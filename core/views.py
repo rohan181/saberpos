@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Product
 from .filters import OrderFilter
+from django.http import HttpResponse
 
 @login_required
 def cart(request):
@@ -11,3 +12,8 @@ def cart(request):
 	
     context = {'products': products,'myFilter':myFilter}
     return render(request, 'core/cart.html', context)
+
+@login_required
+def dataupdate(request):
+     products = Product.objects.all()
+     return HttpResponse(products)

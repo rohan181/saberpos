@@ -16,7 +16,7 @@ class Product(models.Model):
     )
     quantity = models.PositiveIntegerField(default=0)
     def __str__(self):
-        return self.name+"  quantity"+self.quantity 
+        return self.name+ " qty "+str(self.quantity)
 
 class UserItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

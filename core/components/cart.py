@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db.models import F
 from django_unicorn.components import UnicornView, QuerySetType
-from core.models import UserItem
+from core.models import UserItem,Product
 
 class CartView(UnicornView):
     user_products: QuerySetType[UserItem] = None
@@ -20,11 +20,19 @@ class CartView(UnicornView):
             user_id=self.user,
             product_id=product_pk
         )
+        
+        
+        
         if not created:
             item.quantity = F('quantity') + 1
             item.save()
+
+       
+
+            
         self.user_products = UserItem.objects.filter(user=self.user)
         self.get_total()
+      
 
     def get_total(self):
         self.total = sum(product.total_price for product in self.user_products)

@@ -194,10 +194,13 @@
                             {{ product.name}}
                         </h5>
                         <div class="flex justify-between">
-                            <p class="font-normal text-gray-700 dark:text-gray-400">
+                            <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
                                 TK{{ product.price }}
                             </p>
-                            <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-4 rounded w-24"
+                            <p class="font-normal   text-white bg-gray-800 mx-1">
+                               {{ product.quantity }}
+                            </p>
+                            <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-24"
                                 unicorn:click="add_item( {{product.pk}} )">
                                 Add Cart
                             </button>

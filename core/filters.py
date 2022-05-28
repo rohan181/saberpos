@@ -10,4 +10,4 @@ class OrderFilter(django_filters.FilterSet):
  class Meta:
 		model = Product
 		fields = '__all__'
-		exclude = ['price']
+		exclude = ['price','quantity']

@@ -11,4 +11,5 @@ urlpatterns = [
     ),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('', views.cart, name='cart'),
+    path('data', views.dataupdate, name='dataupdate'),
 ]
