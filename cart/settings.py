@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_unicorn',
     'core',
+    
+    'django_filters',
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,5 @@
-<div class="flex">
-    <div class="w-70 flex-grow shadow-md bg-white " id="sidenavSecExample">
+<div class="flex  "  >
+    <div class=" h-screen shadow-md bg-white  " id="sidenavSecExample">
         <div class="pt-4 pb-2 px-6">
             <a href="#!">
                 <div class="flex items-center">
@@ -176,11 +176,16 @@
 
 
 
-    <div>
+    <div class="basis-3/4">
         <!-- put component code here -->
-        <div class="grid grid-cols-3 gap-2 m-8">
+        <div class="grid grid-cols-3 gap-2 m-8 ">
             <div class="col-span-2 m-2">
                 <h2 class="font-medium leading-tight text-4xl mt-0 mb-4 text-blue-600">Products</h2>
+                <form method="get">
+                    {{myFilter.form}}
+    
+                <button class="btn btn-primary" type="submit">Search</button>
+              </form>
                 <div class="flex flex-wrap">
                     {% for product in products %}
                     <a href="#"
