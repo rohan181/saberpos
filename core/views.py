@@ -5,15 +5,24 @@ from .filters import OrderFilter
 from django.http import HttpResponse
 from django.db.models import Count, F, Value
 from django.db import connection
-
+from core.form import useritem  
+from django.contrib.auth.models import User
 
 @login_required
 def cart(request):
+    form = useritem(request.POST or None, request.FILES or None)
+    
+    if form.is_valid():
+        fs= form.save(commit=False)
+        fs.user= request.user
+        fs.save()
+        
+     
     products = Product.objects.all()
     myFilter = OrderFilter(request.GET, queryset=products)
     products = myFilter.qs 
-	
-    context = {'products': products,'myFilter':myFilter}
+	  
+    context = {'products': products,'myFilter':myFilter,'form':form}
     return render(request, 'core/cart.html', context)
 
 @login_required
