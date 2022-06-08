@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db.models import F
 from django_unicorn.components import UnicornView, QuerySetType
-from core.models import UserItem,Product
+from core.models import UserItem,Product,sold
 
 class CartView(UnicornView):
     user_products: QuerySetType[UserItem] = None
@@ -39,6 +39,8 @@ class CartView(UnicornView):
 
     def delete_item(self, product_pk):
         item = UserItem.objects.get(pk=product_pk)
+        #item1 = sold.objects.get(pk=product_pk)
         item.delete()
+        #item1.delete()
         self.user_products = self.user_products.exclude(pk=product_pk)
         self.get_total()

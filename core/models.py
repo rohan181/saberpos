@@ -34,7 +34,8 @@ class UserItem(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True)
     paid = models.PositiveIntegerField(default=0,null=True)
     left = models.PositiveIntegerField(default=0,null=True)
-
+    quantityupdate = models.PositiveIntegerField(default=0,null=True)
+    customerupdate = models.PositiveIntegerField(default=0,null=True)
     @property
     def total_price(self):
         return self.quantity * self.product.price
@@ -56,3 +57,21 @@ class Order(models.Model):
         default=0,
         null=True
     )
+
+
+class sold(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added = models.DateTimeField(auto_now_add=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True)
+    paid = models.PositiveIntegerField(default=0,null=True)
+    left = models.PositiveIntegerField(default=0,null=True)
+    quantityupdate = models.PositiveIntegerField(default=0,null=True)
+    customerupdate = models.PositiveIntegerField(default=0,null=True)
+    @property
+    def total_price(self):
+        return self.quantity * self.product.price
+
+    def __str__(self):
+        return self.product.name   
