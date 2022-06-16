@@ -25,7 +25,7 @@ def cart(request):
                 detail.user  = request.user
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
-
+                detail.left = rs.left
                 detail.save()
                 product = Product.objects.get(id=rs.product_id)
                     
