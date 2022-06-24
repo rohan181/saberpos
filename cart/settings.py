@@ -1,4 +1,5 @@
 from pathlib import Path
+from django.conf import global_settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -11,14 +12,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&1l0a@tr_x$)se55wg$eopa%x!_yk9#@r=yi3e3*_s)oe%+%ga'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
+
+
+
+
+
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -29,7 +38,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_unicorn',
     'core',
-    
+    'import_export',
     'django_filters',
 ]
 
@@ -56,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -110,6 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+IMPORT_EXPORT_USE_TRANSACTIONS=True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

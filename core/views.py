@@ -8,6 +8,7 @@ from django.db import connection
 from core.form import useritem  
 from django.contrib.auth.models import User
 
+
 @login_required
 def cart(request):
     form = useritem(request.POST or None, request.FILES or None)
@@ -25,7 +26,7 @@ def cart(request):
                 detail.user  = request.user
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
-                detail.left = rs.left
+                detail.left = fs.left
                 detail.save()
                 product = Product.objects.get(id=rs.product_id)
                     
@@ -35,6 +36,7 @@ def cart(request):
         
    
     products = Product.objects.all()
+    
     myFilter = OrderFilter(request.GET, queryset=products)
     products = myFilter.qs 
 	  

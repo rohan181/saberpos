@@ -7,16 +7,19 @@ class Product(models.Model):
 			('uttara', 'uttara'),
 			('badda', 'badda'),
 			) 
-    shopname = models.CharField(max_length=200, null=True, choices=CATEGORY)        
-    name = models.CharField(max_length=200)
+    #shopname = models.CharField(max_length=200, null=True, choices=CATEGORY)        
+    name = models.TextField(max_length=200,null=True)
+    productcatagory= models.CharField(max_length=200,null=True)
+    brand= models.CharField(max_length=200,null=True)
     price = models.DecimalField(
         decimal_places=0,
         max_digits=10,
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(0)],
+        null=True
     )
-    quantity = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=0,null=True)
     def __str__(self):
-        return self.name+ " qty "+str(self.quantity)
+        return self.name
 class Customer(models.Model):
     name = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
