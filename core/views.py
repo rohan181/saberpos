@@ -2,12 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Product,UserItem,sold
 from .filters import OrderFilter
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
 from core.form import useritem  
 from django.contrib.auth.models import User
-
+from django.core.paginator import Paginator
 
 @login_required
 def cart(request):
@@ -17,7 +17,7 @@ def cart(request):
         fs= form.save(commit=False)
         fs.user= request.user
         fs.save()
-
+        
 
         for rs in shopcart:
                 detail = sold()
@@ -36,6 +36,7 @@ def cart(request):
         
    
     products = Product.objects.all()
+    
     
     myFilter = OrderFilter(request.GET, queryset=products)
     products = myFilter.qs 

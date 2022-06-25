@@ -1,4 +1,5 @@
-<div class="flex  "  >
+{% load static %}
+<div class="flex  ">
     <div class=" h-screen shadow-md bg-white  " id="sidenavSecExample">
         <div class="pt-4 pb-2 px-6">
             <a href="#!">
@@ -168,7 +169,7 @@
                 </ul>
             </li>
         </ul>
-        
+
     </div>
 
 
@@ -183,30 +184,33 @@
                 <h2 class="font-medium leading-tight text-4xl mt-0 mb-4 text-blue-600">Products</h2>
                 <form method="get">
                     {{myFilter.form}}
-    
-                <button class="btn btn-primary" type="submit">Search</button>
-              </form>
-                <div class="flex flex-wrap">
-                    {% for product in products %}
-                    <a href="#"
-                        class="w-[30%] p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-2">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            {{ product.name}}
-                        </h5>
-                        <div class="flex justify-between">
-                            <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
-                                TK{{ product.price }}
-                            </p>
-                            <p class="font-normal   text-white bg-gray-800 mx-1">
-                               {{ product.quantity }}
-                            </p>
-                            <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-24"
-                                unicorn:click="add_item( {{product.pk}} )">
-                                Add Cart
-                            </button>
-                        </div>
-                    </a>
-                    {% endfor %}
+
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </form>
+                <div class="flex flex-wrap infinite-container" >
+                   
+                        {% for product in products %}
+                        <a href="#"
+                            class="w-[30%] p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-2">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                {{ product.name}}
+                            </h5>
+                            <div class="flex justify-between">
+                                <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
+                                    TK{{ product.price }}
+                                </p>
+                                <p class="font-normal   text-white bg-gray-800 mx-1">
+                                    {{ product.quantity }}
+                                </p>
+                                <button
+                                    class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-24"
+                                    unicorn:click="add_item( {{product.pk}} )">
+                                    Add Cart
+                                </button>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    
                 </div>
             </div>
 
@@ -236,11 +240,11 @@
                             <p class="font-bold">${{ total }}</p>
                         </div>
                     </div>
-                    <form method="POST" class="post-form">  
-                        {% csrf_token %}  
-                        {{ form.as_p }}  
-                        <button type="submit" class="save btn btn-default">Save</button>  
-                    </form> 
+                    <form method="POST" class="post-form">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-default">Save</button>
+                    </form>
 
                 </div>
                 {% else %}
@@ -250,3 +254,21 @@
         </div>
     </div>
 </div>
+
+<script src="{% static " js/jquery.waypoints.min.js" %}"></script>
+<script src="/static/js/infinite.min.js"></script>
+<script>
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+
+        offset: 'bottom-in-view',
+
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            $('.loading').hide();
+        }
+
+    });
+</script>
