@@ -90,7 +90,7 @@ def update_view(request, id):
 
 
 
-def group(request, id):
+def ggroup(request, id):
     # dictionary for initial data with
     # field names as keys
     context ={}
@@ -110,7 +110,48 @@ def group(request, id):
     # add form dictionary to context
     context["form"] = form
  
-    return render(request, "core/update_view.html", context)			   
+    return render(request, "core/update_view.html", context)	
+
+
+
+
+@login_required
+def group(request):
+    form = useritem(request.POST or None, request.FILES or None)
+    shopcart =UserItem.objects.filter(user=request.user)
+    if form.is_valid():
+        fs= form.save(commit=False)
+        fs.user= request.user
+        fs.save()
+        
+
+        for rs in shopcart:
+                detail = sold()
+                detail.customer    = fs.customer # Order Id
+                detail.product_id  = rs.product_id
+                detail.user  = request.user
+                detail.quantity  = rs.quantity
+                detail.added  = rs.added
+                detail.left = fs.left
+                detail.save()
+                product = Product.objects.get(id=rs.product_id)
+                    
+                product.quantity -= rs.quantity
+                product.save()
+
+        
+    
+    products = Product.objects.all().exclude(quantity=0)
+    
+    
+    myFilter = OrderFilter(request.GET, queryset=products)
+    products = myFilter.qs 
+	  
+    context = {'products': products,'myFilter':myFilter,'form':form}
+    return render(request, 'core/group.html', context)
+
+
+
 
 
                   

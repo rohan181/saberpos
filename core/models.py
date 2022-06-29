@@ -19,6 +19,7 @@ class Product(models.Model):
     )
    
     sellprice = models.PositiveIntegerField(default=0,null=True)
+    groupname= models.CharField(max_length=200,null=True)
     quantity = models.PositiveIntegerField(default=0,null=True)
     def __str__(self):
         return self.name
