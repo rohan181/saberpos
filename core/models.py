@@ -17,6 +17,8 @@ class Product(models.Model):
         validators=[MinValueValidator(0)],
         null=True
     )
+   
+    sellprice = models.PositiveIntegerField(default=0,null=True)
     quantity = models.PositiveIntegerField(default=0,null=True)
     def __str__(self):
         return self.name

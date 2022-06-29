@@ -37,6 +37,11 @@ class CartView(UnicornView):
     def get_total(self):
         self.total = sum(product.total_price for product in self.user_products)
 
+
+    def get_totalll(self,product_pk):
+        item1 = UserItem.objects.get(pk=product_pk).values('price')
+        self.total = sum(product.total_price for product in self.user_products)-item1
+
     def delete_item(self, product_pk):
         item = UserItem.objects.get(pk=product_pk)
         #item1 = sold.objects.get(pk=product_pk)

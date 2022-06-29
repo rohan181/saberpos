@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
-
+from .views import  update_view,group
 from . import views
 
 urlpatterns = [
@@ -11,5 +11,7 @@ urlpatterns = [
     ),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('', views.cart, name='cart'),
+    path('<id>/update',update_view ,name='update'),
+    path('<id>/group',group,name='group'),
     path('data', views.dataupdate, name='dataupdate'),
 ]

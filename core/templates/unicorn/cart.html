@@ -1,6 +1,6 @@
 {% load static %}
 <div class="flex  ">
-    <div class=" h-screen shadow-md bg-white  " id="sidenavSecExample">
+    <div class="h-ful shadow-md bg-white  " id="sidenavSecExample">
         <div class="pt-4 pb-2 px-6">
             <a href="#!">
                 <div class="flex items-center">
@@ -179,8 +179,8 @@
 
     <div class="basis-3/4">
         <!-- put component code here -->
-        <div class="grid grid-cols-3 gap-2 m-8 ">
-            <div class="col-span-2 m-2">
+        <div class="grid grid-cols-3 gap-2 m-2 ">
+            <div class="col-span-2 m-1">
                 <h2 class="font-medium leading-tight text-4xl mt-0 mb-4 text-blue-600">Products</h2>
                 <form method="get">
                     {{myFilter.form}}
@@ -191,7 +191,7 @@
                    
                         {% for product in products %}
                         <a href="#"
-                            class="w-[30%] p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-2">
+                            class="w-[47%] p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                                 {{ product.name}}
                             </h5>
@@ -199,16 +199,30 @@
                                 <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
                                     TK{{ product.price }}
                                 </p>
+                                <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
+                                    TK{{ product.sellprice }}
+                                </p>
                                 <p class="font-normal   text-white bg-gray-800 mx-1">
                                     {{ product.quantity }}
                                 </p>
                                 <button
-                                    class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-24"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-24 mr-px"
                                     unicorn:click="add_item( {{product.pk}} )">
-                                    Add Cart
+                                    Add 
                                 </button>
+
+                                <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+                                onclick="window.location.href = '{{product.id}}/update'">
+                                price set
+                                </button>
+                                <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-24 mr-px"
+                                onclick="window.location.href = 'https://ide.geeksforgeeks.org';">
+                                Click
+                                </button>
+                                
                             </div>
                         </a>
+                        
                         {% endfor %}
                     
                 </div>
@@ -218,7 +232,7 @@
                 <h2 class="font-medium leading-tight text-4xl mt-0 mb-4 text-blue-600">Cart</h2>
 
                 {% if user_products %}
-                <div class="flex flex-col justify-between block p-3 rounded-lg shadow-lg bg-white max-w-sm p-6">
+                <div class="flex flex-col justify-between block p-2 rounded-lg shadow-lg bg-white max-w-sm p-2">
                     {% for product in user_products %}
                     <div class="flex justify-between my-1">
                         <p>

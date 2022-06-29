@@ -5,9 +5,13 @@ from .filters import OrderFilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
-from core.form import useritem  
+from core.form import useritem,GeeksForm 
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+
+from django.shortcuts import (get_object_or_404,
+                              render,
+                              HttpResponseRedirect)
 
 @login_required
 def cart(request):
@@ -35,7 +39,7 @@ def cart(request):
 
         
    
-    products = Product.objects.all()
+    products = Product.objects.all().exclude(quantity=0)
     
     
     myFilter = OrderFilter(request.GET, queryset=products)
@@ -62,7 +66,52 @@ def dataupdate(request):
 
       return render(request, 'core/a.html')
 				  
-				   
+def update_view(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+ 
+    # fetch the object related to passed id
+    obj = get_object_or_404(Product, id = id)
+ 
+    # pass the object as instance in form
+    form = GeeksForm(request.POST or None, instance = obj)
+ 
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect("/")
+ 
+    # add form dictionary to context
+    context["form"] = form
+ 
+    return render(request, "core/update_view.html", context)
+
+
+
+def group(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+ 
+    # fetch the object related to passed id
+    obj = get_object_or_404(Product, id = id)
+ 
+    # pass the object as instance in form
+    form = GeeksForm(request.POST or None, instance = obj)
+ 
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect("/")
+ 
+    # add form dictionary to context
+    context["form"] = form
+ 
+    return render(request, "core/update_view.html", context)			   
+
 
                   
                   
