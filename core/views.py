@@ -8,7 +8,7 @@ from django.db import connection
 from core.form import useritem,GeeksForm 
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-
+from django.contrib import messages
 from django.shortcuts import (get_object_or_404,
                               render,
                               HttpResponseRedirect)
@@ -27,6 +27,7 @@ def cart(request):
                 detail = sold()
                 detail.customer    = fs.customer # Order Id
                 detail.product_id  = rs.product_id
+                detail.order_id     = fs.id 
                 detail.user  = request.user
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
@@ -39,17 +40,17 @@ def cart(request):
 
         
    
-    products = Product.objects.all().exclude(quantity=0)
+    products = Product.objects.all()
     
     
     myFilter = OrderFilter(request.GET, queryset=products)
     products = myFilter.qs 
-	  
+    
     context = {'products': products,'myFilter':myFilter,'form':form}
     return render(request, 'core/cart.html', context)
 
 @login_required
-def dataupdate(request):
+def soldlist(request):
       #cursor = connection['db.sqlite3'].cursor()
       #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
       #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
@@ -61,10 +62,13 @@ def dataupdate(request):
         
         #row = cursor.fetchone()
 
-        
+         orders=sold.objects.all().order_by('-id')
+         context = {#'category': category,
+               'orders': orders,
+               }
 
 
-      return render(request, 'core/a.html')
+         return render(request, 'core/a.html',context)
 				  
 def update_view(request, id):
     # dictionary for initial data with
@@ -116,7 +120,7 @@ def ggroup(request, id):
 
 
 @login_required
-def group(request):
+def group(request,id):
     form = useritem(request.POST or None, request.FILES or None)
     shopcart =UserItem.objects.filter(user=request.user)
     if form.is_valid():
@@ -140,8 +144,8 @@ def group(request):
                 product.save()
 
         
-    
-    products = Product.objects.all().exclude(quantity=0)
+    obj = get_object_or_404(Product, id = id)
+    products = Product.objects.all().filter(groupname=obj.groupname)
     
     
     myFilter = OrderFilter(request.GET, queryset=products)

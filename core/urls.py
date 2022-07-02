@@ -12,6 +12,6 @@ urlpatterns = [
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('', views.cart, name='cart'),
     path('<id>/update',update_view ,name='update'),
-    path('group',group,name='group'),
-    path('data', views.dataupdate, name='dataupdate'),
+    path('<id>/group',group,name='group'),
+    path('soldlist', views.soldlist, name='dataupdate'),
 ]

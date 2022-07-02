@@ -4,7 +4,7 @@ from core.models import Order, UserItem,Product
 class useritem(forms.ModelForm):  
     class Meta:  
         model = Order 
-        fields = ['customer','left']
+        fields = ['customer','left','name','address']
 
 
 

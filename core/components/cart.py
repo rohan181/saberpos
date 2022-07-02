@@ -2,6 +2,21 @@ from django.contrib.auth.models import User
 from django.db.models import F
 from django_unicorn.components import UnicornView, QuerySetType
 from core.models import UserItem,Product,sold
+from core.form import useritem
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from core.models import Product,UserItem,sold
+
+from django.http import HttpResponse,HttpResponseRedirect
+from django.db.models import Count, F, Value
+from django.db import connection
+from core.form import useritem,GeeksForm 
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+
+from django.shortcuts import (get_object_or_404,
+                              render,
+                              HttpResponseRedirect)
 
 class CartView(UnicornView):
     user_products: QuerySetType[UserItem] = None
@@ -32,6 +47,7 @@ class CartView(UnicornView):
             
         self.user_products = UserItem.objects.filter(user=self.user)
         self.get_total()
+        
       
 
     def get_total(self):
