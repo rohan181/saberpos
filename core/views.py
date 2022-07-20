@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold
+from core.models import Product,UserItem,sold,Order
 from .filters import OrderFilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
@@ -12,6 +12,9 @@ from django.contrib import messages
 from django.shortcuts import (get_object_or_404,
                               render,
                               HttpResponseRedirect)
+from django.db.models import Sum
+from num2words import num2words
+
 
 @login_required
 def cart(request):
@@ -62,7 +65,7 @@ def soldlist(request):
         
         #row = cursor.fetchone()
 
-         orders=sold.objects.all().order_by('-id')
+         orders=Order.objects.all().order_by('-id')
          context = {#'category': category,
                'orders': orders,
                }
@@ -156,7 +159,37 @@ def group(request,id):
 
 
 
+@login_required
+def cashmemo(request,id):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
 
+         orders=sold.objects.all().filter(order_id=id)
+         total=0
+         for rs in orders:
+            total+=rs.product.price * rs.quantity
+         text=num2words(total)   
+         #total = sum(product.total_price for product in self.user_products)
+         context = {#'category': category,
+               'orders': orders,
+               'total': total,
+               'text': text,
+               }
+
+
+         return render(request, 'core/cashmemo.html',context)
+
+
+def get_total(self):
+        self.total = sum(product.total_price for product in self.user_products)
 
                   
                   

@@ -51,8 +51,12 @@ class UserItem(models.Model):
    
    
     @property
+    def price(self):
+        return (self.product.price)
+
+    @property
     def total_price(self):
-        return self.quantity * self.product.price
+        return (self.quantity * self.product.price)
 
     def __str__(self):
         return self.product.name
@@ -73,9 +77,11 @@ class Order(models.Model):
     )
     name = models.CharField(max_length=200,null=True,blank=True)
     address = models.CharField(max_length=200,null=True,blank=True)
-   
+    paid = models.PositiveIntegerField(default=0,null=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
-   
+    @property
+    def total_price(self):
+        return (self.quantity * self.product.price)
 
 
 class sold(models.Model):

@@ -16,6 +16,9 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 
+
+
+
 class ComputerAdmin(admin.ModelAdmin):
     list_filter=('added', 'product')
     list_display = ('added', 'product')

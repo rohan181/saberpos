@@ -14,4 +14,5 @@ urlpatterns = [
     path('<id>/update',update_view ,name='update'),
     path('<id>/group',group,name='group'),
     path('soldlist', views.soldlist, name='dataupdate'),
+    path('<id>/cashmemo', views.cashmemo, name='cashmemo'),
 ]
