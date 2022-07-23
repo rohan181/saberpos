@@ -1,3 +1,4 @@
+from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Product,UserItem,sold,Order
@@ -43,7 +44,7 @@ def cart(request):
 
         
    
-    products = Product.objects.all()
+    products = Product.objects.all()[:50]
     
     
     myFilter = OrderFilter(request.GET, queryset=products)
@@ -73,16 +74,22 @@ def soldlist(request):
 
          return render(request, 'core/a.html',context)
 				  
-def update_view(request, id):
+def update_view(request,id):
     # dictionary for initial data with
     # field names as keys
     context ={}
  
     # fetch the object related to passed id
-    obj = get_object_or_404(Product, id = id)
- 
+    #obj = get_object_or_404(Product, id = id)
+    
+    item, created = UserItem.objects.get_or_create(
+            user_id=request.user.id,
+            product_id=id,
+        )
+    shopcart =UserItem.objects.filter(user=request.user,product_id=id).first()
+    
     # pass the object as instance in form
-    form = GeeksForm(request.POST or None, instance = obj)
+    form = GeeksForm(request.POST or None, instance = shopcart)
  
     # save the data from the form and
     # redirect to detail_view

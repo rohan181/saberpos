@@ -31,6 +31,9 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0,null=True)
     def __str__(self):
         return self.name
+
+
+       
 class Customer(models.Model):
     name = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
@@ -41,22 +44,52 @@ class Customer(models.Model):
         return self.name        
 
 class UserItem(models.Model):
+    PRODUCT = (
+			('Direct', 'Direct'),
+			('Exchange', 'Exchange'),
+			)
+    PRODUCT1 = (
+			('Local', 'Local'),
+			('Container', 'Container'),
+			)        
+    engine = (
+			('complete', 'complete'),
+			('incomplete', 'incomplete'),
+			)          
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(default=0,null=True)
     added = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True)
-    paid = models.PositiveIntegerField(default=0,null=True)
-    left = models.PositiveIntegerField(default=0,null=True)
-   
-   
+    model_no = models.CharField(max_length=200,blank=True,null=True)
+    engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
+    status=models.CharField(max_length=10,choices=PRODUCT,default='Direct',null=True)
+    productype=models.CharField(max_length=10,choices=PRODUCT1,default='Local',null=True)
+    enginecomplete=models.CharField(max_length=10,choices=engine,default='complete',null=True)
+    remarks = models.CharField(max_length=500,blank=True,null=True)
+    exchange_ammount = models.PositiveIntegerField(default=0,null=True)
+    exchange_engine = models.CharField(max_length=500,blank=True,default='')
+    price1 = models.DecimalField(
+        default=0,
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+    price2 = models.DecimalField(
+        default=0,
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
     @property
     def price(self):
         return (self.product.price)
 
     @property
     def total_price(self):
-        return (self.quantity * self.product.price)
+        return (self.quantity * self.price1)
 
     def __str__(self):
         return self.product.name

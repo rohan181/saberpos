@@ -190,6 +190,7 @@
                 <div class="flex flex-wrap infinite-container" >
                    
                         {% for product in products %}
+                        {% if forloop.counter <= 50 %}
                         <a href="#"
                             class="w-[47%] p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -228,7 +229,7 @@
                                 
                             </div>
                         </a>
-                        
+                        {% endif %}
                         {% endfor %}
                     
                 </div>
@@ -242,7 +243,7 @@
                     {% for product in user_products %}
                     <div class="flex justify-between my-1">
                         <p>
-                            {{ product.quantity }} x <b>{{ product.product.name }}</b>
+                            {{ product.quantity }} x {{ product.price1 }}<b> {{ product.product.name }}</b>
                         </p>
                         <p>
                             <span>${{ product.total_price }}</span>
