@@ -20,6 +20,11 @@
             text-align: left;
             background-color: #eee;
         }
+        .address{
+            font-size: 18px;
+            font-weight: 200;
+
+        }
 
         .mt-50 {
 
@@ -59,8 +64,8 @@
                     
                     <div class="text-center">
                         <img src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" class="top1 " alt="">
-                        <h4>RANA MOTORS LIMITED</h2>
-                         
+                        <h4>RANA MOTORS LIMITED</h4>
+                            <span class="address">Address:Uttara 3rd phase Connectiong Road,Diabari,Dhaka 1230,+880-1842-111631,+880-1815-644860</span>
                          <h4><u>INVOICE(CLIENT COPY)</u></h2>   
                     </div>
                     <div class="header-elements">
@@ -72,23 +77,18 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="mb-4 pull-left">
-                                    <h6>BBBOOTSTRAP.COM</h6>
-                                    <ul class="list list-unstyled mb-0 text-left">
-                                        <li>2269 Six Sigma</li>
-                                        <li>New york city</li>
-                                        <li>+1 474 44737 47 </li>
-
-                                    </ul>
+                                    <h4 class="invoice-color mb-2 mt-md-2">Invoice {{date.added}}|</h4>
+                                    
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="mb-4 ">
                                     <div class="text-sm-right">
-                                        <h4 class="invoice-color mb-2 mt-md-2">Invoice #BBB1243</h4>
+                                        
                                         <ul class="list list-unstyled mb-0">
-                                            <li>Date: <span class="font-weight-semibold">March 15, 2020</span></li>
-                                            <li>Due date: <span class="font-weight-semibold">March 30, 2020</span></li>
+                                            <li>Date: <span class="font-weight-semibold">{{ date.added| date:"F d, Y"}}</span></li>
+                                            
                                         </ul>
                                     </div>
                                 </div>
@@ -111,34 +111,7 @@
                                 </ul>
                             </div>
 
-                            <div class="mb-2 ml-auto">
-                                <span class="text-muted">Payment Details:</span>
-                                <div class="d-flex flex-wrap wmin-md-400">
-                                    <ul class="list list-unstyled mb-0 text-left">
-                                        <li>
-                                            <h5 class="my-2">Total Due:</h5>
-                                        </li>
-                                        <li>Bank name:</li>
-                                        <li>Country:</li>
-                                        <li>City:</li>
-                                        <li>Address:</li>
-                                        <li>IBAN:</li>
-                                        <li>SWIFT code:</li>
-                                    </ul>
-
-                                    <ul class="list list-unstyled text-right mb-0 ml-auto">
-                                        <li>
-                                            <h5 class="font-weight-semibold my-2">$1,090</h5>
-                                        </li>
-                                        <li><span class="font-weight-semibold">Hong Kong Bank</span></li>
-                                        <li>Hong Kong</li>
-                                        <li>Thurnung street, 21</li>
-                                        <li>New standard</li>
-                                        <li><span class="font-weight-semibold">98574959485</span></li>
-                                        <li><span class="font-weight-semibold">BHDHD98273BER</span></li>
-                                    </ul>
-                                </div>
-                            </div>
+                           
                         </div>
                     </div>
 
@@ -175,10 +148,9 @@
 
                            
 
-                            <p class="over mt-50">Client's Signature</p>
-                            <p class="over ml-auto mt-50">Authority's Signature</p>
+                          
                             <div class="pt-2 mb-3 wmin-md-400 ml-auto">
-                                <h6 class="mb-3 text-left">Total due</h6>
+                                
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tbody>
@@ -203,7 +175,8 @@
                                         </tbody>
                                        
                                     </table>
-                                    <p>IN WORDS:{{text}}</p>
+                                    
+                                    
                                 </div>
 
 
@@ -211,7 +184,10 @@
                         </div>
                        
                     </div>
-
+                    <p>IN WORDS:{{text}}</p>
+                    <br>
+                    <p class="over mt-200">Client's Signature</p>
+                    <p class="over ml-auto ">Authority's Signature</p>
                     <div class="card-footer">
                      <P>Goods ones sold are not taken back</P>
                     </div>

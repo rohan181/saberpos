@@ -15,6 +15,7 @@ from django.shortcuts import (get_object_or_404,
                               HttpResponseRedirect)
 from django.db.models import Sum
 from num2words import num2words
+import datetime
 
 
 @login_required
@@ -24,8 +25,10 @@ def cart(request):
     if form.is_valid():
         fs= form.save(commit=False)
         fs.user= request.user
-        fs.save()
-        
+        fs.invoice_id=fs.added
+       
+        fs.save()   
+       
 
         for rs in shopcart:
                 detail = sold()
@@ -72,7 +75,7 @@ def soldlist(request):
                }
 
 
-         return render(request, 'core/a.html',context)
+         return render(request, 'core/soldlist.html',context)
 				  
 def update_view(request,id):
     # dictionary for initial data with
@@ -180,6 +183,8 @@ def cashmemo(request,id):
         #row = cursor.fetchone()
 
          orders=sold.objects.all().filter(order_id=id)
+         ordere_de=Order.objects.all().filter(id=id)
+         date=sold.objects.all().filter(order_id=id).first()
          total=0
          for rs in orders:
             total+=rs.product.price * rs.quantity
@@ -189,6 +194,8 @@ def cashmemo(request,id):
                'orders': orders,
                'total': total,
                'text': text,
+               'date': date,
+               'ordere_de':ordere_de
                }
 
 

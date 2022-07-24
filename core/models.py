@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
-
+import datetime
 class Product(models.Model):
     CATEGORY = (
 			('uttara', 'uttara'),
@@ -108,13 +108,20 @@ class Order(models.Model):
         default=0,
         null=True
     )
+    added = models.DateTimeField(auto_now_add=True,null=True)
     name = models.CharField(max_length=200,null=True,blank=True)
     address = models.CharField(max_length=200,null=True,blank=True)
     paid = models.PositiveIntegerField(default=0,null=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
+    invoice_id = models.CharField(blank=True,null=True, max_length=30)
     @property
     def total_price(self):
         return (self.quantity * self.product.price)
+
+
+    
+
+    
 
 
 class sold(models.Model):
@@ -133,4 +140,9 @@ class sold(models.Model):
         return self.quantity * self.product.price
 
     def __str__(self):
-        return self.product.name   
+        return self.product.name 
+
+
+    @property
+    def invoice(self):
+        return (self.id+" " +" "+ self.added+"")          

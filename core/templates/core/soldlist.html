@@ -15,8 +15,10 @@
         <thead class="thead-dark">
           <tr>
            
-            <th scope="col">Productname</th>
-            <th scope="col">customername</th>
+            
+            <th scope="col">Id Customername</th>
+            <th scope="col">Genaral Customername</th>
+            <th scope="col">Handle</th>
             <th scope="col">Handle</th>
             <th scope="col">Handle</th>
           </tr>
@@ -25,10 +27,17 @@
             {% for rs in orders %}
             <tr>
                 
-                <td >{{ rs.product.name}} </td>
+                
                 <td >{{ rs.customer.name}}</td>
+                <td >{{ rs.name}}</td>
                 <td >{{rs.paid}} </td>
-                <td>{{ rs.added | date:"F d, Y"}}</td>
+                <td><button class="bg-blue-500 hover:bg-blue-700 text-blue-600 text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+                                onclick="window.location.href = '{{rs.id}}/cashmemo'">
+                                Printcashmemo
+              
+                </button>
+               </td>
+                <td>{{ rs.added| date:"F d, Y"}}</td>
             </tr>
         {% endfor %}
         </tbody>
