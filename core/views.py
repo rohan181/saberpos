@@ -39,6 +39,7 @@ def cart(request):
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
                 detail.left = fs.left
+                detail.discount = fs.discount
                 detail.save()
                 product = Product.objects.get(id=rs.product_id)
                     
@@ -47,7 +48,7 @@ def cart(request):
 
         
    
-    products = Product.objects.all()[:50]
+    products = Product.objects.all()
     
     
     myFilter = OrderFilter(request.GET, queryset=products)
@@ -188,14 +189,18 @@ def cashmemo(request,id):
          total=0
          for rs in orders:
             total+=rs.product.price * rs.quantity
-         text=num2words(total)   
+
+         total1=total-date.discount
+         text=num2words(total1)   
          #total = sum(product.total_price for product in self.user_products)
          context = {#'category': category,
                'orders': orders,
                'total': total,
                'text': text,
                'date': date,
-               'ordere_de':ordere_de
+               'ordere_de':ordere_de,
+               'total':total,
+               'total1':total1,
                }
 
 

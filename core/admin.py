@@ -14,7 +14,9 @@ class OrderAdmin(admin.ModelAdmin):
     
     inlines = [OrderProductline]
 
-
+class PhotoAdmin(admin.ModelAdmin):
+  
+    search_fields = ['name']
 
 
 
@@ -45,5 +47,6 @@ class SwitchModelAdmin(ImportExportModelAdmin):
         list_filter=('added','productcatagory')
         resource_class = SwitchModelResource
         inlines = [OrderProductline]
+        search_fields = ['name']
 
 admin.site.register(Product,SwitchModelAdmin)

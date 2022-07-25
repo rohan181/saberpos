@@ -1,4 +1,5 @@
 {% load static %}
+{%load crispy_forms_tags %} 
 <div class="flex  ">
     <div class="h-ful shadow-md bg-white  " id="sidenavSecExample">
         <div class="pt-4 pb-2 px-6">
@@ -185,12 +186,12 @@
                 <form method="get">
                     {{myFilter.form}}
 
-                    <button class="btn btn-primary" type="submit">Search</button>
+                    <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
                 </form>
                 <div class="flex flex-wrap infinite-container" >
                    
                         {% for product in products %}
-                        {% if forloop.counter <= 50 %}
+                        
                         <a href="#"
                             class="w-[47%] p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -200,19 +201,17 @@
                                 <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
                                     TK{{ product.price }}
                                 </p>
-                                <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
-                                    TK{{ product.sellprice }}
-                                </p>
-                                <p class="font-normal   text-white bg-gray-800 mx-1">
-                                    {{ product.quantity }}
+                                
+                                <p class="font-normal   text-red mx-1">
+                                    Qty: {{ product.quantity }}
                                 </p>
                                 <button
-                                    class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-24 mr-px"
+                                    class="save btn btn-info"
                                     unicorn:click="add_item( {{product.pk}} )">
                                     Add 
                                 </button>
 
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+                                <button class="h-8  text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100"
                                 onclick="window.location.href = '{{product.id}}/update'">
                                 price set
                                 </button>
@@ -229,7 +228,7 @@
                                 
                             </div>
                         </a>
-                        {% endif %}
+                        
                         {% endfor %}
                     
                 </div>
@@ -239,7 +238,7 @@
                 <h2 class="font-medium leading-tight text-4xl mt-0 mb-4 text-blue-600">Cart</h2>
 
                 {% if user_products %}
-                <div class="flex flex-col justify-between block p-2 rounded-lg shadow-lg bg-white max-w-sm p-2">
+                <div class="flex flex-col justify-between block  rounded-lg shadow-lg bg-white max-w-sm p-3">
                     {% for product in user_products %}
                     <div class="flex justify-between my-1">
                         <p>
@@ -261,10 +260,12 @@
                             <p class="font-bold">${{ total }}</p>
                         </div>
                     </div>
+                    {% load crispy_forms_tags %}
                     <form method="POST" class="post-form">
                         {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="save btn btn-default">Save</button>
+                        {{ form|crispy}}
+                        <br>
+                        <button type="submit" class="save btn btn-info">Save</button>
                     </form>
 
                 </div>

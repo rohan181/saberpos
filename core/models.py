@@ -60,7 +60,7 @@ class UserItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0,null=True)
     added = models.DateTimeField(auto_now_add=True)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
     model_no = models.CharField(max_length=200,blank=True,null=True)
     engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
     status=models.CharField(max_length=10,choices=PRODUCT,default='Direct',null=True)
@@ -106,14 +106,15 @@ class Order(models.Model):
         max_digits=10,
         validators=[MinValueValidator(0)],
         default=0,
-        null=True
+        null=True,
+        blank=True
     )
     added = models.DateTimeField(auto_now_add=True,null=True)
     name = models.CharField(max_length=200,null=True,blank=True)
-    address = models.CharField(max_length=200,null=True,blank=True)
+    address = models.CharField(max_length=800,null=True,blank=True)
     paid = models.PositiveIntegerField(default=0,null=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
-    invoice_id = models.CharField(blank=True,null=True, max_length=30)
+    discount = models.PositiveIntegerField(default=0,null=True,blank=True)
     @property
     def total_price(self):
         return (self.quantity * self.product.price)
@@ -133,7 +134,7 @@ class sold(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True)
     paid = models.PositiveIntegerField(default=0,null=True)
     left = models.PositiveIntegerField(default=0,null=True)
-    
+    discount = models.PositiveIntegerField(default=0,null=True,blank=True)
     
     @property
     def total_price(self):

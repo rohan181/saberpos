@@ -14,7 +14,7 @@
             margin: 0;
             font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             font-size: 25px;
-            font-weight: 800;
+            font-weight: 600;
             line-height: 1.5385;
             color: #333;
             text-align: left;
@@ -23,6 +23,16 @@
         .address{
             font-size: 18px;
             font-weight: 200;
+
+        }
+        .bio{
+            font-size: 30px;
+            font-weight: 259;
+
+        }
+        .dio{
+            font-size: 20px;
+            font-weight: 500;
 
         }
 
@@ -64,9 +74,9 @@
                     
                     <div class="text-center">
                         <img src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" class="top1 " alt="">
-                        <h4>RANA MOTORS LIMITED</h4>
+                        <h2>RANA MOTORS LIMITED</h2>
                             <span class="address">Address:Uttara 3rd phase Connectiong Road,Diabari,Dhaka 1230,+880-1842-111631,+880-1815-644860</span>
-                         <h4><u>INVOICE(CLIENT COPY)</u></h2>   
+                         <h4><span class=" border border-secondary px-4 font-bold">INVOICE</span></h2>   
                     </div>
                     <div class="header-elements">
 
@@ -77,8 +87,8 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="mb-4 pull-left">
-                                    <h4 class="invoice-color mb-2 mt-md-2">Invoice {{date.added}}|</h4>
-                                    
+                                    <h4 class="font-weight-bold mb-2 mt-md-2  ">Invoice: {{date.added|date:"dmy-gi"}}</h4>
+                                    <h4 class="font-weight-bold mb-2 mt-md-2 ">SL: {{date.order_id}}</h4>
                                 </div>
                             </div>
 
@@ -87,7 +97,9 @@
                                     <div class="text-sm-right">
                                         
                                         <ul class="list list-unstyled mb-0">
-                                            <li>Date: <span class="font-weight-semibold">{{ date.added| date:"F d, Y"}}</span></li>
+                                            <li><span class="dio border border-secondary px-2">CLIENT COPY</span></li>
+                                         <li>Date : <span class="font-weight-semibold"> {{ date.added| date:"F d, Y"}}</span></li>
+                                            <li><span>Contact :</span><span class="bio"> {{date.customer.Phone}}</span></li>
                                             
                                         </ul>
                                     </div>
@@ -97,17 +109,15 @@
 
                         <div class="d-md-flex flex-md-wrap">
                             <div class="mb-4 mb-md-2 text-left">
-                                <span class="text-muted">Invoice To:</span>
+                                
                                 <ul class="list list-unstyled mb-0">
-                                    <li>
-                                        <h5 class="my-2">Tibco Turang</h5>
-                                    </li>
-                                    <li><span class="font-weight-semibold">Samantha Mutual funds Ltd</span></li>
-                                    <li>Gurung Street</li>
-                                    <li>23 BB Lane</li>
-                                    <li>Hong kong</li>
-                                    <li>234 456 5678</li>
-                                    <li><a href="#" data-abc="true">tibco@samantha.com</a></li>
+                                    
+                                    <li><span>NAME :</span><span class="bio"> {{date.customer.name|title}}</span></li>
+                                    <li><span>ADDRESS :</span><span class="bio"> {{date.customer.address|title}}</span></li>
+                                    
+                                    <li><span>DELIVERY ADDRESS :</span><span class="bio"> {{date.order.address|title}}</span></li>
+                                    
+                                    
                                 </ul>
                             </div>
 
@@ -115,13 +125,18 @@
                         </div>
                     </div>
 
+                    
+
+
+
+
                     <div class="table-responsive">
                         <table class="table table-lg">
                             <thead>
                                 <tr>
                                     <th>Description</th>
                                     <th>QTY</th>
-                                    <th></th>
+                                    <th>Unit Price</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -161,14 +176,15 @@
 
                                             <tr>
                                                 <th class="text-left">Discount: <span
-                                                        class="font-weight-normal">(25%)</span>
+                                                        class="font-weight-normal"></span>
                                                 </th>
-                                                <td class="text-right">$27</td>
+                                                <td class="text-right">{{date.discount}}</td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left">Total:</th>
-                                                <td class="text-right text-primary">
-                                                    <h5 class="font-weight-semibold">$1,160</h5>
+                                                
+                                                    
+                                                    <td class="text-right">{{total1}}</td>
                                                 </td>
                                             </tr>
                                             
@@ -184,12 +200,14 @@
                         </div>
                        
                     </div>
-                    <p>IN WORDS:{{text}}</p>
+                    <p>IN WORDS:BDT {{text|title}}</p>
                     <br>
-                    <p class="over mt-200">Client's Signature</p>
-                    <p class="over ml-auto ">Authority's Signature</p>
+                    <div class="d-sm-inline-flex">
+                        <p class="over">RECEIVED BY</p>
+                        <span class="over ml-auto">FOR - RANA MOTORS LIMITED</span>
+                        </div> 
                     <div class="card-footer">
-                     <P>Goods ones sold are not taken back</P>
+                     <P class="address" >Goods ones sold are not taken back</P>
                     </div>
                 </div>
 

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'core',
     'import_export',
     'django_filters',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -118,6 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 IMPORT_EXPORT_USE_TRANSACTIONS=True
