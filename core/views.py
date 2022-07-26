@@ -16,6 +16,9 @@ from django.shortcuts import (get_object_or_404,
 from django.db.models import Sum
 from num2words import num2words
 import datetime
+from django.shortcuts import render
+
+from django.core.paginator import Paginator
 
 
 @login_required
@@ -53,6 +56,23 @@ def cart(request):
     
     myFilter = OrderFilter(request.GET, queryset=products)
     products = myFilter.qs 
+
+    # p = Paginator(products, 5)  # creating a paginator object
+    # # getting the desired page number from url
+    # page_number = request.GET.get('page')
+    # try:
+    #     page_obj = p.get_page(page_number)  # returns the desired page object
+    # except PageNotAnInteger:
+    #     # if page_number is not an integer then assign the first page
+    #     page_obj = p.page(1)
+    # except EmptyPage:
+    #     # if page is empty then return last page
+    #     page_obj = p.page(p.num_pages)
+
+    
+    
+    # products=page_obj  
+    
     
     context = {'products': products,'myFilter':myFilter,'form':form}
     return render(request, 'core/cart.html', context)
@@ -210,9 +230,11 @@ def cashmemo(request,id):
 def get_total(self):
         self.total = sum(product.total_price for product in self.user_products)
 
-                  
-                  
-
+                                  
+def productlist(request):
+    return render(request, 'core/productlist.html', {
+        'products': Product.objects.all(),
+    })
 
 
       

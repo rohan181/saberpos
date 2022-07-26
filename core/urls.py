@@ -15,4 +15,5 @@ urlpatterns = [
     path('<id>/group',group,name='group'),
     path('soldlist', views.soldlist, name='dataupdate'),
     path('<id>/cashmemo', views.cashmemo, name='cashmemo'),
+    path('productlist', views.productlist, name='productlist'),
 ]

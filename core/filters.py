@@ -53,3 +53,8 @@ class OrderFilter(django_filters.FilterSet):
 		model = Product
 		fields = '__all__'
 		exclude = ['price','quantity']
+
+def __init__(self, *args, **kwargs):
+        super(OrderFilter, self).__init__(*args, **kwargs)
+
+        self.fields['productcatagory'].widget.attrs['placeholder'] = 'Engine'     
