@@ -224,7 +224,7 @@ def cashmemo(request,id):
                }
 
 
-         return render(request, 'core/cashmemo.html',context)
+         return render(request, 'core/cashmemo1.html',context)
 
 
 def get_total(self):
