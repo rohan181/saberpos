@@ -55,7 +55,12 @@ class UserItem(models.Model):
     engine = (
 			('complete', 'complete'),
 			('incomplete', 'incomplete'),
-			)          
+			)
+
+    credit = (('noncredit', 'noncredit'),
+			('credit', 'credit'),
+			
+			)                  
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0,null=True)
@@ -64,6 +69,7 @@ class UserItem(models.Model):
     model_no = models.CharField(max_length=200,blank=True,null=True)
     engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
     status=models.CharField(max_length=10,choices=PRODUCT,default='Direct',null=True)
+    credit=models.CharField(max_length=10,choices=credit,default='noncredit',null=True)
     productype=models.CharField(max_length=10,choices=PRODUCT1,default='Local',null=True)
     enginecomplete=models.CharField(max_length=10,choices=engine,default='complete',null=True)
     remarks = models.CharField(max_length=500,blank=True,null=True)

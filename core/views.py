@@ -46,8 +46,10 @@ def cart(request):
                 detail.save()
                 product = Product.objects.get(id=rs.product_id)
                     
-                product.quantity -= rs.quantity
-                product.save()
+                product = Product.objects.get(id=rs.product_id)
+                if rs.credit =='noncredit':    
+                     product.quantity -= rs.quantity
+                     product.save()
 
         
    
@@ -171,11 +173,12 @@ def group(request,id):
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
                 detail.left = fs.left
+                detail.discount = fs.discount
                 detail.save()
                 product = Product.objects.get(id=rs.product_id)
-                    
-                product.quantity -= rs.quantity
-                product.save()
+                if rs.credit =='noncredit':    
+                     product.quantity -= rs.quantity
+                     product.save()
 
         
     obj = get_object_or_404(Product, id = id)
