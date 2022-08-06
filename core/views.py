@@ -29,13 +29,15 @@ def cart(request):
         fs= form.save(commit=False)
         fs.user= request.user
         fs.invoice_id=fs.added
-       
+        
         fs.save()   
-       
+        
 
         for rs in shopcart:
                 detail = sold()
-                detail.customer    = fs.customer # Order Id
+                detail.customer    = fs.customer
+                 # Order Id
+                 
                 detail.product_id  = rs.product_id
                 detail.order_id     = fs.id 
                 detail.user  = request.user
@@ -44,17 +46,17 @@ def cart(request):
                 detail.left = fs.left
                 detail.discount = fs.discount
                 detail.save()
-                product = Product.objects.get(id=rs.product_id)
-                    
+                
+                shopcart.delete()    
                 product = Product.objects.get(id=rs.product_id)
                 if rs.credit =='noncredit':    
                      product.quantity -= rs.quantity
                      product.save()
 
         
-   
-    products = Product.objects.all()
     
+    products = Product.objects.all()
+   
     
     myFilter = OrderFilter(request.GET, queryset=products)
     products = myFilter.qs 

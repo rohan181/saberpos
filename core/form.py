@@ -5,7 +5,10 @@ class useritem(forms.ModelForm):
     class Meta:  
         model = Order 
         fields = ['customer','left','name','address','paid',"discount"]
-
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Name'}),
+           
+        }
 
 
 
