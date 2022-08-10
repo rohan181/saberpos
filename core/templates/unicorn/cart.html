@@ -1,5 +1,9 @@
 {% load static %}
+
 {%load crispy_forms_tags %} 
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+
+
 <div class="flex  ">
     <div class="h-ful shadow-md bg-white  " id="sidenavSecExample">
         <div class="pt-4 pb-2 px-6">
@@ -182,7 +186,7 @@
         <!-- put component code here -->
         <div class="grid grid-cols-3 gap-2 m-2 ">
             <div class="col-span-2 m-1">
-                
+                {{ form.media }}    
                 <form method="get">
                     {{myFilter.form}}
 
@@ -221,6 +225,7 @@
                             <p class="font-bold">${{ total }}</p>
                         </div>
                     </div>
+                    {{ form.media }} 
                     {% load crispy_forms_tags %}
                     <form method="POST" class="post-form">
                         {% csrf_token %}

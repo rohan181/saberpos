@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'import_export',
     'django_filters',
     'crispy_forms',
+    'tempus_dominus',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,8 @@ IMPORT_EXPORT_USE_TRANSACTIONS=True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'cart'
 LOGOUT_REDIRECT_URL = 'login'
+
+
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [STATIC_DIR,]

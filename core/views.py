@@ -208,9 +208,9 @@ def cashmemo(request,id):
         
         #row = cursor.fetchone()
 
-         orders=sold.objects.all().filter(order_id=id)
-         ordere_de=Order.objects.all().filter(id=id)
-         date=sold.objects.all().filter(order_id=id).first()
+         orders=sold.objects.all().filter(added=id)
+         ordere_de=Order.objects.all().filter(added=id)
+         date=sold.objects.all().filter(added=id).first()
          total=0
          for rs in orders:
             total+=rs.product.price * rs.quantity
