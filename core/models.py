@@ -121,10 +121,11 @@ class Order(models.Model):
     paid = models.PositiveIntegerField(default=0,null=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
     discount = models.PositiveIntegerField(default=0,null=True,blank=True)
+    
     @property
     def total_price(self):
         return (self.quantity * self.product.price)
-
+    
 
     
 
@@ -141,6 +142,83 @@ class sold(models.Model):
     paid = models.PositiveIntegerField(default=0,null=True)
     left = models.PositiveIntegerField(default=0,null=True)
     discount = models.PositiveIntegerField(default=0,null=True,blank=True)
+    price1 = models.DecimalField(
+        default=0,
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+    price2 = models.DecimalField(
+        default=0,
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+    engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
+    
+    @property
+    def total_price(self):
+        return self.quantity * self.price1
+
+    def __str__(self):
+        return self.product.name 
+
+
+    @property
+    def invoice(self):
+        return (self.id+" " +" "+ self.added+"")   
+
+
+
+class supplier(models.Model):
+    name = models.CharField(max_length=200)
+    address = models.CharField(max_length=200)
+   
+    Phone = models.CharField(max_length=200)
+       
+    def __str__(self):
+        return self.name         
+
+
+
+class mrentry(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    supplier= models.ForeignKey(supplier, on_delete=models.CASCADE,blank=True,null=True)
+    UserItem  = models.ManyToManyField(UserItem,blank=True)
+    left = models.DecimalField(
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        default=0,
+        null=True,
+        blank=True
+    )
+    added = models.DateTimeField(auto_now_add=True,null=True)
+    name = models.CharField(max_length=200,null=True,blank=True)
+    address = models.CharField(max_length=800,null=True,blank=True)
+    paid = models.PositiveIntegerField(default=0,null=True)
+    Phone = models.CharField(max_length=200,null=True,blank=True)
+    discount = models.PositiveIntegerField(default=0,null=True,blank=True)
+    @property
+    def total_price(self):
+        return (self.quantity * self.product.price)            
+
+
+
+
+
+class mrentryrecord(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    mrentry = models.ForeignKey(mrentry, on_delete=models.CASCADE,null=True,blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added = models.DateTimeField(auto_now_add=True)
+    supplier = models.ForeignKey(supplier, on_delete=models.CASCADE,null=True)
+    paid = models.PositiveIntegerField(default=0,null=True)
+    left = models.PositiveIntegerField(default=0,null=True)
+    discount = models.PositiveIntegerField(default=0,null=True,blank=True)
     
     @property
     def total_price(self):
@@ -152,4 +230,4 @@ class sold(models.Model):
 
     @property
     def invoice(self):
-        return (self.id+" " +" "+ self.added+"")          
+        return (self.id+" " +" "+ self.added+"") 

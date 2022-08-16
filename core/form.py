@@ -1,10 +1,20 @@
 from django import forms  
-from core.models import Order, UserItem,Product
+from core.models import Order, UserItem,Product,mrentry
   
 class useritem(forms.ModelForm):  
     class Meta:  
         model = Order 
         fields = ['customer','left','name','address','paid',"discount"]
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Name'}),
+           
+        }
+
+
+class mrr(forms.ModelForm):  
+    class Meta:  
+        model = mrentry 
+        fields = ['supplier','left','name','address','paid',"discount"]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name'}),
            

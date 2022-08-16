@@ -5,7 +5,7 @@ from django.contrib import admin
 # from import_export.admin import ImportExportModelAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-from .models import Product,UserItem,Customer,Order,sold
+from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry
 class OrderProductline(admin.TabularInline):
     model =sold
     
@@ -34,8 +34,10 @@ class ComputerAdmin(admin.ModelAdmin):
 #admin.site.register(Product,OrderAdmin)
 admin.site.register(Customer,OrderAdmin)
 admin.site.register(UserItem)
-
+admin.site.register(mrentryrecord)
+admin.site.register(mrentry)
 admin.site.register(Order)
+admin.site.register(supplier)
 admin.site.register(sold,ComputerAdmin)
 class SwitchModelResource(resources.ModelResource):
         class Meta:
