@@ -4,7 +4,7 @@ from core.models import Order, UserItem,Product,mrentry
 class useritem(forms.ModelForm):  
     class Meta:  
         model = Order 
-        fields = ['customer','left','name','address','paid',"discount"]
+        fields = ['customer','left','name','address','paid',"discount","Phone"]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name'}),
            

@@ -111,6 +111,7 @@ h6{
                
                 
               </tr>
+              {% if date.customer.name != None %}
               <tr>
                 <th scope="row">Client Name</th>
                 <td>{{date.customer.name|title}}</td>
@@ -118,6 +119,18 @@ h6{
                 <td>{{date.customer.Phone}}</td>
                 
               </tr>
+               {% endif%}
+               {% if date.customer.name == None %}
+              <tr>
+                <th scope="row">Client Name</th>
+                <td>{{date.name|title}}</td>
+                <th scope="row">Mobile No</th>
+                <td>{{date.Phone}}</td>
+                
+              </tr>
+               {% endif%}
+
+
               <tr>
                 <th scope="row">Address</th>
                 <td colspan="3">{{date.customer.address|title}}</td>
