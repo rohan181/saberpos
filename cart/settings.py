@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'widget_tweaks',
-    'django_unicorn',
     'core',
     'import_export',
     'django_filters',

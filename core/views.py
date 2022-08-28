@@ -25,6 +25,7 @@ from django.core.paginator import Paginator
 def cart(request):
     form = useritem(request.POST or None, request.FILES or None)
     shopcart =UserItem.objects.filter(user=request.user)
+    user_products = UserItem.objects.filter(user=request.user)
     if form.is_valid():
         fs= form.save(commit=False)
         fs.user= request.user
@@ -83,7 +84,7 @@ def cart(request):
     # products=page_obj  
     
     
-    context = {'products': products,'myFilter':myFilter,'form':form}
+    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products}
     return render(request, 'core/cart.html', context)
 
 @login_required
