@@ -83,8 +83,12 @@ def cart(request):
     
     # products=page_obj  
     
+    paginator = Paginator(products, 20) # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    pro = paginator.get_page(page_number)
     
-    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products}
+    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'pro':pro}
     return render(request, 'core/cart.html', context)
 
 @login_required

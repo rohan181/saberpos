@@ -193,11 +193,73 @@
 
                     <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
                 </form>
-                <div class="flex flex-wrap infinite-container" hx-trigger="load" hx-get="{% url 'productlist' %}" hx-target="this" >
+                <div class="flex flex-wrap " >
+
+                    {% for product in pro %}
+    
+    <a href="#"
+        class="w-[47%] p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            {{ product.name}}
+        </h5>
+        <div class="flex justify-between">
+            <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
+                TK{{ product.price }}
+            </p>
+            
+            <p class="font-normal   text-red mx-1">
+                Qty: {{ product.quantity }}
+            </p>
+            <button
+                class="save btn btn-info"
+                unicorn:click="add_item( {{product.pk}} )">
+                Add 
+            </button>
+
+            <button class="h-8  text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100"
+            onclick="window.location.href = '{{product.id}}/update'">
+            price set
+            </button>
+
+            {% if product.groupname == None%}
+               
+            {% else %}
+            <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+            onclick="window.location.href = '/{{product.id}}/group'">
+            group
+            </button>
+            {% endif %}
+            
+            
+        </div>
+    </a>
+    
+    {% endfor %}
                    
                        
                     
                 </div>
+
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if pro.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ pro.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span class="current">
+                            Page {{ pro.number }} of {{ pro.paginator.num_pages }}.
+                        </span>
+                
+                        {% if pro.has_next %}
+                            <a href="?page={{ pro.next_page_number }}">next</a>
+                            <a href="?page={{ pro.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+
+
+
             </div>
 
             <div>
