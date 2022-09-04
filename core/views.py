@@ -26,6 +26,10 @@ def cart(request):
     form = useritem(request.POST or None, request.FILES or None)
     shopcart =UserItem.objects.filter(user=request.user)
     user_products = UserItem.objects.filter(user=request.user)
+    total=0
+    for gs in user_products:
+        total+=gs.price1 * gs.quantity
+
     if form.is_valid():
         fs= form.save(commit=False)
         fs.user= request.user
@@ -50,7 +54,7 @@ def cart(request):
                 detail.price2 = rs.price2
                 detail.engine_no=rs.engine_no
                 detail.Phone=fs.Phone
-                
+                detail.name=fs.name
                 detail.save()
                 
                 shopcart.delete()    
@@ -88,7 +92,7 @@ def cart(request):
     page_number = request.GET.get('page')
     pro = paginator.get_page(page_number)
     
-    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'pro':pro}
+    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'pro':pro,'total':total}
     return render(request, 'core/cart.html', context)
 
 @login_required
