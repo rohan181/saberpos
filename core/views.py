@@ -50,7 +50,7 @@ def cart(request):
                 detail.price2 = rs.price2
                 detail.engine_no=rs.engine_no
                 detail.Phone=fs.Phone
-                detai
+                
                 detail.save()
                 
                 shopcart.delete()    
