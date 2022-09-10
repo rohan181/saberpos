@@ -78,6 +78,7 @@ class UserItem(models.Model):
     remarks = models.CharField(max_length=500,blank=True,null=True)
     exchange_ammount = models.PositiveIntegerField(default=0,null=True)
     exchange_engine = models.CharField(max_length=500,blank=True,default='')
+    sparename = models.CharField(max_length=200,null=True,blank=True)
     price1 = models.DecimalField(
         default=0,
         decimal_places=0,
@@ -163,7 +164,7 @@ class sold(models.Model):
     name = models.CharField(max_length=200,null=True,blank=True)
     engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
-    
+    sparename = models.CharField(max_length=200,null=True,)
     @property
     def total_price(self):
         return self.quantity * self.price1

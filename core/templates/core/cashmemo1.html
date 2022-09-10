@@ -167,7 +167,14 @@ h6{
 
 
                 <th scope="row">{{ forloop.counter }}</th>
+                {% if rs.sparename != None %}
+                
+                <td>{{rs.sparename}} {{rs.engine_no}}</td>
+                {% endif%}
+                {% if rs.sparename == None %}
+                
                 <td>{{rs.product.name}} {{rs.engine_no}}</td>
+                {% endif%}
                 <td>N/A</td>
                 <td>{{rs.product.brand}}</td>
                 <td align="right">{{rs.quantity}}</td>

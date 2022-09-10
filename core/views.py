@@ -55,6 +55,7 @@ def cart(request):
                 detail.engine_no=rs.engine_no
                 detail.Phone=fs.Phone
                 detail.name=fs.name
+                detail.sparename =rs.sparename 
                 detail.save()
                 
                 shopcart.delete()    

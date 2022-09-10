@@ -1,0 +1,114 @@
+raw_data = 
+for dirpath, dirname, filename in os.walk(raw_data):
+    for file in tqdm([f for f in filename if f.endswith('.png')]):
+        if file.split('_')[4] == '0':
+            path=r'C:\Users\gazi\Desktop\New folder (2)\dataset\train\open'
+            if not os.path.exists(path):
+                os.makedirs(path)
+            shutil.copy(src=dirpath + '/' + file, dst= path)
+        elif file.split('_')[4] == '1':
+            path=r'C:\Users\gazi\Desktop\New folder (2)\dataset\train\close'
+            if not os.path.exists(path):
+                os.makedirs(path)
+            shutil.copy(src=dirpath + '/' + file, dst= path) 
+
+
+
+
+
+Train Teat Splitting:
+import os
+import numpy as np
+import shutil
+import pandas as pd
+
+def train_test_split():
+    print("########### Train Test Val Script started ###########")
+    #data_csv = pd.read_csv("DataSet_Final.csv") ##Use if you have classes saved in any .csv file
+
+    root_dir = r'C:\Users\gazi\Desktop\New folder (2)\updatedataset'
+    classes_dir = ['close', 'open']
+
+    #for name in data_csv['names'].unique()[:10]:
+    #    classes_dir.append(name)
+
+    processed_dir = r'C:\Users\gazi\Desktop\New folder (2)\dataset'
+
+    val_ratio = 0
+    test_ratio = 0.20
+
+    for cls in classes_dir:
+        # Creating partitions of the data after shuffeling
+        print("$$$$$$$ Class Name " + cls + " $$$$$$$")
+        src = processed_dir +"//" + cls  # Folder to copy images from
+
+        allFileNames = os.listdir(src)
+        np.random.shuffle(allFileNames)
+        train_FileNames, val_FileNames, test_FileNames = np.split(np.array(allFileNames),
+                                                                  [int(len(allFileNames) * (1 - (val_ratio + test_ratio))),
+                                                                   int(len(allFileNames) * (1 - val_ratio)),
+                                                                   ])
+        train_FileNames = [src + '//' + name for name in train_FileNames.tolist()]
+        val_FileNames = [src + '//' + name for name in val_FileNames.tolist()]
+        test_FileNames = [src + '//' + name for name in test_FileNames.tolist()]
+
+        print('Total images: '+ str(len(allFileNames)))
+        print('Training: '+ str(len(train_FileNames)))
+        print('Validation: '+  str(len(val_FileNames)))
+        print('Testing: '+ str(len(test_FileNames)))
+
+        # # Creating Train / Val / Test folders (One time use)
+        os.makedirs(root_dir + '/train//' + cls)
+        os.makedirs(root_dir + '/val//' + cls)
+        os.makedirs(root_dir + '/test//' + cls)
+
+        # Copy-pasting images
+        for name in train_FileNames:
+            shutil.copy(name, root_dir + '/train//' + cls)
+
+        for name in val_FileNames:
+            shutil.copy(name, root_dir + '/val//' + cls)
+
+        for name in test_FileNames:
+            shutil.copy(name, root_dir + '/test//' + cls)
+
+    print("########### Train Test Val Script Ended ###########")
+
+train_test_split()
+Train With Resnet50:
+
+Image height width set on 80 y 80: 
+
+train_data_dir = r'C:\Users\gazi\Desktop\New folder (2)\updatedataset'
+img_width, img_height = 80, 80
+batch_size = 32
+validation_dir = r'C:\Users\gazi\Desktop\New folder (2)\updatedataset'
+
+
+Image data generator
+image_size = 80
+
+#from keras.applications import preprocess_input
+#model = MobileNetV2(include_top=False, input_shape=(224, 224, 3),weights="imagenet")
+data_generator = ImageDataGenerator(
+                                    horizontal_flip=True,
+                                    width_shift_range=0.2,
+                                    height_shift_range=0.2,
+                                    validation_split=0.2)# set validation split
+
+train_generator = data_generator.flow_from_directory(
+    train_data_dir,
+    target_size=(image_size, image_size),
+    batch_size=200,
+    class_mode='categorical',
+    subset='training'
+    )
+validation_generator = data_generator.flow_from_directory(
+    validation_dir,
+    target_size=(image_size, image_size),
+    batch_size=10,
+    class_mode='categorical',
+    subset='validation'
+    )
+
+
