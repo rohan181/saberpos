@@ -17,6 +17,8 @@ urlpatterns = [
     path('<id>/group',group,name='group'),
     path('soldlist', views.soldlist, name='dataupdate'),
     path('<id>/cashmemo', views.cashmemo, name='cashmemo'),
+    path('<id>/returnn', views.returnno, name='return'),
+    path('<id>/returnitem', views.returnreasonn, name='returnreasonn'),
     path('productlist', views.productlist, name='productlist'),
     path('mrproductlist', views.mrproductlist, name='mrproductlist'),
 ]

@@ -238,3 +238,10 @@ class mrentryrecord(models.Model):
     @property
     def invoice(self):
         return (self.id+" " +" "+ self.added+"") 
+
+
+
+class returnn(models.Model):        
+     sold = models.ForeignKey(sold, on_delete=models.CASCADE,null=True,blank=True)
+     quantity = models.PositiveIntegerField(default=1)
+     returnreason = models.CharField(max_length=300,null=True,default='',blank=True)

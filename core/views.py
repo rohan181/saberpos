@@ -1,12 +1,12 @@
 from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord
+from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn
 from .filters import OrderFilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
-from core.form import useritem,GeeksForm,mrr
+from core.form import useritem,GeeksForm,mrr,returnnform
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -186,11 +186,12 @@ def ggroup(request, id):
  
     # pass the object as instance in form
     form = GeeksForm(request.POST or None, instance = obj)
- 
+   
     # save the data from the form and
     # redirect to detail_view
     if form.is_valid():
         form.save()
+        
         return HttpResponseRedirect("/")
  
     # add form dictionary to context
@@ -275,6 +276,44 @@ def cashmemo(request,id):
 
          return render(request, 'core/cashmemo1.html',context)
 
+@login_required
+def returnno(request,id):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         orders=sold.objects.all().filter(order_id=id)
+         ordere_de=Order.objects.all().filter(id=id)
+         date=sold.objects.all().filter(order_id=id).first()
+         total=0
+         for rs in orders:
+            total+=rs.price1 * rs.quantity
+
+         total1=total-date.discount
+         text=num2words(total1)   
+         #total = sum(product.total_price for product in self.user_products)
+         context = {#'category': category,
+               'orders': orders,
+               'total': total,
+               'text': text,
+               'date': date,
+               'ordere_de':ordere_de,
+               'total':total,
+               'total1':total1,
+               }
+
+
+         return render(request, 'core/return.html',context)
+
+
+
 
 def get_total(self):
         self.total = sum(product.total_price for product in self.user_products)
@@ -357,7 +396,38 @@ def mr(request):
     return render(request, 'core/mr.html', context)
 
 
-
+def returnreasonn(request,id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+ 
+    # fetch the object related to passed id
+    #obj = get_object_or_404(Product, id = id)
+    
+    item, created = returnn.objects.get_or_create(
+           sold_id=id,
+        )
+    shopcart =returnn.objects.filter(sold_id=id).first()
+    
+    # pass the object as instance in form
+    form = returnnform(request.POST or None, instance = shopcart)
+ 
+    # save the data from the form and
+    # redirect to detail_view
+    #sold = sold.objects.get(id=id)
+    solds = get_object_or_404(sold, id = id)
+    product = Product.objects.get(id=solds.product_id)
+    if form.is_valid():
+        fs= form.save(commit=False)
+        product.quantity += fs.quantity
+        product.save()
+        fs.save()
+        return HttpResponseRedirect("/")
+         
+    # add form dictionary to context
+    context["form"] = form
+ 
+    return render(request, "core/returnreason.html", context)
 
 
 

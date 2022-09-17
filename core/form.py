@@ -1,5 +1,5 @@
 from django import forms  
-from core.models import Order, UserItem,Product,mrentry
+from core.models import Order, UserItem,Product,mrentry,returnn
   
 class useritem(forms.ModelForm):  
     class Meta:  
@@ -36,4 +36,18 @@ class GeeksForm(forms.ModelForm):
         fields = [
            
           "productype","quantity","engine_no","status","enginecomplete","price1","price2","exchange_ammount","exchange_engine","remarks",'credit',"sparename"
+        ]
+
+
+class returnnform(forms.ModelForm):
+ 
+    # create meta class
+    class Meta:
+        # specify model to be used
+        model = returnn
+ 
+        # specify fields to be used
+        fields = [
+           
+          "quantity","returnreason"
         ]
