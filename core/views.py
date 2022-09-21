@@ -6,7 +6,7 @@ from .filters import OrderFilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
-from core.form import useritem,GeeksForm,mrr,returnnform
+from core.form import soldformm, useritem,GeeksForm,mrr,returnnform
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -255,7 +255,7 @@ def cashmemo(request,id):
 
          orders=sold.objects.all().filter(order_id=id)
          ordere_de=Order.objects.all().filter(id=id)
-         date=sold.objects.all().filter(order_id=id).first()
+         date=sold.objects.all().filter(order_id=id).last()
          total=0
          for rs in orders:
             total+=rs.price1 * rs.quantity
@@ -291,7 +291,7 @@ def returnno(request,id):
 
          orders=sold.objects.all().filter(order_id=id)
          ordere_de=Order.objects.all().filter(id=id)
-         date=sold.objects.all().filter(order_id=id).first()
+         date=sold.objects.all().filter(order_id=id).last()
          total=0
          for rs in orders:
             total+=rs.price1 * rs.quantity
@@ -429,6 +429,132 @@ def returnreasonn(request,id):
  
     return render(request, "core/returnreason.html", context)
 
+
+@login_required
+def editcashmemo(request,id):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         orders=sold.objects.all().filter(order_id=id)
+         ordere_de=Order.objects.all().filter(id=id)
+         date=sold.objects.all().filter(order_id=id).last()
+         total=0
+         for rs in orders:
+            total+=rs.price1 * rs.quantity
+
+         total1=total-date.discount
+         text=num2words(total1) 
+         products = Product.objects.all()
+   
+    
+         myFilter = OrderFilter(request.GET, queryset=products)
+         products = myFilter.qs 
+         orderr =Order.objects.get(id=id)
+
+         form = useritem(request.POST or None, request.FILES or None, instance = orderr)
+         shopcart =UserItem.objects.filter(user=request.user)
+         user_products = UserItem.objects.filter(user=request.user)
+         total=0
+         for gs in user_products:
+           total+=gs.price1 * gs.quantity
+
+
+         paginator = Paginator(products, 20) # Show 25 contacts per page.
+
+         page_number = request.GET.get('page')
+         pro = paginator.get_page(page_number) 
+
+         if form.is_valid():
+           fs= form.save(commit=False)
+           fs.user= request.user
+           fs.invoice_id=fs.added
+        
+           fs.save()  
+           for rs in shopcart:
+                detail = sold()
+                detail.customer    = fs.customer
+                 # Order Id
+                 
+                detail.product_id  = rs.product_id
+                detail.order_id     =id 
+                detail.user  = request.user
+                detail.quantity  = rs.quantity
+                detail.added  = rs.added
+                detail.left = fs.left
+                detail.discount = fs.discount
+                detail.price1 = rs.price1
+                detail.price2 = rs.price2
+                detail.engine_no=rs.engine_no
+                detail.Phone=fs.Phone
+                detail.name=fs.name
+                detail.sparename =rs.sparename 
+                detail.save()
+                
+                shopcart.delete()    
+                product = Product.objects.get(id=rs.product_id)
+                if rs.credit =='noncredit':    
+                     product.quantity -= rs.quantity
+                     product.save()
+
+         #total = sum(product.total_price for product in self.user_products)
+         context = {#'category': category,
+               'orders': orders,
+               'total': total,
+               'text': text,
+               'date': date,
+               'ordere_de':ordere_de,
+               'total':total,
+               'total1':total1,
+               'products': products,
+               'myFilter':myFilter,
+               'form':form,
+               'user_products':user_products,
+               'pro':pro
+
+               }
+
+
+         return render(request, 'core/editcashmemo.html',context)    
+
+
+@login_required
+def fianaleditcashmemo(request,id):
+    context ={}
+    shopcart =sold.objects.get(id=id)
+    
+
+    # pass the object as instance in form
+    form = soldformm(request.POST or None, instance = shopcart)
+    productnew = Product.objects.get(id=shopcart.product_id)
+    qua=productnew.quantity+shopcart.quantity
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        fs= form.save(commit=False)
+        form.save()
+        #productnew.quantity  += shopcart.quantity
+        
+        
+        productnew.quantity  = qua-fs.quantity
+        productnew.save()
+
+
+        
+        
+ 
+    # add form dictionary to context
+    
+    context["form"] = form
+ 
+    return render(request, "core/update_view.html", context)
 
 
 

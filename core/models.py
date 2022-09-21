@@ -164,7 +164,7 @@ class sold(models.Model):
     name = models.CharField(max_length=200,null=True,blank=True)
     engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
-    sparename = models.CharField(max_length=200,null=True,)
+    sparename = models.CharField(max_length=200,null=True,blank=True)
     @property
     def total_price(self):
         return self.quantity * self.price1

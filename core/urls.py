@@ -19,6 +19,8 @@ urlpatterns = [
     path('<id>/cashmemo', views.cashmemo, name='cashmemo'),
     path('<id>/returnn', views.returnno, name='return'),
     path('<id>/returnitem', views.returnreasonn, name='returnreasonn'),
+    path('<id>/editcashmemo', views.editcashmemo, name='editcashmemo'),
+    path('<id>/fianaleditcashmemo', views.fianaleditcashmemo, name='fianaleditcashmemo,'),
     path('productlist', views.productlist, name='productlist'),
     path('mrproductlist', views.mrproductlist, name='mrproductlist'),
 ]
