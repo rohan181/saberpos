@@ -1,19 +1,29 @@
 from email.policy import default
 import django_filters
+from django import forms
 from django_filters import CharFilter
 
+import django_filters
+from django_filters import DateFilter, CharFilter
+
 from .models import *
+
+from .models import *
+
+
+from django.contrib.admin.widgets import AdminDateWidget
+
 
 class OrderFilter(django_filters.FilterSet):
 
  catagory = (
     ('Engine', 'Engine'),
-    
+
     ('Suspention', 'Suspention'),
     ('Gear Box', 'Gear Box'),
     ('Booster', 'Booster'),
     ('Master Salander', 'Master Salander'),
-    
+
     ('Nose Cut', 'Nose Cut'),
     ('AC Cooling Box', 'AC Cooling Box'),
     ('Difencel', 'Difencel'),
@@ -46,15 +56,36 @@ class OrderFilter(django_filters.FilterSet):
 )
 
  name = CharFilter(field_name='name', lookup_expr='icontains')
- #productcatagory =ModelChoiceField(field_name='productcatagory', lookup_expr='icontains')
- productcatagory = django_filters.ChoiceFilter(choices=catagory ,field_name='productcatagory')
- brand = django_filters.ChoiceFilter(choices=brand ,field_name='brand')
+ # productcatagory =ModelChoiceField(field_name='productcatagory', lookup_expr='icontains')
+ productcatagory = django_filters.ChoiceFilter(
+     choices=catagory, field_name='productcatagory')
+ brand = django_filters.ChoiceFilter(choices=brand, field_name='brand')
+ # added = django_filters.DateFilter(field_name='added', lookup_expr='gte', input_formats=["%m-%d-%Y"])
+
  class Meta:
 		model = Product
 		fields = '__all__'
-		exclude = ['price','quantity']
+		exclude = ['price', 'quantity']
+
 
 def __init__(self, *args, **kwargs):
         super(OrderFilter, self).__init__(*args, **kwargs)
 
-        self.fields['productcatagory'].widget.attrs['placeholder'] = 'Engine'     
+        self.fields['productcatagory'].widget.attrs['placeholder'] = 'Engine'
+
+
+class soldfilter(django_filters.FilterSet):
+	start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
+	end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  
+           
+
+
+class Meta:
+	model = Order
+	fields = '__all__'
+
+    
+    
+		
+

@@ -5,11 +5,13 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&1l0a@tr_x$)se55wg$eopa%x!_yk9#@r=yi3e3*_s)oe%+%ga'
+SECRET_KEY ='django-insecure-&1l0a@tr_x$)se55wg$eopa%x!_yk9#@r=yi3e3*_s)oe%+%ga'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -38,7 +40,8 @@ INSTALLED_APPS = [
     'import_export',
     'django_filters',
     'crispy_forms',
-    'mathfilters'
+    'mathfilters',
+    
 ]
 
 MIDDLEWARE = [
@@ -124,7 +127,9 @@ STATIC_URL = '/static/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 IMPORT_EXPORT_USE_TRANSACTIONS=True
 
 # Default primary key field type
@@ -133,3 +138,5 @@ IMPORT_EXPORT_USE_TRANSACTIONS=True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'cart'
 LOGOUT_REDIRECT_URL = 'login'
+
+

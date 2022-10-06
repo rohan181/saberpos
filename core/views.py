@@ -2,11 +2,11 @@ from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn
-from .filters import OrderFilter
+from .filters import OrderFilter,soldfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
-from core.form import soldformm, useritem,GeeksForm,mrr,returnnform
+from core.form import soldformm, useritem,GeeksForm,mrr,returnnform,billfrom
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -19,7 +19,7 @@ import datetime
 from django.shortcuts import render
 
 from django.core.paginator import Paginator
-
+from django.shortcuts import redirect
 
 @login_required
 def cart(request):
@@ -110,8 +110,12 @@ def soldlist(request):
         #row = cursor.fetchone()
 
          orders=Order.objects.all().order_by('-id')
+         myFilter =soldfilter(request.GET, queryset=orders)
+         orders = myFilter.qs 
+        
          context = {#'category': category,
                'orders': orders,
+               'myFilter':myFilter
                }
 
 
@@ -255,7 +259,7 @@ def cashmemo(request,id):
 
          orders=sold.objects.all().filter(order_id=id)
          ordere_de=Order.objects.all().filter(id=id)
-         date=sold.objects.all().filter(order_id=id).last()
+         date=Order.objects.all().filter(id=id).last()
          total=0
          for rs in orders:
             total+=rs.price1 * rs.quantity
@@ -478,31 +482,31 @@ def editcashmemo(request,id):
            fs.invoice_id=fs.added
         
            fs.save()  
-           for rs in shopcart:
-                detail = sold()
-                detail.customer    = fs.customer
-                 # Order Id
+        #    for rs in shopcart:
+        #         detail = sold()
+        #         detail.customer    = fs.customer
+        #          # Order Id
                  
-                detail.product_id  = rs.product_id
-                detail.order_id     =id 
-                detail.user  = request.user
-                detail.quantity  = rs.quantity
-                detail.added  = rs.added
-                detail.left = fs.left
-                detail.discount = fs.discount
-                detail.price1 = rs.price1
-                detail.price2 = rs.price2
-                detail.engine_no=rs.engine_no
-                detail.Phone=fs.Phone
-                detail.name=fs.name
-                detail.sparename =rs.sparename 
-                detail.save()
+        #         detail.product_id  = rs.product_id
+        #         detail.order_id     =id 
+        #         detail.user  = request.user
+        #         detail.quantity  = rs.quantity
+        #         detail.added  = rs.added
+        #         detail.left = fs.left
+        #         detail.discount = fs.discount
+        #         detail.price1 = rs.price1
+        #         detail.price2 = rs.price2
+        #         detail.engine_no=rs.engine_no
+        #         detail.Phone=fs.Phone
+        #         detail.name=fs.name
+        #         detail.sparename =rs.sparename 
+        #         detail.save()
                 
-                shopcart.delete()    
-                product = Product.objects.get(id=rs.product_id)
-                if rs.credit =='noncredit':    
-                     product.quantity -= rs.quantity
-                     product.save()
+        #         shopcart.delete()    
+        #         product = Product.objects.get(id=rs.product_id)
+        #         if rs.credit =='noncredit':    
+        #              product.quantity -= rs.quantity
+        #              product.save()
 
          #total = sum(product.total_price for product in self.user_products)
          context = {#'category': category,
@@ -545,7 +549,8 @@ def fianaleditcashmemo(request,id):
         
         productnew.quantity  = qua-fs.quantity
         productnew.save()
-
+       
+   
 
         
         
@@ -557,6 +562,23 @@ def fianaleditcashmemo(request,id):
     return render(request, "core/update_view.html", context)
 
 
+
+
+
+
+@login_required
+def bill(request,id):
+  context ={}
+  form = billfrom(request.POST or None, request.FILES or None)
+
+  if form.is_valid():
+           fs= form.save(commit=False)
+           fs.order_id= id
+           fs.save() 
+           messages.success(request, 'Form submission successful')
+
+  context["form"] = form
+  return render(request, "core/update_view.html", context)
 
 
         

@@ -245,3 +245,18 @@ class returnn(models.Model):
      sold = models.ForeignKey(sold, on_delete=models.CASCADE,null=True,blank=True)
      quantity = models.PositiveIntegerField(default=1)
      returnreason = models.CharField(max_length=300,null=True,default='',blank=True)
+
+
+
+
+class bill(models.Model):  
+     order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,blank=True)      
+     name = models.TextField(max_length=100,null=True)
+     ammount = models.DecimalField(
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+
+    

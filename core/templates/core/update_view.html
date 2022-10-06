@@ -23,14 +23,23 @@
     <div class="main">
         <!-- Create a Form -->
         {% load crispy_forms_tags %}
-        <form method="POST">
+        <form method="POST" >
             <!-- Security token by Django -->
             {% csrf_token %}
      
             <!-- form as paragraph -->
             {{ form|crispy }}
+           
             <input type="submit" value="Update">
         </form>
+
+        {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
     
     </div>
     <!-- Option 2: Separate Popper and Bootstrap JS -->
