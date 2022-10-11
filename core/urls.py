@@ -1,6 +1,8 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
-from .views import  update_view,ggroup,group,mrupdate_view,mrproductlist
+from .views import  update_view,ggroup,group,mrupdate_view
+
+
 from . import views
 
 urlpatterns = [
@@ -24,5 +26,8 @@ urlpatterns = [
     path('productlist', views.productlist, name='productlist'),
     path('mrproductlist', views.mrproductlist, name='mrproductlist'),
     path('<id>/bill', views.bill, name='bill'),
+    path('customerlist', views.customerlist, name='bill'),
+    path("search/", views.search, name="search_results"),
+
    
 ]

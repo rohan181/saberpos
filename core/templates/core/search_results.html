@@ -1,0 +1,18 @@
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>First name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.email }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>

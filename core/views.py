@@ -1,7 +1,7 @@
 from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn
+from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer
 from .filters import OrderFilter,soldfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.shortcuts import (get_object_or_404,
                               render,
                               HttpResponseRedirect)
+from django.db.models import Q                              
 from django.db.models import Sum
 from num2words import num2words
 import datetime
@@ -20,6 +21,10 @@ from django.shortcuts import render
 
 from django.core.paginator import Paginator
 from django.shortcuts import redirect
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.generic import  ListView
+
 
 @login_required
 def cart(request):
@@ -581,6 +586,39 @@ def bill(request,id):
   return render(request, "core/update_view.html", context)
 
 
+
+@login_required
+def customerlist(request):
+    user_list = Customer.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(user_list, 2)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+
+    return render(request, 'core/customerlist.html', { 'users': users })
         
       
   
+
+def search(request):
+
+    results = []
+
+    if request.method == "GET":
+
+        query = request.GET.get('search')
+
+        if query == '':
+
+            query = 'None'
+
+        results = Customer.objects.filter(Q(name__icontains=query)  )
+
+    return render(request, 'core/search_results.html', {'query': query, 'users': results})
+        
+      
