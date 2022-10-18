@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <h1>HomePage</h1>
+   
 
     
 
@@ -22,7 +22,7 @@
 
       <div class="form-group mb-8">
 
-           <h1>{% if type %}{{ type.name }}{% else %} List of Books {% endif %}</h1>
+           
 
       </div>
 
@@ -44,7 +44,7 @@
         <thead>
           <tr>
             <th>Username</th>
-            <th>First name</th>
+            <th>Phone</th>
             <th>Email</th>
           </tr>
         </thead>
@@ -52,7 +52,7 @@
           {% for user in users %}
             <tr>
               <td>{{ user.name }}</td>
-              <td>{{ user.first_name }}</td>
+              <td>{{ user.Phone }}</td>
               <td>{{ user.email }}</td>
             </tr>
           {% endfor %}

@@ -75,17 +75,22 @@ def __init__(self, *args, **kwargs):
 
 
 class soldfilter(django_filters.FilterSet):
-	start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
-	end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
   
-           
+  class Meta:
+   model = Order
+   fields = '__all__'
 
 
-class Meta:
-	model = Order
-	fields = '__all__'
-
-    
+class soldfilter(django_filters.FilterSet):
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  
+  class Meta:
+   model = Order
+   fields = '__all__'  
+   exclude = ['UserItem'] 
     
 		
 

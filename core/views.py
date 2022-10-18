@@ -34,13 +34,21 @@ def cart(request):
     total=0
     for gs in user_products:
         total+=gs.price1 * gs.quantity
+    outstock=1    
 
-    if form.is_valid():
+    for rs in shopcart:
+        product = Product.objects.get(id=rs.product_id)
+        if product.quantity < rs.quantity and rs.credit =='noncredit':
+                    outstock=0   
+   
+    if form.is_valid() and outstock==1:
         fs= form.save(commit=False)
         fs.user= request.user
+        fs.totalprice=total
+        fs.due=total-(fs.paid+fs.discount)
         fs.invoice_id=fs.added
-        
-        fs.save()   
+        fs.save()
+           
         
 
         for rs in shopcart:
@@ -64,11 +72,22 @@ def cart(request):
                 detail.save()
                 
                 shopcart.delete()    
-                product = Product.objects.get(id=rs.product_id)
+                
+                 
+                  
+   
                 if rs.credit =='noncredit':    
                      product.quantity -= rs.quantity
                      product.save()
+                
+
+                
+        
+          
+            
         return HttpResponseRedirect("/soldlist")
+
+      
         
     
     products = Product.objects.all()
@@ -592,7 +611,7 @@ def customerlist(request):
     user_list = Customer.objects.all()
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(user_list, 2)
+    paginator = Paginator(user_list, 5)
     try:
         users = paginator.page(page)
     except PageNotAnInteger:
@@ -622,3 +641,18 @@ def search(request):
     return render(request, 'core/search_results.html', {'query': query, 'users': results})
         
       
+
+@login_required
+def customersolddeatails(request):
+    user_list = Customer.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(user_list, 3)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+
+    return render(request, 'core/customerlist.html', { 'users': users })      
