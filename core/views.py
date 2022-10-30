@@ -32,8 +32,11 @@ def cart(request):
     shopcart =UserItem.objects.filter(user=request.user)
     user_products = UserItem.objects.filter(user=request.user)
     total=0
+    total1=0
     for gs in user_products:
         total+=gs.price1 * gs.quantity
+    for gs in user_products:
+        total1+=gs.price1 * gs.quantity    
     outstock=1    
 
     for rs in shopcart:
@@ -44,7 +47,8 @@ def cart(request):
     if form.is_valid() and outstock==1:
         fs= form.save(commit=False)
         fs.user= request.user
-        fs.totalprice=total
+        fs.totalprice=total-fs.discount
+        fs.totalprice1=total1-fs.discount
         fs.due=total-(fs.paid+fs.discount)
         fs.invoice_id=fs.added
         fs.save()
@@ -303,6 +307,118 @@ def cashmemo(request,id):
 
 
          return render(request, 'core/cashmemo1.html',context)
+
+
+@login_required
+def cashmemo1(request,id):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         orders=sold.objects.all().filter(order_id=id)
+         ordere_de=Order.objects.all().filter(id=id)
+         date=Order.objects.all().filter(id=id).last()
+         total=0
+         for rs in orders:
+            total+=rs.price2 * rs.quantity
+
+         total1=total-date.discount
+         text=num2words(total1)   
+         #total = sum(product.total_price for product in self.user_products)
+         context = {#'category': category,
+               'orders': orders,
+               'total': total,
+               'text': text,
+               'date': date,
+               'ordere_de':ordere_de,
+               'total':total,
+               'total1':total1,
+               }
+
+
+         return render(request, 'core/cashmemo2.html',context)
+
+
+@login_required
+def chalan(request,id):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         orders=sold.objects.all().filter(order_id=id)
+         ordere_de=Order.objects.all().filter(id=id)
+         date=Order.objects.all().filter(id=id).last()
+         total=0
+         for rs in orders:
+            total+=rs.price2 * rs.quantity
+
+         total1=total-date.discount
+         text=num2words(total1)   
+         #total = sum(product.total_price for product in self.user_products)
+         context = {#'category': category,
+               'orders': orders,
+               'total': total,
+               'text': text,
+               'date': date,
+               'ordere_de':ordere_de,
+               'total':total,
+               'total1':total1,
+               }
+
+
+         return render(request, 'core/chalan.html',context)    
+
+
+@login_required
+def chalan(request,id):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         orders=sold.objects.all().filter(order_id=id)
+         ordere_de=Order.objects.all().filter(id=id)
+         date=Order.objects.all().filter(id=id).last()
+         total=0
+         for rs in orders:
+            total+=rs.price2 * rs.quantity
+
+         total1=total-date.discount
+         text=num2words(total1)   
+         #total = sum(product.total_price for product in self.user_products)
+         context = {#'category': category,
+               'orders': orders,
+               'total': total,
+               'text': text,
+               'date': date,
+               'ordere_de':ordere_de,
+               'total':total,
+               'total1':total1,
+               }
+
+
+         return render(request, 'core/chalan.html',context)                      
+
 
 @login_required
 def returnno(request,id):
@@ -611,7 +727,7 @@ def customerlist(request):
     user_list = Customer.objects.all()
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(user_list, 5)
+    paginator = Paginator(user_list, 20)
     try:
         users = paginator.page(page)
     except PageNotAnInteger:

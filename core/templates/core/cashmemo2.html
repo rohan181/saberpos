@@ -97,7 +97,7 @@ h6{
              
           
             <div class="d-flex justify-content-end">
-              <span class="float-end fw-bold">Office Copy</span>
+              <span class="float-end fw-bold">Client Copy</span>
             </div>
           </div>
 
@@ -180,8 +180,8 @@ h6{
                 <td>N/A</td>
                 <td>{{rs.product.brand}}</td>
                 <td align="right">{{rs.quantity}}</td>
-                <td>{{rs.price1}}</td>
-                <td align="right">{{rs.total_price}}</td>
+                <td>{{rs.price2}}</td>
+                <td align="right">{{rs.total_price1}}</td>
                 
               </tr> 
               {% endfor %}
@@ -294,7 +294,7 @@ h6{
                   padding:1.95pt 1.95pt 1.95pt 1.95pt;height:12.3pt'>
                   <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
                   line-height:normal'><b><span style='font-size:11px;font-family:"Tahoma",sans-serif;
-                  color:black'>{{date.totalprice|sub:date.paid}}</span></b></p>
+                  color:black'>{{total|sub:date.paid}}</span></b></p>
                   </td>
                  </tr>
               </tbody>

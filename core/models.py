@@ -39,7 +39,7 @@ class Customer(models.Model):
     address = models.CharField(max_length=200)
    
     Phone = models.CharField(max_length=200)
-    quantity = models.PositiveIntegerField(default=0,null=True)
+    balance = models.PositiveIntegerField(default=0,null=True)
     
        
     def __str__(self):
@@ -124,10 +124,12 @@ class Order(models.Model):
     added = models.DateTimeField(auto_now_add=True,null=True)
     name = models.CharField(max_length=200,null=True,blank=True)
     address = models.CharField(max_length=800,null=True,blank=True)
+    vehicleno  = models.CharField(max_length=800,null=True,blank=True)
     paid = models.PositiveIntegerField(default=0,null=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
     discount = models.PositiveIntegerField(default=0,null=True,blank=True)
     totalprice = models.PositiveIntegerField(default=0,null=True,blank=True)
+    totalprice1 = models.PositiveIntegerField(default=0,null=True,blank=True)
     due = models.PositiveIntegerField(default=0,null=True,blank=True)
     @property
     def total_price(self):
@@ -171,6 +173,9 @@ class sold(models.Model):
     @property
     def total_price(self):
         return self.quantity * self.price1
+    @property
+    def total_price1(self):
+        return self.quantity * self.price2    
 
     def __str__(self):
         return self.product.name 
@@ -270,4 +275,20 @@ class bill(models.Model):
         null=True
     )
 
-    
+
+class paybillcatogory(models.Model):    
+   name = models.TextField(max_length=100,null=True)
+
+   def __str__(self):
+        return self.name
+
+
+class paybill(models.Model):    
+   paybillcatogory = models.ForeignKey(paybillcatogory, on_delete=models.CASCADE,null=True,blank=True)   
+   ammount = models.DecimalField(
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+   address = models.CharField(max_length=800,null=True,blank=True)
