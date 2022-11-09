@@ -30,7 +30,7 @@ from django.views.generic import  ListView
 def cart(request):
     form = useritem(request.POST or None, request.FILES or None)
     shopcart =UserItem.objects.filter(user=request.user)
-    user_products = UserItem.objects.filter(user=request.user)
+    user_products = UserItem.objects.filter(user=request.user,groupproduct =False)
     total=0
     total1=0
     for gs in user_products:
@@ -73,10 +73,11 @@ def cart(request):
                 detail.Phone=fs.Phone
                 detail.name=fs.name
                 detail.sparename =rs.sparename 
+                detail.groupproduct = rs.groupproduct
                 detail.save()
                 
                 shopcart.delete()    
-                
+                user_products.delete()
                  
                   
    
@@ -160,8 +161,12 @@ def update_view(request,id):
     item, created = UserItem.objects.get_or_create(
             user_id=request.user.id,
             product_id=id,
+            groupproduct = False
         )
     shopcart =UserItem.objects.filter(user=request.user,product_id=id).first()
+    
+    
+
     
     # pass the object as instance in form
     form = GeeksForm(request.POST or None, instance = shopcart)
@@ -169,6 +174,7 @@ def update_view(request,id):
     # save the data from the form and
     # redirect to detail_view
     if form.is_valid():
+       
         form.save()
         return HttpResponseRedirect("/")
  
@@ -176,6 +182,51 @@ def update_view(request,id):
     context["form"] = form
  
     return render(request, "core/update_view.html", context)
+
+
+def groupupdate_view(request,id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+ 
+    # fetch the object related to passed id
+    #obj = get_object_or_404(Product, id = id)
+    
+    item, created = UserItem.objects.get_or_create(
+            user_id=request.user.id,
+            product_id=id,
+            groupproduct=True
+        )
+    shopcart =UserItem.objects.filter(user=request.user,product_id=id).first()
+
+    obj = get_object_or_404(Product, id = id)
+    products = Product.objects.all().filter(groupname=obj.groupname,mother=True).first()
+    
+    mother =UserItem.objects.filter(user=request.user,product_id=products.id).first()
+
+
+   
+   
+
+    
+    
+    # pass the object as instance in form
+    form = GeeksForm(request.POST or None, instance = shopcart)
+ 
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        fs= form.save(commit=False)
+        mother.price1 +=fs.price1 * fs.quantity
+        mother.price2 +=fs.price2 * fs.quantity
+        fs.save()
+        mother.save()
+        return HttpResponseRedirect("/")
+ 
+    # add form dictionary to context
+    context["form"] = form
+ 
+    return render(request, "core/update_view.html", context)    
 
 
 
@@ -238,6 +289,7 @@ def ggroup(request, id):
 def group(request,id):
     form = useritem(request.POST or None, request.FILES or None)
     shopcart =UserItem.objects.filter(user=request.user)
+    user_products = UserItem.objects.filter(user=request.user)
     if form.is_valid():
         fs= form.save(commit=False)
         fs.user= request.user
@@ -267,7 +319,7 @@ def group(request,id):
     myFilter = OrderFilter(request.GET, queryset=products)
     products = myFilter.qs 
 	  
-    context = {'products': products,'myFilter':myFilter,'form':form}
+    context = {'products': products,'myFilter':myFilter,'user_products':user_products}
     return render(request, 'core/group.html', context)
 
 
@@ -285,7 +337,7 @@ def cashmemo(request,id):
         
         #row = cursor.fetchone()
 
-         orders=sold.objects.all().filter(order_id=id)
+         orders=sold.objects.all().filter(order_id=id,groupproduct =False)
          ordere_de=Order.objects.all().filter(id=id)
          date=Order.objects.all().filter(id=id).last()
          total=0
@@ -322,7 +374,7 @@ def cashmemo1(request,id):
         
         #row = cursor.fetchone()
 
-         orders=sold.objects.all().filter(order_id=id)
+         orders=sold.objects.all().filter(order_id=id,groupproduct =False)
          ordere_de=Order.objects.all().filter(id=id)
          date=Order.objects.all().filter(id=id).last()
          total=0
@@ -359,7 +411,7 @@ def chalan(request,id):
         
         #row = cursor.fetchone()
 
-         orders=sold.objects.all().filter(order_id=id)
+         orders=sold.objects.all().filter(order_id=id,groupproduct =False)
          ordere_de=Order.objects.all().filter(id=id)
          date=Order.objects.all().filter(id=id).last()
          total=0
@@ -611,6 +663,12 @@ def editcashmemo(request,id):
            total+=gs.price1 * gs.quantity
 
 
+         total1=0
+         
+         for gs in user_products:
+           total1+=gs.price1 * gs.quantity   
+
+
          paginator = Paginator(products, 20) # Show 25 contacts per page.
 
          page_number = request.GET.get('page')
@@ -619,34 +677,41 @@ def editcashmemo(request,id):
          if form.is_valid():
            fs= form.save(commit=False)
            fs.user= request.user
+           
+           fs.invoice_id=fs.added
+           fs.totalprice=total-fs.discount
+           fs.totalprice1=total1-fs.discount
+           fs.due=total-(fs.paid+fs.discount)
            fs.invoice_id=fs.added
         
            fs.save()  
-        #    for rs in shopcart:
-        #         detail = sold()
-        #         detail.customer    = fs.customer
-        #          # Order Id
+           for rs in shopcart:
+                detail = sold()
+                detail.customer    = fs.customer
+                 # Order Id
                  
-        #         detail.product_id  = rs.product_id
-        #         detail.order_id     =id 
-        #         detail.user  = request.user
-        #         detail.quantity  = rs.quantity
-        #         detail.added  = rs.added
-        #         detail.left = fs.left
-        #         detail.discount = fs.discount
-        #         detail.price1 = rs.price1
-        #         detail.price2 = rs.price2
-        #         detail.engine_no=rs.engine_no
-        #         detail.Phone=fs.Phone
-        #         detail.name=fs.name
-        #         detail.sparename =rs.sparename 
-        #         detail.save()
+                detail.product_id  = rs.product_id
+                detail.order_id     =id 
+                detail.user  = request.user
+                detail.quantity  = rs.quantity
+                detail.added  = rs.added
+                detail.left = fs.left
+                detail.discount = fs.discount
+                detail.price1 = rs.price1
+                detail.price2 = rs.price2
+                detail.engine_no=rs.engine_no
+                detail.Phone=fs.Phone
+                detail.name=fs.name
+                detail.sparename =rs.sparename 
+                detail.groupproduct = rs.groupproduct
+
+                detail.save()
                 
-        #         shopcart.delete()    
-        #         product = Product.objects.get(id=rs.product_id)
-        #         if rs.credit =='noncredit':    
-        #              product.quantity -= rs.quantity
-        #              product.save()
+                shopcart.delete()    
+                product = Product.objects.get(id=rs.product_id)
+                if rs.credit =='noncredit':    
+                     product.quantity -= rs.quantity
+                     product.save()
 
          #total = sum(product.total_price for product in self.user_products)
          context = {#'category': category,
@@ -771,4 +836,24 @@ def customersolddeatails(request):
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
 
-    return render(request, 'core/customerlist.html', { 'users': users })      
+    return render(request, 'core/customerlist.html', { 'users': users })   
+
+
+
+
+@login_required
+def billcustomer(request,id):
+  context ={}
+  form = billfrom(request.POST or None, request.FILES or None)
+  cus = Customer.objects.get(id=id)
+
+  if form.is_valid():
+           fs= form.save(commit=False)
+           fs.customer_id=id
+           fs.save() 
+           cus.balance  -= fs.ammount
+           cus.save()
+           messages.success(request, 'Form submission successful')
+
+  context["form"] = form
+  return render(request, "core/update_view.html", context)

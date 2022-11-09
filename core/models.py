@@ -29,6 +29,7 @@ class Product(models.Model):
     sellprice = models.PositiveIntegerField(default=0,null=True)
     groupname= models.CharField(max_length=200,null=True)
     quantity = models.PositiveIntegerField(default=0,null=True)
+    mother = models.BooleanField(null=True,blank=True)
     def __str__(self):
         return self.name
 
@@ -81,6 +82,7 @@ class UserItem(models.Model):
     exchange_ammount = models.PositiveIntegerField(default=0,null=True)
     exchange_engine = models.CharField(max_length=500,blank=True,default='')
     sparename = models.CharField(max_length=200,null=True,blank=True)
+    groupproduct = models.BooleanField(null=True,blank=True)
     price1 = models.DecimalField(
         default=0,
         decimal_places=0,
@@ -170,6 +172,7 @@ class sold(models.Model):
     engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
     sparename = models.CharField(max_length=200,null=True,blank=True)
+    groupproduct = models.BooleanField(null=True,blank=True)
     @property
     def total_price(self):
         return self.quantity * self.price1
@@ -261,7 +264,7 @@ class returnn(models.Model):
      sold = models.ForeignKey(sold, on_delete=models.CASCADE,null=True,blank=True)
      quantity = models.PositiveIntegerField(default=1)
      returnreason = models.CharField(max_length=300,null=True,default='',blank=True)
-
+     added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
 
 
 
@@ -274,6 +277,8 @@ class bill(models.Model):
         validators=[MinValueValidator(0)],
         null=True
     )
+     added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
 
 
 class paybillcatogory(models.Model):    
@@ -292,3 +297,20 @@ class paybill(models.Model):
         null=True
     )
    address = models.CharField(max_length=800,null=True,blank=True)
+
+
+
+class dailyreport(models.Model):    
+   paybillcatogory = models.ForeignKey(paybillcatogory, on_delete=models.CASCADE,null=True,blank=True)   
+   ammount = models.DecimalField(
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+   address = models.CharField(max_length=800,null=True,blank=True)
+
+
+
+
+

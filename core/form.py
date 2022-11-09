@@ -67,4 +67,4 @@ class soldformm(forms.ModelForm):
 class billfrom(forms.ModelForm):  
     class Meta:  
         model =bill
-        fields = ['name','ammount']         
+        fields = ['name','ammount','customer']         

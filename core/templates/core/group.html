@@ -217,7 +217,7 @@
                                 </button>
 
                                 <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-                                onclick="window.location.href = '/{{product.id}}/update'">
+                                onclick="window.location.href = '/{{product.id}}/groupupdate'">
                                 price set
                                 </button>
                                
@@ -257,11 +257,7 @@
                             <p class="font-bold">${{ total }}</p>
                         </div>
                     </div>
-                    <form method="POST" class="post-form">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="save btn btn-default">Save</button>
-                    </form>
+                    
 
                 </div>
                 {% else %}
