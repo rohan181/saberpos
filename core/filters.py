@@ -23,7 +23,7 @@ class OrderFilter(django_filters.FilterSet):
     ('Gear Box', 'Gear Box'),
     ('Booster', 'Booster'),
     ('Master Salander', 'Master Salander'),
-
+    ('Master Cylinder', 'Master Cylinder'),
     ('Nose Cut', 'Nose Cut'),
     ('AC Cooling Box', 'AC Cooling Box'),
     ('Difencel', 'Difencel'),
@@ -64,8 +64,8 @@ class OrderFilter(django_filters.FilterSet):
 
  class Meta:
 		model = Product
-		fields = '__all__'
-		exclude = ['price', 'quantity']
+		fields = ['name','productcatagory']
+	
 
 
 def __init__(self, *args, **kwargs):
@@ -80,17 +80,11 @@ class soldfilter(django_filters.FilterSet):
   
   class Meta:
    model = Order
-   fields = '__all__'
+   fields = ['customer']
 
 
-class soldfilter(django_filters.FilterSet):
-  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
-  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+
   
-  class Meta:
-   model = Order
-   fields = '__all__'  
-   exclude = ['UserItem'] 
     
 		
 

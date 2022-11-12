@@ -59,8 +59,9 @@ class UserItem(models.Model):
 			('Container', 'Container'),
 			)        
     engine = (
-			('complete', 'complete'),
+			
 			('incomplete', 'incomplete'),
+            ('complete', 'complete'),
 			)
 
     credit = (('noncredit', 'noncredit'),
@@ -77,7 +78,7 @@ class UserItem(models.Model):
     status=models.CharField(max_length=10,choices=PRODUCT,default='Direct',null=True)
     credit=models.CharField(max_length=10,choices=credit,default='noncredit',null=True)
     productype=models.CharField(max_length=10,choices=PRODUCT1,default='Local',null=True)
-    enginecomplete=models.CharField(max_length=10,choices=engine,default='complete',null=True)
+    enginecomplete=models.CharField(max_length=10,choices=engine,default='incomplete',null=True)
     remarks = models.CharField(max_length=500,blank=True,null=True)
     exchange_ammount = models.PositiveIntegerField(default=0,null=True)
     exchange_engine = models.CharField(max_length=500,blank=True,default='')
@@ -301,13 +302,9 @@ class paybill(models.Model):
 
 
 class dailyreport(models.Model):    
-   paybillcatogory = models.ForeignKey(paybillcatogory, on_delete=models.CASCADE,null=True,blank=True)   
-   ammount = models.DecimalField(
-        decimal_places=0,
-        max_digits=10,
-        validators=[MinValueValidator(0)],
-        null=True
-    )
+   order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,blank=True)  
+   added = models.DateTimeField(auto_now_add=True,null=True) 
+   
    address = models.CharField(max_length=800,null=True,blank=True)
 
 

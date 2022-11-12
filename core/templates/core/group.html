@@ -210,16 +210,27 @@
                                 <p class="font-normal   text-white bg-gray-800 mx-1">
                                     {{ product.quantity }}
                                 </p>
-                                <button
-                                    class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-24 mr-px"
-                                    unicorn:click="add_item( {{product.pk}} )">
-                                    Add 
-                                </button>
+                                
 
+
+
+                               
+
+                                {% if product.mother == True%}
+
+                                <button class="bg-red-800 hover:bg-blue-700 text-black text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+                                onclick="window.location.href = '/{{product.id}}/update'">
+                                price set
+                                </button>
+           
+                                {% else %}
                                 <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
                                 onclick="window.location.href = '/{{product.id}}/groupupdate'">
                                 price set
                                 </button>
+                                {% endif %}
+
+
                                
                                 
                                 

@@ -10,13 +10,8 @@
         <div class="pt-4 pb-2 px-6">
             <a href="#!">
                 <div class="flex items-center">
-                    <div class="shrink-0">
-                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp" class="rounded-full w-10"
-                            alt="Avatar">
-                    </div>
-                    <div class="grow ml-3">
-                        <p class="text-sm font-semibold text-blue-600">Jason McCoel</p>
-                    </div>
+                    
+                    
                 </div>
             </a>
         </div>
@@ -183,7 +178,7 @@
             <div class="col-span-2 m-1">
                 
                 <form method="get">
-                    {{myFilter.form}}
+                    {{myFilter.form|crispy}}
 
                     <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
                 </form>
@@ -212,8 +207,8 @@
 
             
 
-            {% if product.groupname == None%}
-               
+            {% if product.groupname == "no" or product.mother == False%}
+           
             {% else %}
             <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
             onclick="window.location.href = '/{{product.id}}/group'">

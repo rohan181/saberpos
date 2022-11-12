@@ -28,6 +28,8 @@ from django.views.generic import  ListView
 
 @login_required
 def cart(request):
+    
+    
     form = useritem(request.POST or None, request.FILES or None)
     shopcart =UserItem.objects.filter(user=request.user)
     user_products = UserItem.objects.filter(user=request.user,groupproduct =False)
@@ -164,6 +166,9 @@ def update_view(request,id):
             groupproduct = False
         )
     shopcart =UserItem.objects.filter(user=request.user,product_id=id).first()
+    obj = get_object_or_404(Product, id = id)
+    products = Product.objects.all().filter(groupname=obj.groupname,mother=True).first()
+   
     
     
 
@@ -174,8 +179,11 @@ def update_view(request,id):
     # save the data from the form and
     # redirect to detail_view
     if form.is_valid():
-       
-        form.save()
+        fs= form.save(commit=False)
+        fs.save()
+        if fs.enginecomplete =="complete":
+            products.quantity = products.quantity-1
+        products.save()
         return HttpResponseRedirect("/")
  
     # add form dictionary to context
@@ -219,9 +227,14 @@ def groupupdate_view(request,id):
         fs= form.save(commit=False)
         mother.price1 +=fs.price1 * fs.quantity
         mother.price2 +=fs.price2 * fs.quantity
+        
+        
         fs.save()
         mother.save()
-        return HttpResponseRedirect("/")
+        if fs.enginecomplete =="complete":
+            products.quantity = products.quantity-1
+        products.save()
+        return HttpResponseRedirect("group")
  
     # add form dictionary to context
     context["form"] = form
@@ -310,6 +323,8 @@ def group(request,id):
                 if rs.credit =='noncredit':    
                      product.quantity -= rs.quantity
                      product.save()
+
+     
 
         
     obj = get_object_or_404(Product, id = id)
