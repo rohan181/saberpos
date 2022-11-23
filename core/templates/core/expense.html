@@ -13,19 +13,56 @@
 
     <div class="basis-3/4">
         <!-- put component code here -->
-
-        {{totalbalace}}
         <div class="grid grid-cols-3 gap-2 m-2 ">
             <div class="col-span-2 m-1">
                 
-                <form method="get">
-                    {{myFilter.form|crispy}}
-
-                    <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
+                {% load crispy_forms_tags %}
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form|crispy}}
+                    <br>
+                    <button type="submit" class="save btn btn-info">Save</button>
                 </form>
                 <div class="flex flex-wrap " >
 
-                    {% for product in pro %}
+    
+    <a href="#"
+        class="w-[47%] p-4 max-w-sm bg-red-50 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            SALE CASH
+        </h5>
+        <div class="flex justify-between">
+            <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
+                {{ orders.ammount}}
+            </p>
+            
+            
+            
+            
+        </div>
+    </a>
+
+    <a href="#"
+        class="w-[47%] p-4 max-w-sm bg-red-50 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Pettey Cash
+        </h5>
+        <div class="flex justify-between">
+            <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
+                {{ orders.petteyCash}}
+            </p>
+            
+            
+            
+            
+        </div>
+    </a>
+
+    <br>
+    <br>
+
+
+    {% for product in pro %}
     
     <a href="#"
         class="w-[47%] p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
@@ -42,21 +79,11 @@
             </p>
             <button
                 class="save btn btn-info mx-2"
-                onclick="window.location.href = '{{product.id}}/update'">
+                onclick="window.location.href = '{{product.id}}/expenseform'">
                 Add 
             </button>
 
             
-
-            {% if product.groupname == "no" or product.mother == False%}
-           
-            {% else %}
-            <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-            onclick="window.location.href = '/{{product.id}}/group'">
-            group
-            </button>
-            {% endif %}
-
 
             
             
@@ -65,6 +92,8 @@
     
     {% endfor %}
                    
+    
+    
                        
                     
                 </div>
@@ -94,38 +123,34 @@
             <div>
                 
 
-                {% if user_products %}
+            
                 <div class="flex flex-col justify-between block  rounded-lg shadow-lg bg-white max-w-sm p-3">
                     {% for product in user_products %}
                     <div class="flex justify-between my-1">
                         <p>
-                            {{ product.quantity }} x {{ product.price1 }}<b> {{ product.product.name }}</b>
+                            {{ product.ammount }}  tk {{ product.paybillcatogory.name }}</b>
                         </p>
                         <p>
-                            <span>${{ product.total_price }}</span>
+                            
                            
                         </p>
                     </div>
                     {% endfor %}
 
-                    <div class="mt-2 border-t-2">
-                        <div class="mt-2 flex justify-between">
-                            <p class="font-bold">TOTAL</p>
-                            <p class="font-bold">${{ total }}</p>
-                        </div>
+                
+                <div class="mt-2 border-t-2">
+                    <div class="mt-2 flex justify-between">
+                        <p class="font-bold">TOTAL</p>
+                        <p class="font-bold">${{ total }}</p>
                     </div>
-                    {% load crispy_forms_tags %}
-                    <form method="POST" class="post-form">
-                        {% csrf_token %}
-                        {{ form|crispy}}
-                        <br>
-                        <button type="submit" class="save btn btn-info">Save</button>
-                    </form>
-
                 </div>
-                {% else %}
-                There are no products in your cart.
-                {% endif %}
+                <button
+                class="save btn btn-info mx-2"
+                onclick="window.location.href = 'expensestore'">
+                Add 
+            </button>
+               </div>
+              
             </div>
         </div>
     </div>

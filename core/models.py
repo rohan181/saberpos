@@ -265,6 +265,7 @@ class returnn(models.Model):
      sold = models.ForeignKey(sold, on_delete=models.CASCADE,null=True,blank=True)
      quantity = models.PositiveIntegerField(default=1)
      returnreason = models.CharField(max_length=300,null=True,default='',blank=True)
+     
      added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
 
 
@@ -289,6 +290,19 @@ class paybillcatogory(models.Model):
         return self.name
 
 
+class temppaybill(models.Model):    
+   paybillcatogory = models.ForeignKey(paybillcatogory, on_delete=models.CASCADE,null=True,blank=True) 
+   user = models.ForeignKey(User, on_delete=models.CASCADE)  
+   ammount = models.DecimalField(
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+   remarks = models.CharField(max_length=800,null=True,blank=True)
+
+
+
 class paybill(models.Model):    
    paybillcatogory = models.ForeignKey(paybillcatogory, on_delete=models.CASCADE,null=True,blank=True)   
    ammount = models.DecimalField(
@@ -297,17 +311,20 @@ class paybill(models.Model):
         validators=[MinValueValidator(0)],
         null=True
     )
-   address = models.CharField(max_length=800,null=True,blank=True)
+   remarks = models.CharField(max_length=800,null=True,blank=True)
 
 
 
 class dailyreport(models.Model):    
-   order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,blank=True)  
+   order = models.ForeignKey(Order,on_delete=models.CASCADE,null=True,blank=True)  
+
    added = models.DateTimeField(auto_now_add=True,null=True) 
-   
-   address = models.CharField(max_length=800,null=True,blank=True)
-
-
-
+   ammount = models.PositiveIntegerField(default=0,null=True)
+   petteyCash = models.PositiveIntegerField(default=0,null=True)
+   returnn = models.ForeignKey(returnn,on_delete=models.CASCADE,null=True,blank=True)
+   bill = models.ForeignKey(bill,on_delete=models.CASCADE,null=True,blank=True)
+   returnprice = models.PositiveIntegerField(default=0)
+   billexpense = models.PositiveIntegerField(default=0)
+   reporttype = models.CharField(max_length=800,null=True,blank=True)
 
 

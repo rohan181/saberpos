@@ -5,7 +5,7 @@ from django.contrib import admin
 # from import_export.admin import ImportExportModelAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry,returnn,bill,paybill,paybillcatogory
+from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry,returnn,bill,paybill,paybillcatogory,dailyreport,temppaybill
 class OrderProductline(admin.TabularInline):
     model =sold
     
@@ -38,6 +38,9 @@ admin.site.register(mrentryrecord)
 admin.site.register(mrentry)
 admin.site.register(Order)
 admin.site.register(supplier)
+
+admin.site.register(temppaybill)
+admin.site.register(dailyreport)
 admin.site.register(sold,ComputerAdmin)
 admin.site.register(returnn)
 admin.site.register(paybill)

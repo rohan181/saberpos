@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rana Motors Limited - Invoice</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="invoice.css">
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+
+</head>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+  <style>
+         *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            font-family:"Tahoma",sans-serif;
+            font-size: 10px;
+        }
+        .container{
+            font-family:"Tahoma",sans-serif;
+            font-size: 12px;
+            margin:auto;
+            display: block;
+            
+        }
+
+        h3{
+            font-size: 20px;
+        }
+        h5{
+            font-size: 17px;
+        }
+        h6{
+            font-size: 12px;
+        }
+
+        .my-0{
+            margin-left: -0.25rem;
+        }
+
+
+        .mt-n1 {
+            margin-top: -.30rem !important;
+        }
+
+
+        .mt-n3 {
+            margin-top: -1rem !important;
+        }
+
+        .mt-n2 {
+            margin-right: -0.25rem !important;
+        }
+
+  </style>
+
+<body>
+
+    {% load static %}
+    {% load crispy_forms_tags %}
+    {{ form.media }}
+      <form method="get">
+        
+        {{myFilter.form|crispy }}
+    
+        <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
+    </form>
+   
+      <div class="card card-one">
+       
+          <div class="mx-1">
+           
+            <div class="my-3"></div>
+
+        
+            
+      
+            <table class="table table-sm table-bordered border-dark mt-n1">
+              <thead class="" style="background: rgba(77, 78, 83, 0.425);">
+                <tr>
+                  <th class="text-center" scope="col">Date</th>
+                  <th class="text-center" scope="col">Doc Type</th>
+                  <th class="text-center" scope="col">Doc No</th>
+                  <th class="text-center" scope="col">Client Name</th>
+                  <th class="text-center" scope="col">Cash Sales</th>
+                  <th class="text-center" scope="col">Due Sales</th>
+                  <th class="text-center" scope="col">Net Sales</th>
+                  <th class="text-center" scope="col">Sales Return</th>
+                  <th class="text-center" scope="col">Collection</th>
+                  <th class="text-center" scope="col">Expenses</th>
+                  <th class="text-center" scope="col">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    {% for rs in orders %}
+                    <tr>
+              
+              
+                      <td>{{ rs.added}}</td>
+                      <td>{{ rs.reporttype}}</td>
+                      <td>{{rs.added|date:"dmy-gi"}} </td>
+                      <td>{% if rs.order.customer.name != None %}
+                        
+                        {{rs.order.customer.name}} 
+                        {% endif%}
+                        {% if rs.order.customer.name == None %}
+                        Genaral
+                        {% endif%}
+                      </td>
+                      <td>
+                        {{rs.order.paid}}
+                    </td>
+              
+                    <td>
+                      {{rs.order.due}}
+                  </td>
+                      <td>
+                        {{rs.order.totalprice}}
+                      </td>
+                      
+              
+                        <td>{{ rs.returnprice}}</td>
+                    
+              
+                    <td>
+              
+                      {{ rs.bill.ammount}}
+                  </td>
+                  <td>{{ rs.billexpense}}</td>
+                      <td>{{ rs.ammount}}</td>
+                     
+                    </tr>
+                    {% endfor %}
+                  
+                  
+                  
+                </tr> 
+                <tr>
+                  
+                  
+                </tr> 
+               
+                  
+                </tr> 
+               
+              
+              </tbody>
+             
+            </table>
+    
+            
+            
+              
+             
+        </div>
+        
+        
+            
+  
+          
+        
+      
+        
+        <div class="row">
+            <span class="mx-5 text-decoration-underline fw-bold">In words: BDT Four Thousand Taka Only</span>
+        </div>
+        <div class="my-3 mx-4">
+            <div class="float-start">
+                <table>
+                    <tr>
+                        <td width="16%" valign="top"><h6 style="margin-bottom: 0;">
+                            <span style="text-decoration: dashed; padding-left: 100%;color: #000; border-bottom: 1px solid black;"></span>
+                        </h6>
+                            <h6 class="text-center fw-bold"
+                            style="margin-top: 5px;">RECEIVED BY</h6></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="float-end">
+                <table>
+                    <tr>
+                        <td width="16%" valign="top"><h6 style="margin-bottom: 0;">
+                            <span style="text-decoration: dashed; padding-left: 100%;color: #000; border-bottom: 1px solid black;"></span>
+                        </h6>
+                            <h6 class="text-center fw-bold"
+                            style="margin-top: 5px;">FOR RANA MOTORS LIMITED</h6></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+      </div>  
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+    
+    <script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/actions.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/calendar.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>    
+</body>
+</html>

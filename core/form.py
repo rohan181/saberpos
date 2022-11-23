@@ -1,5 +1,5 @@
 from django import forms  
-from core.models import Order, UserItem,Product,mrentry,returnn,sold,bill
+from core.models import Order, UserItem,Product,mrentry,returnn,sold,bill,dailyreport,temppaybill
   
 class useritem(forms.ModelForm):  
     class Meta:  
@@ -50,7 +50,7 @@ class returnnform(forms.ModelForm):
         # specify fields to be used
         fields = [
            
-          "quantity","returnreason"
+          "quantity","returnreason",
         ]
 
 
@@ -67,4 +67,19 @@ class soldformm(forms.ModelForm):
 class billfrom(forms.ModelForm):  
     class Meta:  
         model =bill
-        fields = ['name','ammount','customer']         
+        fields = ['name','ammount']     
+
+
+
+
+class dailyreportt(forms.ModelForm):  
+    class Meta:  
+        model =dailyreport
+        fields = ['petteyCash'] 
+
+
+
+class tempbilformm(forms.ModelForm):  
+    class Meta:  
+        model =temppaybill
+        fields = ['ammount','remarks']                  

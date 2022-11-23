@@ -83,6 +83,22 @@ class soldfilter(django_filters.FilterSet):
    fields = ['customer']
 
 
+class dailyreportfilter(django_filters.FilterSet):
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  
+  class Meta:
+   model = dailyreport
+   fields = []   
+
+
+
+class expensefilter(django_filters.FilterSet):
+  
+  
+  class Meta:
+   model =  paybillcatogory
+   fields = ['name'] 
 
   
     

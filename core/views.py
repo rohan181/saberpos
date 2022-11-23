@@ -1,12 +1,12 @@
 from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer
-from .filters import OrderFilter,soldfilter
+from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill
+from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
-from core.form import soldformm, useritem,GeeksForm,mrr,returnnform,billfrom
+from core.form import soldformm, useritem,GeeksForm,mrr,returnnform,billfrom,dailyreportt,tempbilformm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -53,7 +53,19 @@ def cart(request):
         fs.totalprice1=total1-fs.discount
         fs.due=total-(fs.paid+fs.discount)
         fs.invoice_id=fs.added
+
+        
         fs.save()
+        
+        
+        obj = dailyreport.objects.all().last()
+        item, created =dailyreport.objects.get_or_create(
+            order_id=fs.id,
+            ammount=obj.ammount+fs.paid,
+            petteyCash=obj.petteyCash,
+            reporttype='INVOICE'
+            
+        )
            
         
 
@@ -98,6 +110,10 @@ def cart(request):
         
     
     products = Product.objects.all()
+
+    totalbalnce=0
+    for p in products:
+        totalbalnce +=p.price
    
     
     myFilter = OrderFilter(request.GET, queryset=products)
@@ -124,7 +140,7 @@ def cart(request):
     page_number = request.GET.get('page')
     pro = paginator.get_page(page_number)
     
-    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'pro':pro,'total':total}
+    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'pro':pro,'total':total,'totalbalace':totalbalnce}
     return render(request, 'core/cart.html', context)
 
 @login_required
@@ -190,6 +206,47 @@ def update_view(request,id):
     context["form"] = form
  
     return render(request, "core/update_view.html", context)
+
+
+def expenseform(request,id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+ 
+    # fetch the object related to passed id
+    #obj = get_object_or_404(Product, id = id)
+    
+    item, created = temppaybill.objects.get_or_create(
+            user_id=request.user.id,
+            paybillcatogory_id=id,
+           
+        )
+    shopcart =temppaybill.objects.filter(user=request.user,paybillcatogory_id=id).first()
+    obj = get_object_or_404(Product, id = id)
+   
+   
+    
+    
+
+    
+    # pass the object as instance in form
+    form = tempbilformm(request.POST or None, instance = shopcart)
+ 
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        fs= form.save(commit=False)
+        fs.save()
+        
+        return HttpResponseRedirect("/")
+ 
+    # add form dictionary to context
+    context["form"] = form
+ 
+    return render(request, "core/update_view.html", context)
+
+
+
 
 
 def groupupdate_view(request,id):
@@ -630,14 +687,23 @@ def returnreasonn(request,id):
     product = Product.objects.get(id=solds.product_id)
     if form.is_valid():
         fs= form.save(commit=False)
+        
         product.quantity += fs.quantity
         product.save()
         fs.save()
+        obj = dailyreport.objects.all().last()
+        item, created =dailyreport.objects.get_or_create(
+            returnn_id=fs.id,
+            ammount=obj.ammount-solds.price1,
+            returnprice=solds.price1*solds.quantity
+        )
+
+        
         return HttpResponseRedirect("/")
          
     # add form dictionary to context
     context["form"] = form
- 
+    context["form"] = form
     return render(request, "core/returnreason.html", context)
 
 
@@ -795,7 +861,13 @@ def bill(request,id):
            fs= form.save(commit=False)
            fs.order_id= id
            fs.save() 
+           obj = dailyreport.objects.all().last()
            messages.success(request, 'Form submission successful')
+           item, created =dailyreport.objects.get_or_create(
+            bill_id=fs.id,
+            ammount=obj.ammount+fs.ammount
+            
+            )
 
   context["form"] = form
   return render(request, "core/update_view.html", context)
@@ -868,7 +940,98 @@ def billcustomer(request,id):
            fs.save() 
            cus.balance  -= fs.ammount
            cus.save()
+           obj = dailyreport.objects.all().last()
+           item, created =dailyreport.objects.get_or_create(
+            bill_id=fs.id,
+            ammount=obj.ammount+fs.ammount
+            
+            )
+           
            messages.success(request, 'Form submission successful')
 
   context["form"] = form
   return render(request, "core/update_view.html", context)
+
+
+def dalyreport(request):
+
+         orders=dailyreport.objects.all().order_by('id')
+         myFilter =dailyreportfilter(request.GET, queryset=orders)
+         orders = myFilter.qs 
+        
+         context = {#'category': category,
+               'orders': orders,
+               'myFilter':myFilter
+               }
+
+
+         return render(request, 'core/daily-report.html',context)
+
+
+
+def dalyreportsearch(request):
+    
+    return render(request, "core/a.html")    
+
+def expense(request):
+
+         orders=dailyreport.objects.all().last()
+         #myFilter =dailyreportfilter(request.GET,queryset=orders)
+         user_products = temppaybill.objects.filter(user=request.user)
+         form = dailyreportt(request.POST or None, request.FILES or None)
+         total=0
+         total1=0
+         for gs in user_products:
+           total+=gs.ammount 
+
+         if form.is_valid() :
+           
+            fs= form.save(commit=False)
+            fs.ammount=orders.ammount -fs.petteyCash
+            fs.petteyCash=fs.petteyCash +orders.petteyCash
+            fs.save()
+            return HttpResponseRedirect("/expense")
+
+
+         products =  paybillcatogory.objects.all()
+   
+    
+         myFilter = expensefilter(request.GET, queryset=products)
+         products = myFilter.qs    
+        
+         context = {#'category': category,
+               'orders': orders,
+               'form':form,
+               'pro':products,
+               'user_products':user_products,
+               'total':total
+               }
+
+
+         return render(request, 'core/expense.html',context)
+
+def expensestore(request):
+
+         orders=dailyreport.objects.all().last()
+         #myFilter =dailyreportfilter(request.GET,queryset=orders)
+         user_products = temppaybill.objects.filter(user=request.user)
+         
+         total=0
+         total1=0
+         for gs in user_products:
+           total+=gs.ammount 
+
+         item, created =dailyreport.objects.get_or_create(
+            
+            petteyCash=orders.petteyCash-total,
+            billexpense=total,
+            ammount=orders.ammount
+            )  
+
+         return HttpResponseRedirect("/soldlist")
+         
+
+        
+
+
+         
