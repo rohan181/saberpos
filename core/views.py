@@ -1,7 +1,7 @@
 from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill
+from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill
 from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
@@ -238,7 +238,7 @@ def expenseform(request,id):
         fs= form.save(commit=False)
         fs.save()
         
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect("/expense")
  
     # add form dictionary to context
     context["form"] = form
@@ -1026,9 +1026,22 @@ def expensestore(request):
             petteyCash=orders.petteyCash-total,
             billexpense=total,
             ammount=orders.ammount
-            )  
+            ) 
 
-         return HttpResponseRedirect("/soldlist")
+         for rs in  user_products:
+                detail = paybill()
+                detail.paybillcatogory =rs.paybillcatogory
+                 # Order Id
+                 
+                detail.ammount  = rs.ammount 
+                detail.remarks    = rs.remarks
+                detail.user  = request.user
+                detail.save()
+                
+                user_products.delete()
+                 
+
+         return HttpResponseRedirect("/expense")
          
 
         

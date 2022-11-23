@@ -311,7 +311,9 @@ class paybill(models.Model):
         validators=[MinValueValidator(0)],
         null=True
     )
+   user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)   
    remarks = models.CharField(max_length=800,null=True,blank=True)
+   added = models.DateTimeField(auto_now_add=True,null=True)
 
 
 

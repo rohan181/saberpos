@@ -1,6 +1,6 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  {% load static %}
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,75 +35,86 @@
         }
       }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <style>
+           *{
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+          }
+          body{
+              font-family:"Tahoma",sans-serif;
+              font-size: 10px;
+          }
+          .container{
+              font-family:"Tahoma",sans-serif;
+              font-size: 12px;
+              margin:auto;
+              display: block;
+              
+          }
+
+          h3{
+              font-size: 20px;
+          }
+          h5{
+              font-size: 17px;
+          }
+          h6{
+              font-size: 12px;
+          }
+
+          .my-0{
+              margin-left: -0.25rem;
+          }
+
+
+          .mt-n1 {
+              margin-top: -.30rem !important;
+          }
+
+
+          .mt-n3 {
+              margin-top: -1rem !important;
+          }
+
+          .mt-n2 {
+              margin-right: -0.25rem !important;
+          }
+
+    </style>
+
 
 </head>
 
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-  <style>
-         *{
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body{
-            font-family:"Tahoma",sans-serif;
-            font-size: 10px;
-        }
-        .container{
-            font-family:"Tahoma",sans-serif;
-            font-size: 12px;
-            margin:auto;
-            display: block;
-            
-        }
-
-        h3{
-            font-size: 20px;
-        }
-        h5{
-            font-size: 17px;
-        }
-        h6{
-            font-size: 12px;
-        }
-
-        .my-0{
-            margin-left: -0.25rem;
-        }
-
-
-        .mt-n1 {
-            margin-top: -.30rem !important;
-        }
-
-
-        .mt-n3 {
-            margin-top: -1rem !important;
-        }
-
-        .mt-n2 {
-            margin-right: -0.25rem !important;
-        }
-
-  </style>
 
 <body>
-
-    {% load static %}
-    {% load crispy_forms_tags %}
-    {{ form.media }}
-      <form method="get">
+    <div class="container">
+    <div>
+        {% load static %}
+        {% load crispy_forms_tags %}
+        {{ form.media }}
+          <form method="get">
+            
+            {{myFilter.form|crispy }}
         
-        {{myFilter.form|crispy }}
-    
-        <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
-    </form>
-   
+            <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
+        </form>
+        
+    </div>
       <div class="card card-one">
        
           <div class="mx-1">
-           
+            <div class="text-center">
+              <img width=78 height=42
+              id="Picture 1" src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" alt="Rana-Motors-Logo"> <b><span
+              style='font-size:16.0pt;line-height:107%;font-family:"Tahoma",sans-serif'>RANA
+              MOTORS LIMITED</span></b> 
+              <p class="card-text">Address: Uttara 3rd Phase Connecting Road, Diabari, Dhaka-1230, 01842-111631, 01815-644860</p>
+              
+
+            </div>
             <div class="my-3"></div>
 
         
@@ -126,57 +137,50 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                    {% for rs in orders %}
-                    <tr>
-              
-              
-                      <td>{{ rs.added}}</td>
-                      <td>{{ rs.reporttype}}</td>
-                      <td>{{rs.added|date:"dmy-gi"}} </td>
-                      <td>{% if rs.order.customer.name != None %}
-                        
-                        {{rs.order.customer.name}} 
-                        {% endif%}
-                        {% if rs.order.customer.name == None %}
-                        Genaral
-                        {% endif%}
+                  <tr>
+                      {% for rs in orders %}
+                      <tr>
+                
+                
+                        <td>{{ rs.added}}</td>
+                        <td>{{ rs.reporttype}}</td>
+                        <td>{{rs.added|date:"dmy-gi"}} </td>
+                        <td>{% if rs.order.customer.name != None %}
+                          
+                          {{rs.order.customer.name}}
+                          {% endif%}
+                          {% if rs.order.customer.name == None and rs.reporttype == 'INVOICE'%}
+                          Genaral
+                          {% endif%}
+                        </td>
+                        <td>
+                          {{rs.order.paid}}
                       </td>
+                
                       <td>
-                        {{rs.order.paid}}
+                        {{rs.order.due}}
                     </td>
-              
-                    <td>
-                      {{rs.order.due}}
-                  </td>
-                      <td>
-                        {{rs.order.totalprice}}
-                      </td>
+                        <td>
+                          {{rs.order.totalprice}}
+                        </td>
+                        
+                
+                          <td>{{ rs.returnprice}}</td>
                       
-              
-                        <td>{{ rs.returnprice}}</td>
+                
+                      <td>
+                
+                        {{ rs.bill.ammount}}
+                    </td>
+                    <td>{{ rs.billexpense}}</td>
+                        <td>{{ rs.ammount}}</td>
+                       
+                      </tr>
+                      {% endfor %}
                     
-              
-                    <td>
-              
-                      {{ rs.bill.ammount}}
-                  </td>
-                  <td>{{ rs.billexpense}}</td>
-                      <td>{{ rs.ammount}}</td>
-                     
-                    </tr>
-                    {% endfor %}
-                  
-                  
-                  
-                </tr> 
-                <tr>
-                  
-                  
-                </tr> 
-               
-                  
-                </tr> 
+                    
+                    
+                  </tr>
                
               
               </tbody>
@@ -189,40 +193,7 @@
              
         </div>
         
-        
-            
-  
-          
-        
-      
-        
-        <div class="row">
-            <span class="mx-5 text-decoration-underline fw-bold">In words: BDT Four Thousand Taka Only</span>
-        </div>
-        <div class="my-3 mx-4">
-            <div class="float-start">
-                <table>
-                    <tr>
-                        <td width="16%" valign="top"><h6 style="margin-bottom: 0;">
-                            <span style="text-decoration: dashed; padding-left: 100%;color: #000; border-bottom: 1px solid black;"></span>
-                        </h6>
-                            <h6 class="text-center fw-bold"
-                            style="margin-top: 5px;">RECEIVED BY</h6></td>
-                    </tr>
-                </table>
-            </div>
 
-            <div class="float-end">
-                <table>
-                    <tr>
-                        <td width="16%" valign="top"><h6 style="margin-bottom: 0;">
-                            <span style="text-decoration: dashed; padding-left: 100%;color: #000; border-bottom: 1px solid black;"></span>
-                        </h6>
-                            <h6 class="text-center fw-bold"
-                            style="margin-top: 5px;">FOR RANA MOTORS LIMITED</h6></td>
-                    </tr>
-                </table>
-            </div>
 
         </div>
       </div>  
@@ -249,6 +220,6 @@
 <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
 <script type="text/javascript" src="{% static 'admin/js/actions.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'admin/js/calendar.js' %}"></script>
-<script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>    
+<script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
 </body>
 </html>
