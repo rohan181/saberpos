@@ -29,6 +29,7 @@ urlpatterns = [
     path('productlist', views.productlist, name='productlist'),
     path('mrproductlist', views.mrproductlist, name='mrproductlist'),
     path('<id>/bill', views.bill, name='bill'),
+    path('<id>/delete', views.delete_item, name='delete'),
     path('<id>/billcustomer', views.billcustomer, name='bill'),
     path('customerlist', views.customerlist, name='customerlist'),
     path('customerdetail', views.customersolddeatails, name='bill'),

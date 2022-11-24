@@ -21,7 +21,17 @@
                     {% csrf_token %}
                     {{ form|crispy}}
                     <br>
-                    <button type="submit" class="save btn btn-info">Save</button>
+                    <button type="submit" class="save btn btn-info" name="btnform1">Save</button>
+                </form>
+
+
+                <br>
+                {% load crispy_forms_tags %}
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form2|crispy}}
+                    <br>
+                    <button type="submit" class="save btn btn-info" name="btnform2">Ss</button>
                 </form>
                 <div class="flex flex-wrap " >
 

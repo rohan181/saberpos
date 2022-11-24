@@ -24,6 +24,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import  ListView
+from django.urls import reverse
 
 
 @login_required
@@ -56,7 +57,10 @@ def cart(request):
 
         
         fs.save()
-        
+        if fs.customer !=None:
+          cus =Customer.objects.filter(id=fs.customer_id).first()
+          cus.balance +=fs.due
+          cus.save()
         
         obj = dailyreport.objects.all().last()
         item, created =dailyreport.objects.get_or_create(
@@ -113,7 +117,7 @@ def cart(request):
 
     totalbalnce=0
     for p in products:
-        totalbalnce +=p.price
+        totalbalnce +=p.price * p.quantity
    
     
     myFilter = OrderFilter(request.GET, queryset=products)
@@ -983,16 +987,30 @@ def expense(request):
          total1=0
          for gs in user_products:
            total+=gs.ammount 
-
-         if form.is_valid() :
+         if request.method=='POST' and 'btnform1' in request.POST:
+           if form.is_valid() :
            
-            fs= form.save(commit=False)
-            fs.ammount=orders.ammount -fs.petteyCash
-            fs.petteyCash=fs.petteyCash +orders.petteyCash
-            fs.save()
-            return HttpResponseRedirect("/expense")
+             fs = form.save(commit=False)
+             fs.ammount =orders.ammount -fs.petteyCash
+             fs.petteyCash =fs.petteyCash +orders.petteyCash
+             fs.save()
+             return HttpResponseRedirect("/expense")
+         
+         form2 = dailyreportt(request.POST or None, request.FILES or None)
 
+         if request.method=='POST' and 'btnform2' in request.POST:
+           if form2.is_valid() :
+           
+             fs1 = form2.save(commit=False)
+             fs1.billexpense = fs1.petteyCash
+             fs1.ammount =orders.ammount -fs1.petteyCash
+             fs1.petteyCash =orders.petteyCash
+             fs1.reporttype='CORPORATE'
+             fs1.save()
+            
+             return HttpResponseRedirect("/expense")
 
+               
          products =  paybillcatogory.objects.all()
    
     
@@ -1004,7 +1022,8 @@ def expense(request):
                'form':form,
                'pro':products,
                'user_products':user_products,
-               'total':total
+               'total':total,
+               'form2':form2
                }
 
 
@@ -1042,7 +1061,14 @@ def expensestore(request):
                  
 
          return HttpResponseRedirect("/expense")
-         
+
+
+
+def delete_item(request,id):
+        item = UserItem.objects.get(id=id)
+        #item1 = sold.objects.get(pk=product_pk)
+        item.delete()         
+        return HttpResponseRedirect(reverse('cart'))
 
         
 
