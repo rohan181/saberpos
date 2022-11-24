@@ -993,6 +993,7 @@ def expense(request):
              fs = form.save(commit=False)
              fs.ammount =orders.ammount -fs.petteyCash
              fs.petteyCash =fs.petteyCash +orders.petteyCash
+             fs.reporttype='FUND TRANSFER'
              fs.save()
              return HttpResponseRedirect("/expense")
          
