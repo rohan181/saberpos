@@ -118,7 +118,13 @@ def cart(request):
     totalbalnce=0
     for p in products:
         totalbalnce +=p.price * p.quantity
-   
+
+    products = Product.objects.filter(mother=True)
+
+    bl=0
+    for p in products:
+        bl +=p.price * p.quantity    
+    totalbalnce=totalbalnce-bl
     
     myFilter = OrderFilter(request.GET, queryset=products)
     products = myFilter.qs 
