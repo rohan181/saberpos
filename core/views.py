@@ -119,10 +119,10 @@ def cart(request):
     for p in products:
         totalbalnce +=p.price * p.quantity
 
-    products = Product.objects.filter(mother=True)
+    mo = Product.objects.filter(mother=True)
 
     bl=0
-    for p in products:
+    for p in mo:
         bl +=p.price * p.quantity    
     totalbalnce=totalbalnce-bl
     
@@ -209,7 +209,7 @@ def update_view(request,id):
         fs.save()
         if fs.enginecomplete =="complete":
             products.quantity = products.quantity-1
-        products.save()
+            products.save()
         return HttpResponseRedirect("/")
  
     # add form dictionary to context
