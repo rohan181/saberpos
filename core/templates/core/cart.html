@@ -6,9 +6,10 @@
 {% load static %}
 {%load crispy_forms_tags %} 
 
-<div class="flex  ">
-    <div class="h-ful shadow-md bg-white  " id="sidenavSecExample">
-        <div class="pt-4 pb-2 px-6">
+
+<div class="flex ">
+    <div class="h-ful shadow-md bg-black  " id="sidenavSecExample">
+        <div class="pt-1 pb-1 px-6">
             <a href="#!">
                 <div class="flex items-center">
                     
@@ -57,7 +58,7 @@
             
 
             <li class="relative" id="sidenavSecEx3">
-                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer"
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-red-50 text-ellipsis whitespace-nowrap rounded hover:text-blue-60 hover:bg-gray-100 transition duration-300 ease-in-out"
                     data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse"
                     data-bs-target="#collapseSidenavSecEx3" aria-expanded="false" aria-controls="collapseSidenavSecEx3">
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img"
@@ -92,7 +93,7 @@
         <hr class="my-2">
         <ul class="relative px-1">
             <li class="relative">
-                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-red-50 text-ellipsis whitespace-nowrap rounded hover:text-blue-60 hover:bg-gray-100 transition duration-300 ease-in-out"
                     href="/mr" data-mdb-ripple="true" data-mdb-ripple-color="primary">
                     
                     <span class="icon">
@@ -196,6 +197,52 @@
 
     <div class="basis-3/4">
         <!-- put component code here -->
+
+
+        <form class="mx-2 bg-gray-200 mt-3" method="POST" class="post-form">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-auto ">
+                  {{ form2.productype|as_crispy_field }}
+                </div>
+                <div class="col-auto">
+                    {{ form2.quantity|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.price1|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.price2|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.status|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.enginecomplete|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.exchange_ammount|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.sparename|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.remarks|as_crispy_field }}
+                  </div>
+                  
+                  
+                <div class="col-auto">
+                <a href="" type="submit" class="save btn btn-info">Save</a>
+        
+                </div>
+            <hr>
+        
+              
+            </div>
+              
+              
+            
+        </form>
 
       TOTAL AMMOUNT  {{totalbalace}}
         <div class="grid grid-cols-3 gap-2 m-2 ">

@@ -55,8 +55,8 @@ class UserItem(models.Model):
 			('Exchange', 'Exchange'),
 			)
     PRODUCT1 = (
-			('Local', 'Local'),
-			('Container', 'Container'),
+			('LocalContainer', ' LocalContainer'),
+			('publicContainer', 'publicContainer'),
 			)        
     engine = (
 			
@@ -71,19 +71,6 @@ class UserItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0,null=True)
-    added = models.DateTimeField(auto_now_add=True)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
-    model_no = models.CharField(max_length=200,blank=True,null=True)
-    engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
-    status=models.CharField(max_length=10,choices=PRODUCT,default='Direct',null=True)
-    credit=models.CharField(max_length=10,choices=credit,default='noncredit',null=True)
-    productype=models.CharField(max_length=10,choices=PRODUCT1,default='Local',null=True)
-    enginecomplete=models.CharField(max_length=10,choices=engine,default='incomplete',null=True)
-    remarks = models.CharField(max_length=500,blank=True,null=True)
-    exchange_ammount = models.PositiveIntegerField(default=0,null=True)
-    exchange_engine = models.CharField(max_length=500,blank=True,default='')
-    sparename = models.CharField(max_length=200,null=True,blank=True)
-    groupproduct = models.BooleanField(null=True,blank=True)
     price1 = models.DecimalField(
         default=0,
         decimal_places=0,
@@ -98,6 +85,20 @@ class UserItem(models.Model):
         validators=[MinValueValidator(0)],
         null=True
     )
+    added = models.DateTimeField(auto_now_add=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
+    model_no = models.CharField(max_length=200,blank=True,null=True)
+    engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
+    status=models.CharField(max_length=10,choices=PRODUCT,default='Direct',null=True)
+    credit=models.CharField(max_length=10,choices=credit,default='noncredit',null=True)
+    productype=models.CharField(max_length=100,choices=PRODUCT1,default='LocalContainer',null=True)
+    enginecomplete=models.CharField(max_length=10,choices=engine,default='incomplete',null=True)
+    remarks = models.CharField(max_length=500,blank=True,null=True)
+    exchange_ammount = models.PositiveIntegerField(default=0,null=True)
+    #exchange_engine = models.CharField(max_length=500,blank=True,default='')
+    sparename = models.CharField(max_length=200,null=True,blank=True)
+    groupproduct = models.BooleanField(null=True,blank=True)
+   
     @property
     def price(self):
         return (self.product.price)

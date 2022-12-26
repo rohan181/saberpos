@@ -36,7 +36,7 @@ class GeeksForm(forms.ModelForm):
         # specify fields to be used
         fields = [
            
-          "productype","quantity","engine_no","status","enginecomplete","price1","price2","exchange_ammount","exchange_engine","remarks",'credit',"sparename"
+          "productype","quantity","engine_no","status","enginecomplete","price1","price2","exchange_ammount","remarks","sparename"
         ]
 
 

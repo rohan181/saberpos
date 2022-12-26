@@ -32,6 +32,7 @@ def cart(request):
     
     
     form = useritem(request.POST or None, request.FILES or None)
+    form2 = GeeksForm(request.POST or None, request.FILES or None)
     shopcart =UserItem.objects.filter(user=request.user)
     user_products = UserItem.objects.filter(user=request.user,groupproduct =False)
     total=0
@@ -149,8 +150,10 @@ def cart(request):
 
     page_number = request.GET.get('page')
     pro = paginator.get_page(page_number)
+
+
     
-    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'pro':pro,'total':total,'totalbalace':totalbalnce}
+    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'pro':pro,'total':total,'totalbalace':totalbalnce,'form2':form2}
     return render(request, 'core/cart.html', context)
 
 @login_required
