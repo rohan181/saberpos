@@ -195,7 +195,7 @@
 
 
 
-    <div class="basis-3/4">
+    <div class="basis-7/8">
         <!-- put component code here -->
 
 
@@ -232,7 +232,7 @@
                   
                   
                 <div class="col-auto">
-                <a href="" type="submit" class="save btn btn-info">Save</a>
+                 <button type="submit" class="save btn btn-info" name="btnform1">Save</button>
         
                 </div>
             <hr>
@@ -253,6 +253,12 @@
 
                     <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
                 </form>
+
+                {{ form.media }}
+
+
+                
+
                 <div class="flex flex-wrap " >
 
                     {% for product in pro %}
@@ -276,19 +282,20 @@
             </p>
             <button
                 class="save btn btn-info mx-2"
-                onclick="window.location.href = '{{product.id}}/update'">
+                onclick="window.location.href = '{{product.id}}/addproduct'">
                 Add 
             </button>
 
             
 
-            {% if product.groupname == "no" or product.mother == False%}
-           
-            {% else %}
+            {% if  product.mother == True%}
             <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
             onclick="window.location.href = '/{{product.id}}/group'">
             group
             </button>
+            {% else %}
+            
+            
             {% endif %}
 
 
@@ -333,16 +340,26 @@
                     {% for product in user_products %}
                     <div class="flex justify-between my-1">
                         <p>
-                            {{ product.quantity }} x {{ product.price1 }}<b> {{ product.product.name }}</b>
+                            {{ product.quantity }} x {{ product.price1 }} <a href='{{product.product_id}}/update'+> <b> {{ product.product.name }}</b> </a>
                         </p>
                         <p>
-                            <span>${{ product.total_price }}</span>
+                            <span>{{ product.total_price }} TK</span>
                            
                         </p>
+                        {% if  product.product.mother == True%}
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-10  mr-px"
+                        onclick="window.location.href = '/{{product.product_id}}/group'">
+                        group
+                        </button>
+                        {% else %}
+                        
+                        
+                        {% endif %}
                         <button class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold px-1 rounded"
                         onclick="window.location.href = '/{{product.id}}/delete'">
                                         X
                                     </button>
+
                     </div>
                     {% endfor %}
 
@@ -357,7 +374,7 @@
                         {% csrf_token %}
                         {{ form|crispy}}
                         <br>
-                        <button type="submit" class="save btn btn-info">Save</button>
+                        <button type="submit" class="save btn btn-info" name="btnform2">Submit</button>
                     </form>
 
                 </div>

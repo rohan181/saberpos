@@ -17,6 +17,7 @@ from django.db.models import Q
 from django.db.models import Sum
 from num2words import num2words
 import datetime
+from twilio.rest import Client 
 from django.shortcuts import render
 
 from django.core.paginator import Paginator
@@ -25,16 +26,18 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import  ListView
 from django.urls import reverse
+from dal import autocomplete
 
 
 @login_required
 def cart(request):
     
-    
+    a =UserItem.objects.filter(user=request.user).last()
     form = useritem(request.POST or None, request.FILES or None)
-    form2 = GeeksForm(request.POST or None, request.FILES or None)
+    form2 = GeeksForm(request.POST or None, request.FILES or None,instance = a)
     shopcart =UserItem.objects.filter(user=request.user)
     user_products = UserItem.objects.filter(user=request.user,groupproduct =False)
+   
     total=0
     total1=0
     for gs in user_products:
@@ -42,13 +45,34 @@ def cart(request):
     for gs in user_products:
         total1+=gs.price1 * gs.quantity    
     outstock=1    
+    
+    if request.method=='POST' and 'btnform1' in request.POST: 
+      if form2.is_valid() :
+        fs = form2.save(commit=False)
+        fs.user= request.user 
+    
+        fs.groupproduct=False
+        fs.save()
+        obj = get_object_or_404(Product, id = fs.product_id)
+        products = Product.objects.all().filter(groupname=obj.groupname).exclude(id=fs.product_id)
+        for rs in products: 
+          item, created = UserItem.objects.get_or_create(
+            user_id=request.user.id,
+            product_id=rs.id,
+            groupproduct = True,
+            quantity=rs.subpartquantity * fs.quantity
 
-    for rs in shopcart:
-        product = Product.objects.get(id=rs.product_id)
-        if product.quantity < rs.quantity and rs.credit =='noncredit':
-                    outstock=0   
-   
-    if form.is_valid() and outstock==1:
+          )
+
+        return HttpResponseRedirect("/")
+     
+
+    # for rs in shopcart:
+    #     product = Product.objects.get(id=rs.product_id)
+    #     if product.quantity < rs.quantity and rs.credit =='noncredit':
+    #                 outstock=0   
+    if request.method=='POST' and 'btnform2' in request.POST: 
+     if form.is_valid() and outstock==1:
         fs= form.save(commit=False)
         fs.user= request.user
         fs.totalprice=total-fs.discount
@@ -97,12 +121,9 @@ def cart(request):
                 
                 shopcart.delete()    
                 user_products.delete()
-                 
-                  
-   
-                if rs.credit =='noncredit':    
-                     product.quantity -= rs.quantity
-                     product.save()
+                product = Product.objects.get(id=rs.product_id)
+                product.quantity -= rs.quantity
+                product.save()
                 
 
                 
@@ -219,6 +240,57 @@ def update_view(request,id):
     context["form"] = form
  
     return render(request, "core/update_view.html", context)
+
+
+
+def addproduct(request,id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+ 
+    # fetch the object related to passed id
+    #obj = get_object_or_404(Product, id = id)
+    
+    item, created = UserItem.objects.get_or_create(
+            user_id=request.user.id,
+            product_id=id,
+            groupproduct = False
+        )
+
+    #obj = get_object_or_404(Product, id = id,mother=True)
+   
+
+      
+    
+   
+    
+    return HttpResponseRedirect("/") 
+
+  
+
+def addproductgroup(request,id):
+    # dictionary for initial data with
+    # field names as keys
+    
+
+    #obj = get_object_or_404(Product, id = id,mother=True)
+    obj = get_object_or_404(Product, id = id)
+    products = Product.objects.all().filter(groupname=obj.groupname)
+    for rs in products: 
+        item, created = UserItem.objects.get_or_create(
+            user_id=request.user.id,
+            product_id=rs.id,
+            groupproduct = True,
+            quantity=rs.quantity
+
+        )
+
+      
+    
+   
+    
+    return HttpResponseRedirect("/") 
+
 
 
 def expenseform(request,id):
@@ -971,6 +1043,11 @@ def dalyreport(request):
          orders=dailyreport.objects.all().order_by('id')
          myFilter =dailyreportfilter(request.GET, queryset=orders)
          orders = myFilter.qs 
+         paginator = Paginator(orders, 15) # Show 25 contacts per page.
+
+         page_number = request.GET.get('page')
+         orders = paginator.get_page(page_number)
+
         
          context = {#'category': category,
                'orders': orders,
@@ -1079,6 +1156,59 @@ def delete_item(request,id):
         #item1 = sold.objects.get(pk=product_pk)
         item.delete()         
         return HttpResponseRedirect(reverse('cart'))
+
+def delete_itemgroup(request,id):
+        item = UserItem.objects.filter(product_id=id)
+        #item1 = sold.objects.get(pk=product_pk)
+        
+        
+        item.delete()      
+        return HttpResponseRedirect("group")   
+         
+
+class CountryAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Product.objects.none()
+
+        qs = Product.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs        
+
+def sms(request):
+       
+ 
+   account_sid = 'ACd9cb2c9b4c4aaea3a152dae6c8e5ecf7' 
+   auth_token = '5f2ae880b9f8f7e3e563adf63ecf978e' 
+   client = Client(account_sid, auth_token) 
+
+   products = Product.objects.all()
+
+   totalbalnce=0
+   for p in products:
+        totalbalnce +=p.price * p.quantity
+
+   mo = Product.objects.filter(mother=True)
+
+   bl=0
+   for p in mo:
+        bl +=p.price * p.quantity    
+   totalbalnce=totalbalnce-bl
+   a="total cash"+str(totalbalnce)
+   
+ 
+   message = client.messages.create(  
+      body=a   , from_='+19386669052',
+
+                              to='+8801624462494' 
+                          ) 
+ 
+  
+   return HttpResponseRedirect("/")            
 
         
 

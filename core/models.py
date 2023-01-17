@@ -26,10 +26,11 @@ class Product(models.Model):
         null=True
     )
    
-    sellprice = models.PositiveIntegerField(default=0,null=True)
+    
     groupname= models.CharField(max_length=200,null=True)
     quantity = models.PositiveIntegerField(default=0,null=True)
     mother = models.BooleanField(null=True,blank=True)
+    subpartquantity = models.PositiveIntegerField(default=0,null=True)
     def __str__(self):
         return self.name
 
@@ -68,7 +69,7 @@ class UserItem(models.Model):
 			('credit', 'credit'),
 			
 			)                  
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0,null=True)
     price1 = models.DecimalField(
@@ -107,8 +108,7 @@ class UserItem(models.Model):
     def total_price(self):
         return (self.quantity * self.price1)
 
-    def __str__(self):
-        return self.product.name
+    
 
 
 

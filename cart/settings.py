@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'mathfilters',
+    'dal',
+    'dal_select2',
+    
     
 ]
 

@@ -5,10 +5,12 @@ from django_filters import CharFilter
 
 import django_filters
 from django_filters import DateFilter, CharFilter
+from dal import autocomplete
 
 from .models import *
 
 from .models import *
+import djhacker 
 
 
 from django.contrib.admin.widgets import AdminDateWidget
@@ -60,18 +62,23 @@ class OrderFilter(django_filters.FilterSet):
  productcatagory = django_filters.ChoiceFilter(
      choices=catagory, field_name='productcatagory')
  brand = django_filters.ChoiceFilter(choices=brand, field_name='brand')
+ 
+ djhacker.formfield(
+    Product.name,
+    forms.ModelChoiceField,
+    widget=autocomplete.ModelSelect2(url='country-autocomplete')
+)
  # added = django_filters.DateFilter(field_name='added', lookup_expr='gte', input_formats=["%m-%d-%Y"])
 
  class Meta:
-		model = Product
-		fields = ['name','productcatagory']
+      model = Product
+      fields = ['name','productcatagory']
+      
+    
 	
 
 
-def __init__(self, *args, **kwargs):
-        super(OrderFilter, self).__init__(*args, **kwargs)
 
-        self.fields['productcatagory'].widget.attrs['placeholder'] = 'Engine'
 
 
 class soldfilter(django_filters.FilterSet):

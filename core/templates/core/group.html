@@ -255,9 +255,9 @@
                         <p>
                             <span>${{ product.total_price }}</span>
                             <button class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold px-1 rounded"
-                                unicorn:click="delete_item( {{ product.pk }} )">
-                                X
-                            </button>
+                        onclick="window.location.href = '/{{product.product_id}}/deletegroup'">
+                                        X
+                                    </button>
                         </p>
                     </div>
                     {% endfor %}
