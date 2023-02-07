@@ -8,7 +8,7 @@
 
 
 <div class="flex ">
-    <div class="h-ful shadow-md bg-black  " id="sidenavSecExample">
+    <div class="h-ful shadow-md bg-black " id="sidenavSecExample">
         <div class="pt-1 pb-1 px-6">
             <a href="#!">
                 <div class="flex items-center">
@@ -22,20 +22,20 @@
                 <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
                     href="admin/core/customer/" data-mdb-ripple="true" data-mdb-ripple-color="primary">
                     
-                    <span>orderlist</span>
+                    <span>admin</span>
                 </a>
             </li>
             <li class="relative">
-                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
                     href="/soldlist" data-mdb-ripple="true" data-mdb-ripple-color="primary">
                     
-                    <span>orderlist</span>
+                    <span>invoicelist</span>
                 </a>
             </li>
             <hr class="my-2">
 
             <li class="relative">
-                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden  text-teal-200 hover:text-white whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
                     href="admin/core/customer/add" data-mdb-ripple="true" data-mdb-ripple-color="primary">
                     
                     <span>add cutomer</span>
@@ -44,7 +44,7 @@
             </li>
 
             <li class="relative">
-                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
                     href="/customerlist" data-mdb-ripple="true" data-mdb-ripple-color="primary">
                     
                     <span>customerlist</span>
@@ -199,7 +199,7 @@
         <!-- put component code here -->
 
 
-        <form class="mx-2 bg-gray-200 mt-3" method="POST" class="post-form">
+        <form class="p-2 bg-gray-100 mt-3" method="POST" class="post-form">
             {% csrf_token %}
             <div class="row g-3">
                 <div class="col-auto ">
@@ -227,6 +227,7 @@
                     {{ form2.sparename|as_crispy_field }}
                   </div>
                   <div class="col-auto">
+                    
                     {{ form2.remarks|as_crispy_field }}
                   </div>
                   
@@ -245,13 +246,14 @@
         </form>
 
       TOTAL AMMOUNT  {{totalbalace}}
-        <div class="grid grid-cols-3 gap-2 m-2 ">
+        <div class="grid  bg-gray-300 grid-cols-3 gap-2  ">
             <div class="col-span-2 m-1">
                 
                 <form method="get">
                     {{myFilter.form|crispy}}
 
-                    <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
+
+                    <button class="btn btn-info mt-2">Search</button>
                 </form>
 
                 {{ form.media }}

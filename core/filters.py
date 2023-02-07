@@ -72,7 +72,7 @@ class OrderFilter(django_filters.FilterSet):
 
  class Meta:
       model = Product
-      fields = ['name','productcatagory']
+      fields = ['productcatagory','name']
       
     
 	
@@ -107,6 +107,14 @@ class expensefilter(django_filters.FilterSet):
    model =  paybillcatogory
    fields = ['name'] 
 
+
+class paybillfilter(django_filters.FilterSet):
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  
+  class Meta:
+   model = paybill
+   fields = []   
   
     
 		

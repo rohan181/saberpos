@@ -14,29 +14,7 @@
     <div class="basis-3/4">
         <!-- put component code here -->
         <div class="grid grid-cols-3 gap-2 m-2 ">
-            <div class="col-span-2 m-1">
-                
-                {% load crispy_forms_tags %}
-                <form method="POST" class="post-form">
-                    {% csrf_token %}
-                    {{ form|crispy}}
-                    <br>
-                    <button type="submit" class="save btn btn-info" name="btnform1">Save</button>
-                </form>
-
-
-                <br>
-                {% load crispy_forms_tags %}
-                <form method="POST" class="post-form">
-                    {% csrf_token %}
-                    {{ form2|crispy}}
-                    <br>
-                    <button type="submit" class="save btn btn-info" name="btnform2">Ss</button>
-                </form>
-                <div class="flex flex-wrap " >
-
-    
-    <a href="#"
+            <a href="#"
         class="w-[47%] p-4 max-w-sm bg-red-50 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             SALE CASH
@@ -67,11 +45,44 @@
             
         </div>
     </a>
+            <div class="col-span-2 m-1">
+                
+                
+                {% load crispy_forms_tags %}
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form|crispy}}
+                    <br>
+                    <button type="submit" class="save btn btn-info" name="btnform1">FUND TRANSER TO PETTYCASH</button>
+                </form>
+
+
+                <br>
+                {% load crispy_forms_tags %}
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form2|crispy}}
+                    <br>
+                    <button type="submit" class="save btn btn-info" name="btnform2">corporate payment</button>
+                    <br>
+                </form>
+               
+
+    
+    
 
     <br>
+    {% load crispy_forms_tags %}
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form3|crispy}}
+                    <br>
+                    <button type="submit" class="save btn btn-info" name="btnform3">COMMISSION</button>
+                </form>
+                
     <br>
 
-
+    <div class="flex flex-wrap " >
     {% for product in pro %}
     
     <a href="#"

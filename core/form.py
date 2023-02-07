@@ -76,7 +76,9 @@ class dailyreportt(forms.ModelForm):
     class Meta:  
         model =dailyreport
         fields = ['petteyCash'] 
-
+        labels = {
+          "petteyCash": ""
+    }
 
 
 class tempbilformm(forms.ModelForm):  

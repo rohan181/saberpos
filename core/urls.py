@@ -1,9 +1,9 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path,include
-from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms
+from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport
 
 from django.urls import re_path as url
-
+from django.urls import reverse
 from . import views
 
 urlpatterns = [
@@ -14,9 +14,10 @@ urlpatterns = [
     ),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('', views.cart, name='cart'),
+    path('salesreport', views.salesreport, name='salesreport'),
     path('mr', views.mr, name='mr'),
     url(
-        r'^country-autocomplete/$',
+        r'country-autocomplete/$',
         CountryAutocomplete.as_view(),
         name='country-autocomplete',
     ),
@@ -36,7 +37,7 @@ urlpatterns = [
     path('<id>/fianaleditcashmemo', views.fianaleditcashmemo, name='fianaleditcashmemo'),
     path('productlist', views.productlist, name='productlist'),
     path('mrproductlist', views.mrproductlist, name='mrproductlist'),
-    path('<id>/bill', views.bill, name='bill'),
+    path('<id>/bill', views.billt, name='bill'),
     path('<id>/delete', views.delete_item, name='delete'),
     path('<id>/deletegroup', views.delete_itemgroup, name='delete'),
     path('<id>/billcustomer', views.billcustomer, name='bill'),
@@ -44,6 +45,7 @@ urlpatterns = [
     path('customerdetail', views.customersolddeatails, name='bill'),
     path("search/", views.search, name="search_results"),
     path("daily", views.dalyreport, name=""),
+    path("expensereport", views.expensereport, name=""),
     path("expense", views.expense, name=""),
     path("sms", views.sms, name="sms"),
     path("<id>/expenseform", views.expenseform ,name=""),

@@ -1,8 +1,8 @@
 from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill
-from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter
+from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill
+from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
@@ -54,7 +54,8 @@ def cart(request):
         fs.groupproduct=False
         fs.save()
         obj = get_object_or_404(Product, id = fs.product_id)
-        products = Product.objects.all().filter(groupname=obj.groupname).exclude(id=fs.product_id)
+        products = Product.objects.all().filter(groupname=obj.groupname).exclude(groupname='')
+       
         for rs in products: 
           item, created = UserItem.objects.get_or_create(
             user_id=request.user.id,
@@ -115,14 +116,18 @@ def cart(request):
                 detail.engine_no=rs.engine_no
                 detail.Phone=fs.Phone
                 detail.name=fs.name
+                detail.remarks =rs.remarks
                 detail.sparename =rs.sparename 
                 detail.groupproduct = rs.groupproduct
-                detail.save()
+                
                 
                 shopcart.delete()    
                 user_products.delete()
                 product = Product.objects.get(id=rs.product_id)
                 product.quantity -= rs.quantity
+                detail.exchange_ammount=rs.exchange_ammount
+                detail.costprice=product.price
+                detail.save()
                 product.save()
                 
 
@@ -938,7 +943,7 @@ def fianaleditcashmemo(request,id):
 
 
 @login_required
-def bill(request,id):
+def billt(request,id):
   context ={}
   form = billfrom(request.POST or None, request.FILES or None)
 
@@ -1066,20 +1071,32 @@ def dalyreportsearch(request):
 def expense(request):
 
          orders=dailyreport.objects.all().last()
+         lastpaybill=paybill.objects.all().last()
          #myFilter =dailyreportfilter(request.GET,queryset=orders)
          user_products = temppaybill.objects.filter(user=request.user)
          form = dailyreportt(request.POST or None, request.FILES or None)
          total=0
-         total1=0
+        
          for gs in user_products:
            total+=gs.ammount 
          if request.method=='POST' and 'btnform1' in request.POST:
+           
            if form.is_valid() :
            
              fs = form.save(commit=False)
+             item, created =paybill.objects.get_or_create(
+
+             pettycashbalance=orders.petteyCash +fs.petteyCash,
+             reloadpetteycash=fs.petteyCash,
+             typecat="receive"
+             )
+             fs.billexpense = fs.petteyCash
              fs.ammount =orders.ammount -fs.petteyCash
+             
              fs.petteyCash =fs.petteyCash +orders.petteyCash
              fs.reporttype='FUND TRANSFER'
+             
+              
              fs.save()
              return HttpResponseRedirect("/expense")
          
@@ -1097,6 +1114,22 @@ def expense(request):
             
              return HttpResponseRedirect("/expense")
 
+         form3 = dailyreportt(request.POST or None, request.FILES or None)
+
+         if request.method=='POST' and 'btnform3' in request.POST:
+            if form3.is_valid() :
+           
+             fs1 = form2.save(commit=False)
+             fs1.billexpense = fs1.petteyCash
+             fs1.ammount =orders.ammount -fs1.petteyCash
+             fs1.petteyCash =orders.petteyCash
+             fs1.reporttype='COMMISSION'
+             fs1.save()
+            
+             return HttpResponseRedirect("/expense")   
+
+              
+
                
          products =  paybillcatogory.objects.all()
    
@@ -1110,7 +1143,8 @@ def expense(request):
                'pro':products,
                'user_products':user_products,
                'total':total,
-               'form2':form2
+               'form2':form2,
+               'form3':form3
                }
 
 
@@ -1138,10 +1172,11 @@ def expensestore(request):
                 detail = paybill()
                 detail.paybillcatogory =rs.paybillcatogory
                  # Order Id
-                 
+                detail.pettycashbalance=orders.petteyCash-rs.ammount
                 detail.ammount  = rs.ammount 
                 detail.remarks    = rs.remarks
                 detail.user  = request.user
+                detail.typecat="payment"
                 detail.save()
                 
                 user_products.delete()
@@ -1208,7 +1243,120 @@ def sms(request):
                           ) 
  
   
-   return HttpResponseRedirect("/")            
+   return HttpResponseRedirect("/")       
+
+
+
+def salesreport(request):
+   
+         orders=dailyreport.objects.all().order_by('id')
+         myFilter =dailyreportfilter(request.GET, queryset=orders)
+         orders = myFilter.qs
+         s=0
+         c=0
+         e=0
+         profit=0
+         l=0
+         open=0
+        
+         cash=0
+         dew=0
+         open2=0
+         corporrateex=0
+         discount=0
+         billa=bill.objects.all()
+         closeblance=0
+         comm=0
+         returnprice=0
+         soldlist=sold.objects.all()
+         orderlist=Order.objects.all()
+         for rs in orders :
+            
+            # if l==0:
+            #   open=rs.ammount
+            #   l=l+1
+            returnprice=returnprice+rs.returnprice
+            corporrateex=rs.billexpense+ corporrateex
+            if rs.reporttype == "COMMISSION":
+               comm=comm+rs.billexpense          
+
+            for b in soldlist: 
+              if b.order_id == rs.order_id and rs.order_id  is not None:
+                 s=b.total_price+s
+                 c=b.total_costprice+c
+                 e=b.exchange_ammount+e
+                 profit=profit+b.totalprofit
+
+            for  t in orderlist:      
+               if t.id == rs.order_id and rs.order_id  is not None:
+                  cash=t.paid+cash
+                  discount=t.discount +discount 
+            for  ac in billa:      
+               if ac.order_id == rs.order_id and rs.order_id  is not None:
+                  dew=ac.ammount+dew    
+
+         
+         #soldlist=sold.objects.filter(order_id__in=s)
+         
+         
+         paginator = Paginator(orders, 15) # Show 25 contacts per page.
+
+         page_number = request.GET.get('page')
+         orders = paginator.get_page(page_number)
+         
+
+         for x in list(reversed(list(orders)))[0:1]:
+            closeblance=x.ammount
+        
+         if open is not None and  cash is not None and  dew is not None:
+           open2= open +dew+cash
+         withoutex=s-e
+         aftercommmision=closeblance+corporrateex
+         totalcost=comm+discount+c+returnprice
+         grossprofit=s-totalcost
+         percentageprofit=(grossprofit/c ) *100
+         context = {#'category': category,
+               'orders': orders,
+               'myFilter':myFilter,
+               'a':soldlist,
+                'c':c,
+                's':s,
+                'e':e,
+                'percentageprofit':percentageprofit,
+                'grossprofit': grossprofit,
+                'totalcost':totalcost,
+                'withoutex':withoutex,
+                'profit':profit,
+                'open':open,
+                'cash':cash,
+                'dew' :dew,
+                'open2':open2,
+                'comm' :comm,
+                'discount':discount , 
+                'closeblance':closeblance,
+                'corporrateex':corporrateex,
+                'aftercommmision':aftercommmision,
+                'returnprice':returnprice
+               }  
+    
+         return render(request, "core/salesreport.html",context )           
+
+
+def expensereport(request):
+
+         orders=paybill.objects.all().order_by('id')
+         myFilter =paybillfilter(request.GET, queryset=orders)
+         orders = myFilter.qs 
+       
+
+        
+         context = {#'category': category,
+               'orders': orders,
+               'myFilter':myFilter
+               }
+
+
+         return render(request, 'core/expensereport.html',context)
 
         
 

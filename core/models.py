@@ -153,8 +153,11 @@ class sold(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True)
     paid = models.PositiveIntegerField(default=0,null=True)
+    exchange_ammount = models.PositiveIntegerField(default=0,null=True)
+    costprice = models.PositiveIntegerField(default=0,null=True)
     left = models.PositiveIntegerField(default=0,null=True)
     discount = models.PositiveIntegerField(default=0,null=True,blank=True)
+    remarks = models.CharField(max_length=500,blank=True,null=True)
     
     price1 = models.DecimalField(
         default=0,
@@ -177,10 +180,23 @@ class sold(models.Model):
     groupproduct = models.BooleanField(null=True,blank=True)
     @property
     def total_price(self):
-        return self.quantity * self.price1
+        return self.quantity * self.price1 +self.exchange_ammount
+
+    @property
+    def profit(self):
+        return (self.total_price-self.costprice ) /self.costprice  
+    @property
+    def profit1(self):
+        return self.profit*100   
+    @property  
+    def totalprofit(self):
+        return self.total_price-self.costprice     
     @property
     def total_price1(self):
-        return self.quantity * self.price2    
+        return self.quantity * self.price2   
+    @property     
+    def total_costprice(self):
+        return self.quantity * self.costprice     
 
     def __str__(self):
         return self.product.name 
@@ -312,6 +328,20 @@ class paybill(models.Model):
         validators=[MinValueValidator(0)],
         null=True
     )
+   pettycashbalance = models.DecimalField(
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+   reloadpetteycash = models.DecimalField(
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+   typecat=models.CharField(max_length=800,null=True,blank=True)
+
    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)   
    remarks = models.CharField(max_length=800,null=True,blank=True)
    added = models.DateTimeField(auto_now_add=True,null=True)
@@ -329,5 +359,9 @@ class dailyreport(models.Model):
    returnprice = models.PositiveIntegerField(default=0)
    billexpense = models.PositiveIntegerField(default=0)
    reporttype = models.CharField(max_length=800,null=True,blank=True)
+
+   @property
+   def paiddtotal(self):
+        return self.order.paid
 
 
