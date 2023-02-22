@@ -82,6 +82,16 @@
                 
     <br>
 
+    {% load crispy_forms_tags %}
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form3|crispy}}
+                    <br>
+                    <button type="submit" class="save btn btn-info" name="btnform4">Discount</button>
+                </form>
+                
+    <br>
+
     <div class="flex flex-wrap " >
     {% for product in pro %}
     

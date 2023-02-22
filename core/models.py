@@ -193,7 +193,7 @@ class sold(models.Model):
         return self.total_price-self.costprice     
     @property
     def total_price1(self):
-        return self.quantity * self.price2   
+        return self.quantity * self.price1   
     @property     
     def total_costprice(self):
         return self.quantity * self.costprice     

@@ -1127,6 +1127,18 @@ def expense(request):
              fs1.save()
             
              return HttpResponseRedirect("/expense")   
+            
+         if request.method=='POST' and 'btnform4' in request.POST:
+            if form3.is_valid() :
+           
+             fs1 = form2.save(commit=False)
+             fs1.billexpense = fs1.petteyCash
+             fs1.ammount =orders.ammount -fs1.petteyCash
+             fs1.petteyCash =orders.petteyCash
+             fs1.reporttype='Discount'
+             fs1.save()
+            
+             return HttpResponseRedirect("/expense")    
 
               
 
@@ -1161,18 +1173,14 @@ def expensestore(request):
          for gs in user_products:
            total+=gs.ammount 
 
-         item, created =dailyreport.objects.get_or_create(
-            
-            petteyCash=orders.petteyCash-total,
-            billexpense=total,
-            ammount=orders.ammount
-            ) 
+         
 
          for rs in  user_products:
                 detail = paybill()
                 detail.paybillcatogory =rs.paybillcatogory
+                paybilllast=paybill.objects.all().last()
                  # Order Id
-                detail.pettycashbalance=orders.petteyCash-rs.ammount
+                detail.pettycashbalance=paybilllast.pettycashbalance-rs.ammount
                 detail.ammount  = rs.ammount 
                 detail.remarks    = rs.remarks
                 detail.user  = request.user
@@ -1180,6 +1188,14 @@ def expensestore(request):
                 detail.save()
                 
                 user_products.delete()
+
+         item, created =dailyreport.objects.get_or_create(
+            
+            petteyCash=orders.petteyCash-total,
+            billexpense=total,
+            ammount=orders.ammount,
+            reporttype="office expense"
+            )      
                  
 
          return HttpResponseRedirect("/expense")
@@ -1268,17 +1284,27 @@ def salesreport(request):
          closeblance=0
          comm=0
          returnprice=0
-         soldlist=sold.objects.all()
+         soldlist=sold.objects.all().filter(groupproduct =False)
          orderlist=Order.objects.all()
+         officeexpense=0
+         pettycashtransfer = 0
          for rs in orders :
             
             # if l==0:
             #   open=rs.ammount
             #   l=l+1
+            
+            if rs.reporttype == 'office expense':
+               officeexpense=rs.billexpense+officeexpense
             returnprice=returnprice+rs.returnprice
             corporrateex=rs.billexpense+ corporrateex
             if rs.reporttype == "COMMISSION":
-               comm=comm+rs.billexpense          
+               comm=comm+rs.billexpense  
+            if rs.reporttype == "Discount":     
+               discount=rs.billexpense +discount     
+
+            if rs.reporttype == "FUND TRANSFER":     
+               pettycashtransfer=rs.billexpense +pettycashtransfer     
 
             for b in soldlist: 
               if b.order_id == rs.order_id and rs.order_id  is not None:
@@ -1290,7 +1316,7 @@ def salesreport(request):
             for  t in orderlist:      
                if t.id == rs.order_id and rs.order_id  is not None:
                   cash=t.paid+cash
-                  discount=t.discount +discount 
+                  
             for  ac in billa:      
                if ac.order_id == rs.order_id and rs.order_id  is not None:
                   dew=ac.ammount+dew    
@@ -1314,16 +1340,31 @@ def salesreport(request):
          aftercommmision=closeblance+corporrateex
          totalcost=comm+discount+c+returnprice
          grossprofit=s-totalcost
+         netprofit=grossprofit- officeexpense
          percentageprofit=(grossprofit/c ) *100
+         duesales=withoutex-cash
+         pettycashreportbalnce=closeblance+corporrateex
+         commisiondisreportbalnce=pettycashreportbalnce+pettycashtransfer
+         cashreturnbalance=commisiondisreportbalnce+comm+discount
+         collentionbalance= cashreturnbalance+returnprice
+         openbalance=collentionbalance-(cash+dew)
          context = {#'category': category,
+               'pettycashreportbalnce':pettycashreportbalnce,
+               'commisiondisreportbalnce':commisiondisreportbalnce,
+               'cashreturnbalance':cashreturnbalance,
+               'collentionbalance':collentionbalance,
+               'openbalance':openbalance,
                'orders': orders,
                'myFilter':myFilter,
                'a':soldlist,
+               'duesales':duesales,
                 'c':c,
                 's':s,
                 'e':e,
+                'pettycashtransfer':pettycashtransfer,
                 'percentageprofit':percentageprofit,
                 'grossprofit': grossprofit,
+                'netprofit':netprofit,
                 'totalcost':totalcost,
                 'withoutex':withoutex,
                 'profit':profit,
@@ -1336,7 +1377,8 @@ def salesreport(request):
                 'closeblance':closeblance,
                 'corporrateex':corporrateex,
                 'aftercommmision':aftercommmision,
-                'returnprice':returnprice
+                'returnprice':returnprice,
+                'officeexpense':officeexpense,
                }  
     
          return render(request, "core/salesreport.html",context )           

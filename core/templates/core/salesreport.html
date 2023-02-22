@@ -139,8 +139,8 @@
                         <tr>
                           <th scope="row">Opening Balance</th>
                           <td></td>
-                          <td>0</td>
-                          <td>{{ open }}</td>
+                          <td></td>
+                          <td>{{ openbalance }}</td>
                         
                           
                         </tr> 
@@ -148,7 +148,7 @@
                           <th scope="row">Collection (Cash + Due)</th>
                           <td>{{cash}}</td>
                           <td>{{dew}}</td>
-                          <td>{{open2}}</td>
+                          <td>{{collentionbalance}}</td>
                          
                           
                         </tr> 
@@ -156,7 +156,7 @@
                           <th scope="row">Cash Return</th>
                           <td colspan="2">{{returnprice}}</td>
                           
-                          <td>1,43,750</td>
+                          <td>{{cashreturnbalance}}</td>
                           
                           
                         </tr> 
@@ -165,7 +165,15 @@
                           <th scope="row">Commission + Discount</th>
                           <td>{{comm}}</td>
                           <td>{{discount}}</td>
-                          <td>{{aftercommmision}}</td>
+                          <td>{{commisiondisreportbalnce}}</td>
+                          
+                          
+                        </tr> 
+                        <tr>
+                          <th scope="row">Pretty Cash</th>
+                          <td colspan="2">{{pettycashtransfer }}</td>
+                          
+                          <td>{{pettycashreportbalnce}}</td>
                           
                           
                         </tr> 
@@ -178,6 +186,7 @@
                           
                           
                         </tr> 
+                       
 
                         <tr>
                           <td  align="right" colspan="3"><b>Closing Balance</b></td>
@@ -198,10 +207,10 @@
                 <div class="card">
                   <div class="card-body">
                     
-                    <table class="table my-2 table-sm table-bordered border-dark mt-n1">
+                    <table class="table my-3 table-sm table-bordered border-dark mt-n1">
                       <thead class="" style="background: rgba(77, 78, 83, 0.425);">
                         <tr>
-                          <th class="text-center" scope="col" colspan="4">PL Summary Report</th>
+                          <th class="text-center" scope="col" colspan="5">PL Summary Report</th>
                          
                           
                         </tr>
@@ -209,6 +218,7 @@
                       <tbody>
                         <tr>
                           <th scope="row">Total Sales</th>
+                          <td>{{ duesales}} due sale </td>
                           <td>{{withoutex}}</td>
                           <td>{{e}}</td>
                           <td>{{s}}</td>
@@ -217,26 +227,40 @@
                         </tr> 
                         <tr>
                           <th scope="row">Total Costing</th>
-                          <td colspan="2">{{c}} pro {{comm}} comm {{discount}} dis {{returnprice}}return</td>
-                          <td>{{totalcost}}</td>
+                          <td colspan="4">{{totalcost}}</td>
                           
                          
                           
                         </tr> 
                         <tr>
-                          <th scope="row">Gross Profit</th>
-                          <td colspan="2">{{grossprofit}}</td>
+                          <th scope="row">Total Profit</th>
+                          <td colspan="3">{{grossprofit}}</td>
                           
-                          <td>{{percentageprofit}}</td>
+                          <td>{{percentageprofit}} %</td>
                           
                           
                         </tr> 
+                        <tr>
+                          <th scope="row">Office expense</th>
+                          <td colspan="4">{{officeexpense}}</td>
+                          
+                          
+                          
+                        </tr> 
+                        <tr>
+                          <th scope="row">Net Profit</th>
+                          <td colspan="4">{{netprofit}}</td>
+                          
+                         
+                          
+                          
+                        </tr> 
+                        
 
                         <tr>
                           <th scope="row">MR </th>
-                          <td>10,000</td>
-                          <td>5,00</td>
-                          <td>15,000</td>
+                          <td colspan="4">10,000</td>
+                          
                           
                           
                         </tr> 
@@ -249,6 +273,51 @@
                       </tbody>
                      
                     </table>
+                    <!---Total Costing table start-->
+                    <table class="table my-2 table-sm table-bordered border-dark mt-n1">
+                      <thead class="" style="background: rgba(77, 78, 83, 0.425);">
+                         <tr>
+                         <th class="text-center" scope="col" colspan="5">Total Costing</th>
+
+
+                         </tr>
+                         <tr>
+                          <th class="text-center" scope="col">Product Costing</th>
+                          <th class="text-center" scope="col">Commission</th>
+                          <th class="text-center" scope="col">Discount</th>
+                          <th class="text-center" scope="col">Return</th>
+                          <th class="text-center" scope="col">Total</th>
+                          
+                        </tr>
+                       
+                      </thead>
+                      <tbody>
+                      
+                        <tr>
+                          <td>{{c}}</td>
+                          <td>{{comm}}</td>
+                          <td>{{discount}}</td>
+                          <td>{{returnprice}}</td>
+                          <td >{{totalcost}}</td>
+                          
+                          
+                          
+                          
+                        </tr> 
+
+                      
+                      
+
+                       
+
+                      
+                       
+                      
+                      </tbody>
+                     
+                    </table>
+
+                    <!--Total Costing table end-->
                   </div>
                 </div>
               </div>
@@ -309,7 +378,7 @@
                     
                   </td>
                   <td align="right">{{b.costprice}}</td>
-                  <td align="right">{{b.profit1}}</td>
+                  
                   <td align="right">{{b.totalprofit}}</td>
                   <td align="right">{{b.remarks}}</td>
                   
