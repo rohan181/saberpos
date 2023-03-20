@@ -31,6 +31,7 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0,null=True)
     mother = models.BooleanField(null=True,blank=True)
     subpartquantity = models.PositiveIntegerField(default=0,null=True)
+    subpartquantity1 = models.PositiveIntegerField(default=0,null=True)
     def __str__(self):
         return self.name
 
@@ -245,6 +246,7 @@ class mrentry(models.Model):
     paid = models.PositiveIntegerField(default=0,null=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
     discount = models.PositiveIntegerField(default=0,null=True,blank=True)
+    
     @property
     def total_price(self):
         return (self.quantity * self.product.price)            
@@ -263,6 +265,14 @@ class mrentryrecord(models.Model):
     paid = models.PositiveIntegerField(default=0,null=True)
     left = models.PositiveIntegerField(default=0,null=True)
     discount = models.PositiveIntegerField(default=0,null=True,blank=True)
+    groupproduct = models.BooleanField(null=True,blank=True)
+    price1 = models.DecimalField(
+        default=0,
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
     
     @property
     def total_price(self):

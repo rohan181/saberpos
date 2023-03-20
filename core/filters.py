@@ -10,7 +10,7 @@ from dal import autocomplete
 from .models import *
 
 from .models import *
-import djhacker 
+
 
 
 from django.contrib.admin.widgets import AdminDateWidget
@@ -63,11 +63,7 @@ class OrderFilter(django_filters.FilterSet):
      choices=catagory, field_name='productcatagory')
  brand = django_filters.ChoiceFilter(choices=brand, field_name='brand')
  
- djhacker.formfield(
-    Product.name,
-    forms.ModelChoiceField,
-    widget=autocomplete.ModelSelect2(url='country-autocomplete')
-)
+ 
  # added = django_filters.DateFilter(field_name='added', lookup_expr='gte', input_formats=["%m-%d-%Y"])
 
  class Meta:
@@ -89,6 +85,14 @@ class soldfilter(django_filters.FilterSet):
    model = Order
    fields = ['customer']
 
+
+class mrfilter(django_filters.FilterSet):
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  
+  class Meta:
+   model = Order
+   fields = ['customer']
 
 class dailyreportfilter(django_filters.FilterSet):
   start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())

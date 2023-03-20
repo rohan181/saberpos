@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  {% load static %}
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+
+ 
+</head>
+
+<body>
+
+  
+  {% load crispy_forms_tags %}
+{{ form.media }}
+  <form method="get">
+    
+    {{myFilter.form|crispy }}
+
+    <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
+</form>
+
+  
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+
+
+        <th scope="col">ID</th>
+        <th scope="col">GN</th>
+        <th scope="col">price due</th>
+        <th scope="col">Printcashmemo1</th>
+        <th scope="col">return</th>
+        <th scope="col">editcashmemo</th>
+        <th scope="col">bill</th>
+        <th scope="col">bill</th>
+        <th scope="col">bill</th>
+        <th scope="col">bill</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rs in orders %}
+      <tr>
+
+
+        <td>{{ rs.supplier.name}}</td>
+        <td>{{ rs.name}}</td>
+        <td>{{rs.totalprice}} | {{rs.due}} </td>
+        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+            onclick="window.location.href = '{{rs.id}}/cashmemo'">
+            Printcashmemo
+
+          </button>
+        </td>
+        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+          onclick="window.location.href = '{{rs.id}}/cashmemo1'">
+          Printcashmemo2
+
+        </button>
+      </td>
+
+      <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+        onclick="window.location.href = '{{rs.id}}/chalan'">
+        chalan
+
+      </button>
+    </td>
+        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+            onclick="window.location.href = '{{rs.id}}/returnn'">
+            return
+
+          </button>
+        </td>
+        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+          onclick="window.location.href = '{{rs.id}}/editcashmemo'">
+          editcashmemo
+
+        </button>
+      </td>
+
+      <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+        onclick="window.location.href = '{{rs.id}}/bill'">
+        bill
+
+      </button>
+    </td>
+        <td>{{ rs.added}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+  </table>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+    
+    <script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/actions.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/calendar.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+</body>
+
+</html>

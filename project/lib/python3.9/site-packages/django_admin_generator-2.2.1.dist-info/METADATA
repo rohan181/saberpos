@@ -1,0 +1,92 @@
+Metadata-Version: 2.1
+Name: django-admin-generator
+Version: 2.2.1
+Summary: Django Admin Generator is a management command to automatically generate a Django `admin.py` file for given apps/models.
+Home-page: https://github.com/WoLpH/django-admin-generator/
+Author: Rick van Hattem
+Author-email: Wolph@Wol.ph
+License: BSD
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Dist: django-utils2 (>=2.5.0)
+Requires-Dist: six
+Provides-Extra: docs
+Requires-Dist: django (>=1.11) ; extra == 'docs'
+Requires-Dist: mock ; extra == 'docs'
+Requires-Dist: sphinx (>=1.6.0) ; extra == 'docs'
+Provides-Extra: tests
+Requires-Dist: pytest (<6) ; extra == 'tests'
+Requires-Dist: pytest-cache ; extra == 'tests'
+Requires-Dist: pytest-cov ; extra == 'tests'
+Requires-Dist: pytest-django ; extra == 'tests'
+Requires-Dist: pytest-flake8 ; extra == 'tests'
+
+Readme
+======
+
+Introduction
+------------
+
+.. image:: https://travis-ci.org/WoLpH/django-admin-generator.svg?branch=master
+    :alt: Test Status
+    :target: https://travis-ci.org/WoLpH/django-admin-generator
+
+.. image:: https://coveralls.io/repos/WoLpH/django-admin-generator/badge.svg?branch=master
+    :alt: Coverage Status
+    :target: https://coveralls.io/r/WoLpH/django-admin-generator?branch=master
+
+The Django Admin Generator is a project which can automatically generate
+(scaffold) a Django Admin for you. By doing this it will introspect your
+models and automatically generate an Admin with properties like:
+
+ - ``list_display`` for all local fields
+ - ``list_filter`` for foreign keys with few items
+ - ``raw_id_fields`` for foreign keys with a lot of items
+ - ``search_fields`` for name and ``slug`` fields
+ - ``prepopulated_fields`` for ``slug`` fields
+ - ``date_hierarchy`` for ``created_at``, ``updated_at`` or ``joined_at`` fields
+
+Links
+-----
+
+* Documentation
+    - http://django-admin-generator.readthedocs.org/en/latest/
+* Source
+    - https://github.com/WoLpH/django-admin-generator
+* Bug reports 
+    - https://github.com/WoLpH/django-admin-generator/issues
+* Package homepage
+    - https://pypi.python.org/pypi/django-admin-generator
+* My blog
+    - http://w.wol.ph/
+
+Install
+-------
+
+To install:
+
+1. Run ``pip install django-admin-generator`` or execute ``python setup.py install`` in the source directory
+2. Add ``django_admin_generator`` to your ``INSTALLED_APPS``
+
+If you want to run the tests, run ``py.test`` (requires ``pytest``)
+
+Usage
+-----
+
+To generate an admin for a given app:
+
+    ./manage.py admin_generator APP_NAME >> APP_NAME/admin.py
+
+To generate an admin for a given app with all models starting with user:
+
+    ./manage.py admin_generator APP_NAME '^user' >> APP_NAME/admin.py
+
+
+

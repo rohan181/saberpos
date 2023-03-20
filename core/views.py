@@ -1,7 +1,7 @@
 from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill
+from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord
 from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
@@ -206,6 +206,31 @@ def soldlist(request):
 
 
          return render(request, 'core/soldlist.html',context)
+
+
+def mrlist(request):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         orders=mrentry.objects.all().order_by('-id')
+         #myFilter =soldfilter(request.GET, queryset=orders)
+         #orders = myFilter.qs 
+        
+         context = {#'category': category,
+               'orders': orders,
+               #'myFilter':myFilter
+               }
+
+
+         return render(request, 'core/mrlist.html',context)
 				  
 def update_view(request,id):
     # dictionary for initial data with
@@ -635,6 +660,42 @@ def chalan(request,id):
 
 
 @login_required
+def mrmemo(request,id):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         orders=mrentryrecord.objects.all().filter(mrentry_id=id,groupproduct =False)
+         ordere_de=Order.objects.all().filter(id=id)
+         date=mrentry.objects.all().filter(id=id).last()
+         total=0
+         for rs in orders:
+            total+=rs.price1 * rs.quantity
+
+         total1=total
+         text=num2words(total1)   
+         #total = sum(product.total_price for product in self.user_products)
+         context = {#'category': category,
+               'orders': orders,
+               'total': total,
+               'text': text,
+               'date': date,
+               'ordere_de':ordere_de,
+               'total':total,
+               'total1':total1,
+               }
+
+
+         return render(request, 'core/mrmemo.html',context)
+
+@login_required
 def returnno(request,id):
       #cursor = connection['db.sqlite3'].cursor()
       #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
@@ -716,6 +777,7 @@ def mr(request):
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
                 detail.left = fs.left
+                detail.price1=fs.price1
                 detail.discount = fs.discount
                 detail.save()
                 
@@ -723,7 +785,11 @@ def mr(request):
                 product = Product.objects.get(id=rs.product_id)
                 if rs.credit =='noncredit':    
                      product.quantity += rs.quantity
+                     product.price = rs.price1
                      product.save()
+
+
+
 
         
     
