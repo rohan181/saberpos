@@ -1114,15 +1114,41 @@ def dalyreport(request):
          orders=dailyreport.objects.all().order_by('id')
          myFilter =dailyreportfilter(request.GET, queryset=orders)
          orders = myFilter.qs 
+
+         
          paginator = Paginator(orders, 15) # Show 25 contacts per page.
 
          page_number = request.GET.get('page')
          orders = paginator.get_page(page_number)
+         cashsale=0
+         duesale=0
+         netsale=0
+         salesreturn=0
+         collection=0
+         expension=0
+        
+         orderlist=Order.objects.all()
+         for rs in orders:
+           for invoice in orderlist:
+              if invoice.id == rs.order_id :
+                cashsale =cashsale + invoice.paid
+           
+    
+         
+                      
+
+
 
         
          context = {#'category': category,
                'orders': orders,
-               'myFilter':myFilter
+               'myFilter':myFilter,
+                'cashsale':cashsale,
+                'duesale':duesale,
+                'netsale':netsale,
+                'salesreturn':salesreturn,
+                'collection':collection,
+                'expension' :expension,
                }
 
 

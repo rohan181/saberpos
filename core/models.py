@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 import datetime
+from django.db.models import F, Sum
 class Product(models.Model):
     CATEGORY = (
 			('uttara', 'uttara'),
@@ -139,6 +140,9 @@ class Order(models.Model):
     @property
     def total_price(self):
         return (self.quantity * self.product.price)
+    
+
+    
     
 
     
@@ -374,4 +378,8 @@ class dailyreport(models.Model):
    def paiddtotal(self):
         return self.order.paid
 
+
+   @property
+   def totalpaid(self):
+        return sum([order.paid for food in self.foods.all()])
 

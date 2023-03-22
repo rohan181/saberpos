@@ -74,6 +74,7 @@
       </tr>
     </thead>
     <tbody>
+      {% with total=0 %}
       {% for rs in orders %}
       <tr>
 
@@ -91,6 +92,7 @@
         </td>
         <td>
           {{rs.order.paid}}
+          {% with total=total+rs.order.paid %}
       </td>
 
       <td>
@@ -113,6 +115,39 @@
        
       </tr>
       {% endfor %}
+
+
+      <tr>
+
+
+        <td></td>
+        <td></td>
+        <td> </td>
+        <td>
+        </td>
+        <td>
+          {{total}}
+      </td>
+
+      <td>
+        {{rs.order.due}}
+    </td>
+        <td>
+          {{rs.order.totalprice}}
+        </td>
+        
+
+          <td>{{ rs.returnprice}}</td>
+      
+
+      <td>
+
+        {{ rs.bill.ammount}}
+    </td>
+    <td>{{ rs.billexpense}}</td>
+        <td>{{ rs.ammount}}</td>
+       
+      </tr>
     </tbody>
   </table>
 

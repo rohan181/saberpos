@@ -138,6 +138,7 @@
               </thead>
               <tbody>
                   <tr>
+                   
                       {% for rs in orders %}
                       <tr>
                 
@@ -155,6 +156,8 @@
                         </td>
                         <td>
                           {{rs.order.paid}}
+                         
+
                       </td>
                 
                       <td>
@@ -178,14 +181,16 @@
                       </tr>
                       {% endfor %}
                     
-                    
-                    
+                  {{cashsale}}
+                  
                   </tr>
                
               
               </tbody>
              
             </table>
+
+          
     
             
             
