@@ -16,6 +16,7 @@ urlpatterns = [
     path('', views.cart, name='cart'),
     path('salesreport', views.salesreport, name='salesreport'),
     path('mr', views.mr, name='mr'),
+    path('corporatepayment', views.corporatepayment, name='mr'),
     url(
         r'country-autocomplete/$',
         CountryAutocomplete.as_view(),

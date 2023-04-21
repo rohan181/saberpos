@@ -379,7 +379,12 @@ class dailyreport(models.Model):
         return self.order.paid
 
 
-   @property
-   def totalpaid(self):
-        return sum([order.paid for food in self.foods.all()])
+  
+   
 
+
+class corportepay(models.Model):    
+    ammount = models.PositiveIntegerField(default=0)
+    Customer = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True,blank=True)
+    added = models.DateTimeField(auto_now_add=True,null=True) 
+    groupproduct = models.BooleanField(null=True,blank=True)  

@@ -1492,6 +1492,12 @@ def expensereport(request):
 
          return render(request, 'core/expensereport.html',context)
 
+
+
+def corporatepayment(request):
+    
+    return render(request, "core/a.html")  
+
         
 
 
