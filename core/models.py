@@ -71,7 +71,7 @@ class UserItem(models.Model):
 			('credit', 'credit'),
 			
 			)                  
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True,related_name='product')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0,null=True)
     price1 = models.DecimalField(

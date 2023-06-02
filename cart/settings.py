@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'mathfilters',
     'dal',
     'dal_select2',
+    'rest_framework',
     
     
 ]

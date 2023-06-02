@@ -10,15 +10,18 @@ from core.form import soldformm, useritem,GeeksForm,mrr,returnnform,billfrom,dai
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import (get_object_or_404,
                               render,
                               HttpResponseRedirect)
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q                              
 from django.db.models import Sum
 from num2words import num2words
 import datetime
 from twilio.rest import Client 
 from django.shortcuts import render
+from django.views import View
 
 from django.core.paginator import Paginator
 from django.shortcuts import redirect
@@ -27,6 +30,13 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import  ListView
 from django.urls import reverse
 from dal import autocomplete
+
+from django.http import JsonResponse
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import TaskSerializer
+from rest_framework import status
 
 
 @login_required
@@ -138,9 +148,17 @@ def cart(request):
         return HttpResponseRedirect("/soldlist")
 
       
-        
-    
-    products = Product.objects.all()
+    price = request.GET.get('price', "")  
+    search = request.GET.get('search', '')
+    if search:
+        products = Product.objects.filter(Q(name__icontains=search) ) # SQLite doesn’t support case-sensitive LIKE statements; contains acts like icontains for SQLite
+
+    else:
+        products = Product.objects.all()
+
+    if price:
+        products= Product.objects.filter(price__lt = price)     
+   
 
     totalbalnce=0
     for p in products:
@@ -172,7 +190,7 @@ def cart(request):
     
     # products=page_obj  
     
-    paginator = Paginator(products, 200) # Show 25 contacts per page.
+    paginator = Paginator(products, 10) # Show 25 contacts per page.
 
     page_number = request.GET.get('page')
     pro = paginator.get_page(page_number)
@@ -1498,7 +1516,79 @@ def corporatepayment(request):
     
     return render(request, "core/a.html")  
 
-        
+
+class AutocompleteView(View):
+    def get(self, request):
+        query = request.GET.get('term', '')
+        countries = Product.objects.filter(name__icontains=query)[:10]
+        print(countries)
+        results = []
+        for country in countries:
+            country_json = {
+                'id': country.id,
+                'label': country.name,
+                'value': country.productcatagory,
+            }
+            results.append(country_json)
+        return JsonResponse(results, safe=False) 
 
 
+#### apiproductlist
+
+@api_view(['GET'])
+def api_productlist(request):
+    tasks = UserItem.objects.all().order_by('-id')
+    serializer = TaskSerializer(tasks, many=True)
+    #total_sum = tasks.aggregate(total_sum=Sum('price1'))['total_sum']  
+    total=0
+   
+    for gs in tasks :
+        total+=gs.price1 * gs.quantity
+
+    response_data = {
+        'tasks': serializer.data,
+        'total_sum': total  # Include the total sum in the response
+    }
+
+    return Response(response_data, status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+def delete_user_item(request, item_id):
+    if request.method == 'DELETE':
+        try:
+            user_item = UserItem.objects.get(id=item_id)
+            user_item.delete()
+            return JsonResponse({'message': 'UserItem deleted successfully'})
+        except UserItem.DoesNotExist:
+            return JsonResponse({'error': 'UserItem not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+
+
+@csrf_exempt
+def apiaddproduct(request,id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+ 
+    # fetch the object related to passed id
+    #obj = get_object_or_404(Product, id = id)
+    
+    item, created = UserItem.objects.get_or_create(
+            user_id=request.user.id,
+            product_id=id,
+            groupproduct = False
+        )
+
+    #obj = get_object_or_404(Product, id = id,mother=True)
+   
+
+      
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    
          

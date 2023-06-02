@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path,include
-from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport
+from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport,api_productlist,delete_user_item,apiaddproduct
 
 from django.urls import re_path as url
 from django.urls import reverse
@@ -17,11 +17,8 @@ urlpatterns = [
     path('salesreport', views.salesreport, name='salesreport'),
     path('mr', views.mr, name='mr'),
     path('corporatepayment', views.corporatepayment, name='mr'),
-    url(
-        r'country-autocomplete/$',
-        CountryAutocomplete.as_view(),
-        name='country-autocomplete',
-    ),
+  
+    path('autocomplete/', views.AutocompleteView.as_view(), name='autocomplete'),
     path('<id>/update',update_view ,name='update'),
     path('<id>/addproduct',addproduct ,name='update'),
     path('<id>/addproductgroup',views.addproductgroup ,name='update'),
@@ -55,5 +52,14 @@ urlpatterns = [
     path("expensestore", views.expensestore ,name=""),
     path("dailysearchresult", views.dalyreportsearch, name="search_results"),
 
-   
+
+    #api
+
+    path('api_productlist/', views.api_productlist, name="api_productlist"),
+    path('api-delete/<int:item_id>/', views.delete_user_item, name='delete_user_item'),
+    path('apiaddproduct/<int:item_id>/', views.apiaddproduct, name='apiaddcart'),
 ]
+
+
+   
+

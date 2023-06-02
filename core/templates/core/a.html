@@ -1,114 +1,106 @@
-raw_data = 
-for dirpath, dirname, filename in os.walk(raw_data):
-    for file in tqdm([f for f in filename if f.endswith('.png')]):
-        if file.split('_')[4] == '0':
-            path=r'C:\Users\gazi\Desktop\New folder (2)\dataset\train\open'
-            if not os.path.exists(path):
-                os.makedirs(path)
-            shutil.copy(src=dirpath + '/' + file, dst= path)
-        elif file.split('_')[4] == '1':
-            path=r'C:\Users\gazi\Desktop\New folder (2)\dataset\train\close'
-            if not os.path.exists(path):
-                os.makedirs(path)
-            shutil.copy(src=dirpath + '/' + file, dst= path) 
+<!doctype html>
+<html lang="en">
 
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-CuOF+2SnTUfTwSZjCXf01h7uYhfOBuxIhGKPbfEJ3+FqH/s6cIFN9bGr1HmAg4fQ" crossorigin="anonymous">
 
+    <title>{% block title %}{% endblock %}</title>
+    {% block css %}{% endblock %}
+</head>
 
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">WonderShop</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% host_url 'contact' host 'www' %}">Contact Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+                <!--
+                <form class="d-flex">
+                    <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                -->
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle dropdownMenuButton" type="button"
+                        id="dropdownMenuButton1" data-toggle="dropdown" aria-expanded="false">
+                        Account
+                    </button>
+                <ul class="dropdown-menu dropdown-menu-left dropdown-menu-lg-right"
+                        aria-labelledby="dropdownMenuButton">
+                        
+                        
+                        <li><a class="dropdown-item" href="{% host_url 'signup' host 'www' %}">Singup</a></li>
+                        
+                        <li><a class="dropdown-item" href="{% host_url 'login' host 'www' %}">Login</a></li>
+                        <li><a class="dropdown-item" href="{% host_url 'logout' host 'www' %}">Logout</a></li>
+                        
+                    </ul>
+            </div>
+        </div>
+    </nav>
+    {% if messages %}
+     {% for message in messages %}
+         <div class="text-center alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="margin-bottom:0px;">
+             {{ message|safe }}
+             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
+         </div>
+     {% endfor %}
+ {% endif %}
 
-Train Teat Splitting:
-import os
-import numpy as np
-import shutil
-import pandas as pd
+    {% block body %}
+    {% endblock %}
 
-def train_test_split():
-    print("########### Train Test Val Script started ###########")
-    #data_csv = pd.read_csv("DataSet_Final.csv") ##Use if you have classes saved in any .csv file
+    <!-- Optional JavaScript; choose one of the two! -->
 
-    root_dir = r'C:\Users\gazi\Desktop\New folder (2)\updatedataset'
-    classes_dir = ['close', 'open']
+    <!-- Option 1: Bootstrap Bundle with Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-popRpmFF9JQgExhfw5tZT4I9/CI5e2QcuUZPOVXb1m7qUmeR2b50u+YFEYe1wgzy"
+        crossorigin="anonymous"></script>
 
-    #for name in data_csv['names'].unique()[:10]:
-    #    classes_dir.append(name)
+    <!-- Option 2: Separate Popper.js and Bootstrap JS
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-t6I8D5dJmMXjCsRLhSzCltuhNZg6P10kE0m0nAncLUjH6GeYLhRU1zfLoW3QNQDF" crossorigin="anonymous"></script>
+    -->
+</body>
+{% block js %}
+{% endblock %}
 
-    processed_dir = r'C:\Users\gazi\Desktop\New folder (2)\dataset'
-
-    val_ratio = 0
-    test_ratio = 0.20
-
-    for cls in classes_dir:
-        # Creating partitions of the data after shuffeling
-        print("$$$$$$$ Class Name " + cls + " $$$$$$$")
-        src = processed_dir +"//" + cls  # Folder to copy images from
-
-        allFileNames = os.listdir(src)
-        np.random.shuffle(allFileNames)
-        train_FileNames, val_FileNames, test_FileNames = np.split(np.array(allFileNames),
-                                                                  [int(len(allFileNames) * (1 - (val_ratio + test_ratio))),
-                                                                   int(len(allFileNames) * (1 - val_ratio)),
-                                                                   ])
-        train_FileNames = [src + '//' + name for name in train_FileNames.tolist()]
-        val_FileNames = [src + '//' + name for name in val_FileNames.tolist()]
-        test_FileNames = [src + '//' + name for name in test_FileNames.tolist()]
-
-        print('Total images: '+ str(len(allFileNames)))
-        print('Training: '+ str(len(train_FileNames)))
-        print('Validation: '+  str(len(val_FileNames)))
-        print('Testing: '+ str(len(test_FileNames)))
-
-        # # Creating Train / Val / Test folders (One time use)
-        os.makedirs(root_dir + '/train//' + cls)
-        os.makedirs(root_dir + '/val//' + cls)
-        os.makedirs(root_dir + '/test//' + cls)
-
-        # Copy-pasting images
-        for name in train_FileNames:
-            shutil.copy(name, root_dir + '/train//' + cls)
-
-        for name in val_FileNames:
-            shutil.copy(name, root_dir + '/val//' + cls)
-
-        for name in test_FileNames:
-            shutil.copy(name, root_dir + '/test//' + cls)
-
-    print("########### Train Test Val Script Ended ###########")
-
-train_test_split()
-Train With Resnet50:
-
-Image height width set on 80 y 80: 
-
-train_data_dir = r'C:\Users\gazi\Desktop\New folder (2)\updatedataset'
-img_width, img_height = 80, 80
-batch_size = 32
-validation_dir = r'C:\Users\gazi\Desktop\New folder (2)\updatedataset'
-
-
-Image data generator
-image_size = 80
-
-#from keras.applications import preprocess_input
-#model = MobileNetV2(include_top=False, input_shape=(224, 224, 3),weights="imagenet")
-data_generator = ImageDataGenerator(
-                                    horizontal_flip=True,
-                                    width_shift_range=0.2,
-                                    height_shift_range=0.2,
-                                    validation_split=0.2)# set validation split
-
-train_generator = data_generator.flow_from_directory(
-    train_data_dir,
-    target_size=(image_size, image_size),
-    batch_size=200,
-    class_mode='categorical',
-    subset='training'
-    )
-validation_generator = data_generator.flow_from_directory(
-    validation_dir,
-    target_size=(image_size, image_size),
-    batch_size=10,
-    class_mode='categorical',
-    subset='validation'
-    )
+</html>
 
 

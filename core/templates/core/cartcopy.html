@@ -1,0 +1,698 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+
+{% load static %}
+{%load crispy_forms_tags %} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="flex ">
+    <div class="h-ful shadow-md bg-black " id="sidenavSecExample">
+        <div class="pt-1 pb-1 px-6">
+            <a href="#!">
+                <div class="flex items-center">
+                    
+                    
+                </div>
+            </a>
+        </div>
+        <ul class="relative px-1">
+            <li class="relative">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-red-50 text-ellipsis whitespace-nowrap rounded hover:text-blue-60 hover:bg-gray-100 transition duration-300 ease-in-out"
+                    href="admin/core/customer/" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                    
+                    <span>admin</span>
+                </a>
+            </li>
+            <li class="relative">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                    href="/soldlist" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                    
+                    <span>invoicelist</span>
+                </a>
+            </li>
+            <hr class="my-2">
+
+            <li class="relative">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden  text-teal-200 hover:text-white whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                    href="admin/core/customer/add" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                    
+                    <span>add cutomer</span>
+                </a>
+
+            </li>
+
+            <li class="relative">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                    href="/customerlist" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                    
+                    <span>customerlist</span>
+                </a>
+
+            </li>
+            <hr class="my-2">
+
+           
+
+            
+
+            <li class="relative" id="sidenavSecEx3">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-red-50 text-ellipsis whitespace-nowrap rounded hover:text-blue-60 hover:bg-gray-100 transition duration-300 ease-in-out"
+                    data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSidenavSecEx3" aria-expanded="false" aria-controls="collapseSidenavSecEx3">
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path fill="currentColor"
+                            d="M192 208c0-17.67-14.33-32-32-32h-16c-35.35 0-64 28.65-64 64v48c0 35.35 28.65 64 64 64h16c17.67 0 32-14.33 32-32V208zm176 144c35.35 0 64-28.65 64-64v-48c0-35.35-28.65-64-64-64h-16c-17.67 0-32 14.33-32 32v112c0 17.67 14.33 32 32 32h16zM256 0C113.18 0 4.58 118.83 0 256v16c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-16c0-114.69 93.31-208 208-208s208 93.31 208 208h-.12c.08 2.43.12 165.72.12 165.72 0 23.35-18.93 42.28-42.28 42.28H320c0-26.51-21.49-48-48-48h-32c-26.51 0-48 21.49-48 48s21.49 48 48 48h181.72c49.86 0 90.28-40.42 90.28-90.28V256C507.42 118.83 398.82 0 256 0z">
+                        </path>
+                    </svg>
+                    <span>Collapsible item 2</span>
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path fill="currentColor"
+                            d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z">
+                        </path>
+                    </svg>
+                </a>
+                <ul class="relative accordion-collapse collapse" id="collapseSidenavSecEx3"
+                    aria-labelledby="sidenavSecEx3" data-bs-parent="#sidenavSecExample">
+                    <li class="relative">
+                        <a href="#!"
+                            class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 3</a>
+                    </li>
+                    <li class="relative">
+                        <a href="#!"
+                            class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 4</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <hr class="my-2">
+        <ul class="relative px-1">
+            <li class="relative">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-red-50 text-ellipsis whitespace-nowrap rounded hover:text-blue-60 hover:bg-gray-100 transition duration-300 ease-in-out"
+                    href="/mr" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                    
+                    <span class="icon">
+                        <ion-icon name="documents-outline"></ion-icon>
+                    </span>
+                    <span>MR ENTRY</span>
+                </a>
+            </li>
+            <li class="relative">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                    href="/expense" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                    
+                    <span class="icon">
+                        <ion-icon name="documents-outline"></ion-icon>
+                    </span>
+                    <span>EXPENSE</span>
+                </a>
+            </li>
+            <li class="relative">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                    href="/daily" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                    
+                    <span class="icon">
+                        <ion-icon name="documents-outline"></ion-icon>
+                    </span>
+                    <span>DAILY REPORT</span>
+                </a>
+            </li>
+            <li class="relative" id="sidenavXxEx2">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer"
+                    data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSidenavXxEx2" aria-expanded="false" aria-controls="collapseSidenavXxEx2">
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="comments"
+                        class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                        <path fill="currentColor"
+                            d="M416 192c0-88.4-93.1-160-208-160S0 103.6 0 192c0 34.3 14.1 65.9 38 92-13.4 30.2-35.5 54.2-35.8 54.5-2.2 2.3-2.8 5.7-1.5 8.7S4.8 352 8 352c36.6 0 66.9-12.3 88.7-25 32.2 15.7 70.3 25 111.3 25 114.9 0 208-71.6 208-160zm122 220c23.9-26 38-57.7 38-92 0-66.9-53.5-124.2-129.3-148.1.9 6.6 1.3 13.3 1.3 20.1 0 105.9-107.7 192-240 192-10.8 0-21.3-.8-31.7-1.9C207.8 439.6 281.8 480 368 480c41 0 79.1-9.2 111.3-25 21.8 12.7 52.1 25 88.7 25 3.2 0 6.1-1.9 7.3-4.8 1.3-2.9.7-6.3-1.5-8.7-.3-.3-22.4-24.2-35.8-54.5z">
+                        </path>
+                    </svg>
+                    <span>Collapsible item 3</span>
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path fill="currentColor"
+                            d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z">
+                        </path>
+                    </svg>
+                </a>
+                <ul class="relative accordion-collapse collapse" id="collapseSidenavXxEx2"
+                    aria-labelledby="sidenavXxEx2" data-bs-parent="#sidenavSecExample">
+                    <li class="relative">
+                        <a href="#!"
+                            class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 5</a>
+                    </li>
+                    <li class="relative">
+                        <a href="#!"
+                            class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 6</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="relative" id="sidenavXxEx3">
+                <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer"
+                    data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSidenavXxEx3" aria-expanded="false" aria-controls="collapseSidenavXxEx3">
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path fill="currentColor"
+                            d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z">
+                        </path>
+                    </svg>
+                    <span>Collapsible item 4</span>
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path fill="currentColor"
+                            d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z">
+                        </path>
+                    </svg>
+                </a>
+                <ul class="relative accordion-collapse collapse" id="collapseSidenavXxEx3"
+                    aria-labelledby="sidenavXxEx3" data-bs-parent="#sidenavSecExample">
+                    <li class="relative">
+                        <a href="#!"
+                            class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 7</a>
+                    </li>
+                    <li class="relative">
+                        <a href="#!"
+                            class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 8</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+
+
+    
+
+
+
+
+
+
+    <div class="basis-7/8">
+        <!-- put component code here -->
+        <form method="GET" action=" " class="d-flex">
+            <input class="form-control me-2" name="search" id="country" type="search" placeholder="Search"
+              aria-label="Search">
+        
+              <select name="price" id="price-list" onchange="location = finalurl2();" style="margin-left: auto;">
+                <option value="" id="price-placeholder" disabled selected hidden>Price</option>
+                <option id="pr500" value="500">less than 500</option>
+                <option id="pr1000" value="1000">less than 1000</option>
+                <option id="pr2000" value="2000">less than 2000</option>
+                <option id="pr10000" value="10000">less than 10000</option>
+              </select>
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+
+        <form class="p-2 bg-gray-100 mt-3" method="POST" class="post-form">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-auto ">
+                  {{ form2.productype|as_crispy_field }}
+                </div>
+                <div class="col-auto">
+                    {{ form2.quantity|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.price1|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.price2|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.status|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.enginecomplete|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.exchange_ammount|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    {{ form2.sparename|as_crispy_field }}
+                  </div>
+                  <div class="col-auto">
+                    
+                    {{ form2.remarks|as_crispy_field }}
+                  </div>
+                  
+                  
+                <div class="col-auto">
+                 <button type="submit" class="save btn btn-info" name="btnform1">Save</button>
+        
+                </div>
+            <hr>
+        
+              
+            </div>
+              
+              
+            
+        </form>
+
+      TOTAL AMMOUNT  {{totalbalace}}
+        <div class="grid  bg-gray-300 grid-cols-3 gap-2  ">
+            <div class="col-span-2 m-1">
+                
+               
+
+                {{ form.media }}
+
+
+                
+
+                <div class="flex flex-wrap " >
+
+                    {% for product in pro %}
+    
+    <a href="#"
+        class="w-[47%] p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 m-1">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            {{ product.name}}
+        </h5>
+        <div class="flex justify-between">
+            <p class="font-normal text-gray-700 dark:text-gray-400 px-1">
+                TK{{ product.price }}
+            </p>
+            
+            <p class="font-normal   text-red mx-1">
+                Qty: {{ product.quantity }}
+            </p>
+
+            <p class="font-normal   text-red mx-1">
+                cat : {{ product.productcatagory }}
+            </p>
+            <button
+                class="save btn btn-info mx-2"
+                onclick="window.location.href = '{{product.id}}/addproduct'">
+                Add 
+            </button>
+
+            
+
+            {% if  product.mother == True%}
+            <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+            onclick="window.location.href = '/{{product.id}}/group'">
+            group
+            </button>
+            {% else %}
+            
+            
+            {% endif %}
+
+
+            
+            
+        </div>
+    </a>
+    
+    {% endfor %}
+                   
+                       
+                    
+                </div>
+
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if pro.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ pro.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span class="current">
+                            Page {{ pro.number }} of {{ pro.paginator.num_pages }}.
+                        </span>
+                
+                        {% if pro.has_next %}
+                            <a href="?page={{ pro.next_page_number }}">next</a>
+                            <a href="?page={{ pro.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+
+
+
+            </div>
+
+            <div>
+                
+
+                {% if user_products %}
+                
+                <div  class="flex flex-col justify-between block  rounded-lg shadow-lg bg-white max-w-sm p-3">
+                    {% for product in user_products %}
+                    <div class="flex justify-between my-1">
+                        <p id="list-wrapper">
+                            {{ product.quantity }} x {{ product.price1 }} <a href='{{product.product_id}}/update'+> <b> {{ product.product.name }}</b> </a>
+                        </p>
+                        <p>
+                            <span>{{ product.total_price }} TK</span>
+                           
+                        </p>
+                        {% if  product.product.mother == True%}
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-10  mr-px"
+                        onclick="window.location.href = '/{{product.product_id}}/group'">
+                        group
+                        </button>
+                        {% else %}
+                        
+                        
+                        {% endif %}
+                        <button class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold px-1 rounded"
+                        onclick="window.location.href = '/{{product.id}}/delete'">
+                                        X
+                                    </button>
+
+                    </div>
+                    {% endfor %}
+
+
+                    <div id="product-container">
+                        <!-- Products will be inserted here by JavaScript -->
+                    </body>
+
+                    <div class="mt-2 border-t-2">
+                        <div class="mt-2 flex justify-between">
+                            <p class="font-bold">TOTAL</p>
+                            <p class="font-bold">${{ total }}</p>
+                        </div>
+                    </div>
+                    {% load crispy_forms_tags %}
+                    <form method="POST" class="post-form">
+                        {% csrf_token %}
+                        {{ form|crispy}}
+                        <br>
+                        <button type="submit" class="save btn btn-info" name="btnform2">Submit</button>
+                    </form>
+
+                </div>
+                {% else %}
+                There are no products in your cart.
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#country").autocomplete({
+            source: "{% url 'autocomplete' %}",
+            minLength: 2,
+            select: function(event, ui) {
+                $("#country").val(ui.item.label);
+               
+                return false;
+            }
+        });
+    });
+</script>
+
+
+<div class="container">
+
+    <div id="task-container">
+        <div id="form-wrapper">
+            <form id="form">
+                <div class="flex-wrapper">
+                    <div style="flex: 6">
+                        <input id="title" class="form-control" type="text" name="title" placeholder="Add task">
+                    </div>
+                    <div style="flex: 1">
+                        <input id="submit" class="btn" type="submit" >
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="list-wrapper">
+        
+        </div>	
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+    /*
+        KEY COMPONENTS:
+        "activeItem" = null until an edit button is clicked. Will contain object of item we are editing
+        "list_snapshot" = Will contain previous state of list. Used for removing extra rows on list update
+        
+        PROCESS:
+        1 - Fetch Data and build rows "buildList()"
+        2 - Create Item on form submit
+        3 - Edit Item click - Prefill form and change submit URL
+        4 - Delete Item - Send item id to delete URL
+        5 - Cross out completed task - Event handle updated item
+
+        NOTES:
+        -- Add event handlers to "edit", "delete", "title"
+        -- Render with strike through items completed
+        -- Remove extra data on re-render
+        -- CSRF Token
+    */
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+
+    var activeItem = null
+    var list_snapshot = []
+
+
+    loadProducts()
+
+    function buildList(){
+        var wrapper = document.getElementById('list-wrapper')
+        //wrapper.innerHTML = ''
+
+
+
+        var url = 'http://127.0.0.1:8000/api_productlist/'
+
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data){
+            console.log('Data:', data)
+
+            var list = data
+            for (var i in list){
+
+
+                try{
+                    document.getElementById(`data-row-${i}`).remove()
+                }catch(err){
+
+                }
+        
+
+
+                var title = `<span class="title">${list[i].productype}</span>`
+                
+              
+                
+
+                var item = `
+                    <div id="data-row-${i}" class="task-wrapper flex-wrapper">
+                        <div style="flex:7">
+                            ${title}
+                        </div>
+                        <div style="flex:1">
+                            <button class="btn btn-sm btn-outline-info edit">Edit </button>
+                        </div>
+                        <div style="flex:1">
+                            <button class="btn btn-sm btn-outline-dark delete">-</button>
+                        </div>
+                    </div>
+
+                `
+                wrapper.innerHTML += item
+
+            }
+
+            if (list_snapshot.length > list.length){
+                for (var i = list.length; i < list_snapshot.length; i++){
+                    document.getElementById(`data-row-${i}`).remove()
+                }
+            }
+
+            list_snapshot = list
+
+
+            for (var i in list){
+                var editBtn = document.getElementsByClassName('edit')[i]
+                var deleteBtn = document.getElementsByClassName('delete')[i]
+                var title = document.getElementsByClassName('title')[i]
+
+                // editBtn.addEventListener('click', (function(item){
+                // 	return function(){
+                // 		editItem(item)
+                // 	}
+                // })(list[i]))
+
+                //Immediatly Invoked Function (IIF) + Closure for saving current loop item in memory
+                editBtn.addEventListener('click', (() => {
+
+                    let item = list[i]
+                    return () => {
+                        editItem(item)
+                    }
+                })())
+
+
+                deleteBtn.addEventListener('click', (function(item){
+                    return function(){
+                        deleteItem(item)
+                    }
+                })(list[i]))
+
+
+
+                
+                title.addEventListener('click', (function(item){
+                    return function(){
+                        strikeUnstrike(item)
+                    }
+                })(list[i]))
+
+
+            }
+
+
+        })
+    }
+
+
+    var form = document.getElementById('form-wrapper')
+    form.addEventListener('submit', function(e){
+        e.preventDefault()
+        console.log('Form submitted')
+        var url = 'http://127.0.0.1:8000/api/task-create/'
+        if (activeItem != null){
+            var url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`
+            activeItem = null
+        }
+
+
+
+        var title = document.getElementById('title').value
+        fetch(url, {
+            method:'POST',
+            headers:{
+                'Content-type':'application/json',
+                'X-CSRFToken':csrftoken,
+            },
+            body:JSON.stringify({'title':title})
+        }
+        ).then(function(response){
+            buildList()
+            document.getElementById('form').reset()
+        })
+    })
+
+
+
+
+    function editItem(item){
+        console.log('Item clicked:', item)
+        activeItem = item
+        document.getElementById('title').value = activeItem.title
+    }
+
+
+    function deleteItem(item){
+        console.log('Delete clicked')
+        fetch(`http://127.0.0.1:8000/api/task-delete/${item.id}/`, {
+            method:'DELETE', 
+            headers:{
+                'Content-type':'application/json',
+                'X-CSRFToken':csrftoken,
+            }
+        }).then((response) => {
+            buildList()
+        })
+    }
+
+
+    function loadProducts() {
+    fetch('/api_productlist/')
+    .then(response => response.json())
+    .then(data => {
+        let productContainer = document.getElementById('product-container');
+        productContainer.innerHTML = ''; // Clear existing products
+
+        for (let product of data) {
+            // Create product element
+            let productDiv = document.createElement('div');
+            productDiv.innerHTML = `
+                ${product.quantity} x ${product.price} <a href='${product.id}/update'> <b> ${product.name} </b> </a>
+                <span>${product.total_price} TK</span>
+                ${product.mother ? '<button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-10 mr-px" onclick="groupProduct(' + product.id + ')">Group</button>' : ''}
+                <button class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold px-1 rounded" onclick="deleteProduct(${product.id})">X</button>
+            `;
+            productContainer.appendChild(productDiv);
+        }
+    });
+}
+
+    function strikeUnstrike(item){
+        console.log('Strike clicked')
+
+        item.completed = !item.completed
+        fetch(`http://127.0.0.1:8000/api/task-update/${item.id}/`, {
+            method:'POST', 
+            headers:{
+                'Content-type':'application/json',
+                'X-CSRFToken':csrftoken,
+            },
+            body:JSON.stringify({'title':item.title, 'completed':item.completed})
+        }).then((response) => {
+            buildList()
+        })
+    }
+
+
+</script>
+
+
+{% endblock %}
