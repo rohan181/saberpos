@@ -1,7 +1,7 @@
 from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord
+from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord,supplier
 from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
@@ -14,6 +14,8 @@ from django.http import JsonResponse
 from django.shortcuts import (get_object_or_404,
                               render,
                               HttpResponseRedirect)
+from django.http import JsonResponse
+import json
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q                              
 from django.db.models import Sum
@@ -1513,8 +1515,41 @@ def expensereport(request):
 
 
 def corporatepayment(request):
+    suppliers = supplier.objects.all()
+    if request.method == 'POST':
+        selected_supplier_id = request.POST.get('supplier')
+        amount = request.POST.get('amount')
+        des = request.POST.get('description')
+        selected_supplier = supplier.objects.get(id=selected_supplier_id)
+        selected_supplier.balance = selected_supplier.balance - int(amount)
+        selected_supplier.save()
+
+        orders=dailyreport.objects.all().last()
+        item, created =paybill.objects.get_or_create(
+
+             pettycashbalance=orders.petteyCash - int(amount),
+             ammount =int(amount),
+             typecat="corporate payment " + selected_supplier.name,
+             remarks = des
+             )
+        item, created =dailyreport.objects.get_or_create(
+            
+             ammount =orders.ammount ,
+             billexpense= int(amount) ,
+             reporttype="corporate payment " + selected_supplier.name,
+             petteyCash = orders.petteyCash - int(amount)
+             
+             )
+        
+        
+        return redirect('cart')
+
+    context = {#'category': category,
+               'suppliers': suppliers ,
+              
+               }
     
-    return render(request, "core/a.html")  
+    return render(request, "core/corporatepayment.html",context)  
 
 
 class AutocompleteView(View):
@@ -1589,6 +1624,46 @@ def apiaddproduct(request,id):
 
       
     return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
+@csrf_exempt
+def userItemstore(request):
+    if request.method == 'POST':
+        # Retrieve the form data from the request
+        
+        json_data = json.loads(request.body)
+            # Extract the required fields from the JSON data
+        productId = json_data.get('productId')
+        product = json_data.get('product')
+        quantity = json_data.get('quantity')
+        price1 = json_data.get('price1')
+        price2 = json_data.get('price2')
+        status = json_data.get('status')
+        engine = json_data.get('engine')
+        exchangeAmount = json_data.get('exchangeAmount')
+        spareName = json_data.get('spareName')
+        remarks = json_data.get('remarks')
+        print(productId)
+
+        # Create an object using the form data
+        obj = UserItem.objects.create(
+            product_id=productId,
+            
+            
+            user_id=request.user.id,
+            quantity=quantity,
+            price1=price1,
+            groupproduct = False
+            
+        )
+
+        # You can perform additional operations with the created object if needed
+
+        # Return a JSON response
+        return JsonResponse({"message": "Form data received and object created successfully"})
+
+    # Return an error response for other request methods
+    return JsonResponse({"error": "Invalid request method"}, status=405)
     
     
          

@@ -384,17 +384,67 @@
                             <div class="modal-body">
                                 <form id="modalForm">
                                     <div class="form-group">
+                                        <label for="product">Product Type</label>
+                                        <select id="product" name="product" class="form-control" required>
+                                            <option value="Local Container">Local Container</option>
+                                            <option value="Public Container">Public Container</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
                                         <label for="quantity">Quantity:</label>
                                         <input type="number" class="form-control" id="quantity" name="quantity" required>
                                     </div>
+                                    
                                     <div class="form-group">
-                                        <label for="price">Price:</label>
-                                        <input type="number" class="form-control" id="price" name="price" required>
+                                        <label for="price1">Price1:</label>
+                                        <input type="number" class="form-control" id="price" name="price1" required>
                                     </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="price2">Price2:</label>
+                                        <input type="number" class="form-control" id="price2" name="price2" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="status">Status:</label>
+                                        <select id="status" name="status" class="form-control" required>
+                                            <option value="Direct">Direct</option>
+                                            <option value="Exchange">Exchange</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="engine">Engine Complete:</label>
+                                        <select id="engine" name="engine" class="form-control" required>
+                                            <option value="Incomplete">Incomplete</option>
+                                            <option value="Complete">Complete</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="exchangeAmount">Exchange Amount:</label>
+                                        <input type="number" class="form-control" id="exchangeAmount" name="exchangeAmount" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="spareName">Spare Name:</label>
+                                        <input type="text" class="form-control" id="spareName" name="spareName" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="remarks">Remarks:</label>
+                                        <input type="text" class="form-control" id="remarks" name="remarks" required>
+                                    </div>
+                                    
                                     <!-- Add other necessary fields here -->
                                     <input type="hidden" id="productId" name="productId">
                                 </form>
                             </div>
+                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary bg-blue-500" onclick="addToCart()">Add to Cart</button>
                                 <button type="button" class="btn btn-secondary bg-gray-500" onclick="closeModal()">Close</button>
@@ -456,16 +506,7 @@
 
     <div id="task-container">
         <div id="form-wrapper">
-            <form id="form">
-                <div class="flex-wrapper">
-                    <div style="flex: 6">
-                        <input id="title" class="form-control" type="text" name="title" placeholder="Add task">
-                    </div>
-                    <div style="flex: 1">
-                        <input id="submit" class="btn" type="submit" >
-                    </div>
-                </div>
-            </form>
+            
         </div>
 
         <div id="list-wrapper">
@@ -793,21 +834,7 @@ function deleteItem(item) {
 
 
 
-    function strikeUnstrike(item){
-        console.log('Strike clicked')
-
-        item.completed = !item.completed
-        fetch(`http://127.0.0.1:8000/api/task-update/${item.id}/`, {
-            method:'POST', 
-            headers:{
-                'Content-type':'application/json',
-                'X-CSRFToken':csrftoken,
-            },
-            body:JSON.stringify({'title':item.title, 'completed':item.completed})
-        }).then((response) => {
-            buildList()
-        })
-    }
+   
 
 
     const openModal = (productId, productName, price) => {
@@ -834,16 +861,60 @@ const closeModal = () => {
 
 const addToCart = () => {
     const modal = document.getElementById("myModal");
-    const quantityField = modal.querySelector("#quantity");
-    const priceField = modal.querySelector("#price");
+    
 
     const productId = modal.querySelector("#productId").value;
-    const quantity = quantityField.value;
-    const price = priceField.value;
-    console.log(price);
+    var product = document.getElementById("product").value;
+    var quantity = document.getElementById("quantity").value;
+    var price1 = document.getElementById("price").value;
+    var price2 = document.getElementById("price2").value;
+    var status = document.getElementById("status").value;
+    var engine = document.getElementById("engine").value;
+    var exchangeAmount = document.getElementById("exchangeAmount").value;
+    var spareName = document.getElementById("spareName").value;
+    var remarks = document.getElementById("remarks").value;
+
     console.log(productId)
 
-    closeModal()
+
+    const formData = {
+  productId: productId,
+  product: product,
+  quantity: quantity,
+  price1: price1,
+  price2: price2,
+  status: status,
+  engine: engine,
+  exchangeAmount: exchangeAmount,
+  spareName: spareName,
+  remarks: remarks
+};
+
+// Make a POST request to the Django API endpoint
+fetch('/api_useritemstore/', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(formData)
+})
+  .then(response => response.json())
+  .then(data => {
+    console.log("API response:", data);
+    loadProducts();
+    // Handle the API response here
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    // Handle the error here
+  });
+
+
+
+   
+
+    closeModal();
+    
 
     // Perform any additional validation or processing here
 

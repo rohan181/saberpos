@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path,include
-from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport,api_productlist,delete_user_item,apiaddproduct
+from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport,api_productlist,delete_user_item,apiaddproduct,userItemstore
 
 from django.urls import re_path as url
 from django.urls import reverse
@@ -16,7 +16,7 @@ urlpatterns = [
     path('', views.cart, name='cart'),
     path('salesreport', views.salesreport, name='salesreport'),
     path('mr', views.mr, name='mr'),
-    path('corporatepayment', views.corporatepayment, name='mr'),
+    path('corporatepayment', views.corporatepayment, name='corporatepayment'),
   
     path('autocomplete/', views.AutocompleteView.as_view(), name='autocomplete'),
     path('<id>/update',update_view ,name='update'),
@@ -25,7 +25,7 @@ urlpatterns = [
     path('<id>/groupupdate',groupupdate_view ,name='update'),
     path('<id>/mrupdate',mrupdate_view ,name='mrupdate'),
     path('<id>/group',group,name='group'),
-    path('soldlist', views.soldlist, name='dataupdate'),
+    path('soldlist', views.soldlist, name='soldlist'),
     path('mrlist', views.mrlist, name='mrlist'),
     path('<id>/cashmemo', views.cashmemo, name='cashmemo'),
     path('<id>/cashmemo1', views.cashmemo1, name='cashmemo1'),
@@ -51,6 +51,7 @@ urlpatterns = [
     path("<id>/expenseform", views.expenseform ,name=""),
     path("expensestore", views.expensestore ,name=""),
     path("dailysearchresult", views.dalyreportsearch, name="search_results"),
+    #path("corporatepay", views.corporatepayment ,name=""),
 
 
     #api
@@ -58,6 +59,8 @@ urlpatterns = [
     path('api_productlist/', views.api_productlist, name="api_productlist"),
     path('api-delete/<int:item_id>/', views.delete_user_item, name='delete_user_item'),
     path('apiaddproduct/<int:item_id>/', views.apiaddproduct, name='apiaddcart'),
+
+    path('api_useritemstore/', views.userItemstore, name="userItemstore"),
 ]
 
 
