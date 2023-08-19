@@ -214,69 +214,36 @@
 
     <div class="basis-7/8">
         <!-- put component code here -->
-        <form method="GET" action=" " class="d-flex">
-            <input class="form-control me-2" name="search" id="country" type="search" placeholder="Search"
-              aria-label="Search">
-        
-              <select name="price" id="price-list" onchange="location = finalurl2();" style="margin-left: auto;">
-                <option value="" id="price-placeholder" disabled selected hidden>Price</option>
-                <option id="pr500" value="500">less than 500</option>
-                <option id="pr1000" value="1000">less than 1000</option>
-                <option id="pr2000" value="2000">less than 2000</option>
-                <option id="pr10000" value="10000">less than 10000</option>
-              </select>
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+       
 
-        <form class="p-2 bg-gray-100 mt-3" method="POST" class="post-form">
-            {% csrf_token %}
-            <div class="row g-3">
-                <div class="col-auto ">
-                  {{ form2.productype|as_crispy_field }}
-                </div>
-                <div class="col-auto">
-                    {{ form2.quantity|as_crispy_field }}
-                  </div>
-                  <div class="col-auto">
-                    {{ form2.price1|as_crispy_field }}
-                  </div>
-                  <div class="col-auto">
-                    {{ form2.price2|as_crispy_field }}
-                  </div>
-                  <div class="col-auto">
-                    {{ form2.status|as_crispy_field }}
-                  </div>
-                  <div class="col-auto">
-                    {{ form2.enginecomplete|as_crispy_field }}
-                  </div>
-                  <div class="col-auto">
-                    {{ form2.exchange_ammount|as_crispy_field }}
-                  </div>
-                  <div class="col-auto">
-                    {{ form2.sparename|as_crispy_field }}
-                  </div>
-                  <div class="col-auto">
-                    
-                    {{ form2.remarks|as_crispy_field }}
-                  </div>
-                  
-                  
-                <div class="col-auto">
-                 <button type="submit" class="save btn btn-info" name="btnform1">Save</button>
-        
-                </div>
-            <hr>
-        
-              
-            </div>
-              
-              
-            
-        </form>
 
-      TOTAL AMMOUNT  {{totalbalace}}
+
+       
+
+        
+
+     
         <div class="grid  bg-gray-300 grid-cols-3 gap-2  ">
             <div class="col-span-2 m-1">
+
+                TOTAL AMMOUNT  {{totalbalace}} TK
+                <div class="container mt-2">
+                    <form method="GET" action=" " class="d-flex custom-form">
+                        <input class="form-control me-2" name="search" id="country" type="search" placeholder="Search"
+                      aria-label="Search">
+                        
+                        
+        
+                        <select name="category" id="category" class="form-select">
+                            <option  value=""> SELECT CATEGORY</option>
+                          {% for supplier in category %}
+                          <option value="{{ supplier.productcatagory  }}">{{ supplier.productcatagory }}</option>
+                        {% endfor %}
+                        </select>
+                        
+                        <button class="btn btn-outline-success ml-1" type="submit">Search</button>
+                    </form>
+                </div>
                 
                
 
@@ -736,7 +703,7 @@
                 <div id="data-row-${i}" class="task-wrapper flex-wrapper">
                     ${item.quantity} x ${item.price1} <a href='${item.product.id}/update'> <b>${item.product.name}</b> </a>
                     <span>${item.quantity * item.price1} TK</span>
-                    ${item.product.mother ? '<button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-10 mr-px" onclick="groupProduct(' + item.id + ')">Group</button>' : ''}
+                    ${item.product.mother ? '<button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-10 mr-px" onclick="groupProduct(' + item.product.id + ')">Group</button>' : ''}
                     <button class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold px-1 rounded delete" data-index="${i}">X</button>
                 </div>
                 `;

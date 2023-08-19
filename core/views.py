@@ -14,6 +14,8 @@ from django.http import JsonResponse
 from django.shortcuts import (get_object_or_404,
                               render,
                               HttpResponseRedirect)
+from django.db import transaction
+from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -150,18 +152,18 @@ def cart(request):
         return HttpResponseRedirect("/soldlist")
 
       
-    price = request.GET.get('price', "")  
+    category= request.GET.get('category', '')  
     search = request.GET.get('search', '')
-    if search:
-        products = Product.objects.filter(Q(name__icontains=search) ) # SQLite doesn’t support case-sensitive LIKE statements; contains acts like icontains for SQLite
-
+    if category and search:
+       products = Product.objects.filter(Q(name__icontains=search) & Q(productcatagory__icontains=category))
+    elif search:
+       products = Product.objects.filter(Q(name__icontains=search))
+    elif category:
+       products = Product.objects.filter(Q(productcatagory__icontains=category))
     else:
-        products = Product.objects.all()
-
-    if price:
-        products= Product.objects.filter(price__lt = price)     
-   
-
+       products = Product.objects.all()
+  
+    #products = Product.objects.filter(Q(productcatagory__icontains=category))
     totalbalnce=0
     for p in products:
         totalbalnce +=p.price * p.quantity
@@ -173,8 +175,8 @@ def cart(request):
         bl +=p.price * p.quantity    
     totalbalnce=totalbalnce-bl
     
-    myFilter = OrderFilter(request.GET, queryset=products)
-    products = myFilter.qs 
+    # myFilter = OrderFilter(request.GET, queryset=products)
+    # products = myFilter.qs 
 
     # p = Paginator(products, 5)  # creating a paginator object
     # # getting the desired page number from url
@@ -197,9 +199,9 @@ def cart(request):
     page_number = request.GET.get('page')
     pro = paginator.get_page(page_number)
 
-
+    category=  Product.objects.values('productcatagory').distinct()
     
-    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'pro':pro,'total':total,'totalbalace':totalbalnce,'form2':form2}
+    context = {'category':category,'products': products,'form':form,'user_products':user_products,'pro':pro,'total':total,'totalbalace':totalbalnce,'form2':form2}
     return render(request, 'core/cart.html', context)
 
 @login_required
@@ -1146,16 +1148,32 @@ def dalyreport(request):
          salesreturn=0
          collection=0
          expension=0
+         returnprice=0
         
          orderlist=Order.objects.all()
+         
+
+
+
          for rs in orders:
            for invoice in orderlist:
-              if invoice.id == rs.order_id :
-                cashsale =cashsale + invoice.paid
-           
+                if invoice.id == rs.order_id:
+                    cashsale += invoice.paid
+                    duesale += invoice.due
+            
+           returnprice += rs.returnprice
     
-         
-                      
+           if rs.bill and rs.bill.ammount is not None:
+                collection += rs.bill.ammount
+           else:
+                collection += 0  # Adding 0 when rs.bill.amount is None
+           expension  =  expension +  rs.billexpense
+        
+             
+
+
+
+          
 
 
 
@@ -1165,8 +1183,8 @@ def dalyreport(request):
                'myFilter':myFilter,
                 'cashsale':cashsale,
                 'duesale':duesale,
-                'netsale':netsale,
-                'salesreturn':salesreturn,
+                'netsale':cashsale + duesale ,
+                'returnprice':returnprice,
                 'collection':collection,
                 'expension' :expension,
                }
@@ -1572,7 +1590,7 @@ class AutocompleteView(View):
 
 @api_view(['GET'])
 def api_productlist(request):
-    tasks = UserItem.objects.all().order_by('-id')
+    tasks = UserItem.objects.filter(groupproduct=False).order_by('-id')
     serializer = TaskSerializer(tasks, many=True)
     #total_sum = tasks.aggregate(total_sum=Sum('price1'))['total_sum']  
     total=0
@@ -1592,15 +1610,39 @@ def api_productlist(request):
 def delete_user_item(request, item_id):
     if request.method == 'DELETE':
         try:
-            user_item = UserItem.objects.get(id=item_id)
-            user_item.delete()
-            return JsonResponse({'message': 'UserItem deleted successfully'})
+            with transaction.atomic():
+                user_item = get_object_or_404(UserItem, id=item_id)
+                product_id = user_item.product_id
+                groupname = user_item.product.groupname
+                
+                # Delete related UserItems in the same group
+                products_to_delete = UserItem.objects.filter(
+                    product__groupname=groupname,
+                    product_id__isnull=False  # Ensure valid product_id
+                ).exclude(id=item_id)
+                products_to_delete.delete()
+                
+                # Delete the primary UserItem
+                user_item.delete()
+                
+                # Debugging output
+                print("UserItem and related records deleted successfully.")
+                
+                return JsonResponse({"message": "UserItem and related records deleted successfully."})
+                
         except UserItem.DoesNotExist:
-            return JsonResponse({'error': 'UserItem not found'}, status=404)
+            return JsonResponse({"error": "UserItem with ID {} does not exist.".format(item_id)})
+        except Product.DoesNotExist:
+            return JsonResponse({"error": "Product with ID {} does not exist.".format(product_id)})
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    else:
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
+            return JsonResponse({"error": "An error occurred: {}".format(e)})
+
+
+
+
+
+
+
     
 
 
@@ -1624,6 +1666,61 @@ def apiaddproduct(request,id):
 
       
     return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
+
+
+
+# product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True,related_name='product')
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     quantity = models.PositiveIntegerField(default=0,null=True)
+#     price1 = models.DecimalField(
+#         default=0,
+#         decimal_places=0,
+#         max_digits=10,
+#         validators=[MinValueValidator(0)],
+#         null=True
+#     )
+#     price2 = models.DecimalField(
+#         default=0,
+#         decimal_places=0,
+#         max_digits=10,
+#         validators=[MinValueValidator(0)],
+#         null=True
+#     )
+#     added = models.DateTimeField(auto_now_add=True)
+#     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
+#     model_no = models.CharField(max_length=200,blank=True,null=True)
+#     engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
+#     status=models.CharField(max_length=10,choices=PRODUCT,default='Direct',null=True)
+#     credit=models.CharField(max_length=10,choices=credit,default='noncredit',null=True)
+#     productype=models.CharField(max_length=100,choices=PRODUCT1,default='LocalContainer',null=True)
+#     enginecomplete=models.CharField(max_length=10,choices=engine,default='incomplete',null=True)
+#     remarks = models.CharField(max_length=500,blank=True,null=True)
+#     exchange_ammount = models.PositiveIntegerField(default=0,null=True)
+#     #exchange_engine = models.CharField(max_length=500,blank=True,default='')
+#     sparename = models.CharField(max_length=200,null=True,blank=True)
+#     groupproduct = models.BooleanField(null=True,blank=True)
+
+
+def process_products(request, product_id, quantity):
+    shopcart = UserItem.objects.filter(user=request.user, product_id=product_id).first()
+    obj = get_object_or_404(Product, id=product_id)
+    motherproduct = Product.objects.filter(groupname=obj.groupname, mother=True).first()
+    products = Product.objects.filter(groupname=obj.groupname).exclude(groupname='')
+   
+    for rs in products:
+        item, created = UserItem.objects.get_or_create(
+            user_id=request.user.id,
+            product_id=rs.id,
+            groupproduct = True,
+            quantity=rs.subpartquantity * quantity
+        )
+        print(rs.id)
+
+    
+
+
 
 
 @csrf_exempt
@@ -1653,9 +1750,63 @@ def userItemstore(request):
             user_id=request.user.id,
             quantity=quantity,
             price1=price1,
-            groupproduct = False
+            price2=price2,
+            groupproduct = False,
+            status= status,
+            remarks = remarks ,
+            exchange_ammount =exchangeAmount ,
+            sparename =spareName ,
+            enginecomplete = engine
+
             
         )
+
+
+
+        
+        
+       
+        obj = get_object_or_404(Product, id = productId)
+        motherproduct = Product.objects.all().filter(groupname=obj.groupname,mother=True).first()
+        products = Product.objects.filter(groupname=obj.groupname).exclude(groupname='').exclude(id=obj.id)
+        print(products)
+        
+        
+
+        for product in products:
+            print(product.id)
+            print(product.subpartquantity )
+            totalquan=product.subpartquantity * int(quantity)
+            obj = UserItem.objects.create(
+            product_id=product.id,
+            
+            
+            user_id=request.user.id,
+            quantity =  totalquan ,
+            price1=price1,
+            price2=price2,
+            groupproduct = True,
+            status= status,
+            remarks = remarks ,
+            exchange_ammount =exchangeAmount ,
+            sparename =spareName ,
+            enginecomplete = engine
+
+            
+        )
+
+
+
+
+
+
+
+       
+    
+    # pass the object as instance in form
+    
+
+
 
         # You can perform additional operations with the created object if needed
 
@@ -1664,6 +1815,12 @@ def userItemstore(request):
 
     # Return an error response for other request methods
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+
+
+
+
     
     
          

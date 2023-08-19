@@ -4,7 +4,7 @@ from django import forms
 from django_filters import CharFilter
 
 import django_filters
-from django_filters import DateFilter, CharFilter
+from django_filters import DateFilter, CharFilter, DateTimeFilter
 from dal import autocomplete
 
 from .models import *
@@ -13,7 +13,7 @@ from .models import *
 
 
 
-from django.contrib.admin.widgets import AdminDateWidget
+from django.contrib.admin.widgets import AdminDateWidget,AdminTimeWidget
 
 
 class OrderFilter(django_filters.FilterSet):
@@ -78,8 +78,11 @@ class OrderFilter(django_filters.FilterSet):
 
 
 class soldfilter(django_filters.FilterSet):
+  
   start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
   end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  start_time = DateTimeFilter(field_name="added", lookup_expr='time__gte', widget=AdminTimeWidget())
+  end_time = DateTimeFilter(field_name="added", lookup_expr='time__lte', widget=AdminTimeWidget())
   
   class Meta:
    model = Order

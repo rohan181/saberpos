@@ -139,7 +139,7 @@ class Order(models.Model):
     due = models.PositiveIntegerField(default=0,null=True,blank=True)
     @property
     def total_price(self):
-        return (self.quantity * self.product.price)
+        return (self.quantity * self.UserItem.price1)
     
 
     
