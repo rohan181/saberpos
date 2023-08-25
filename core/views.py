@@ -1147,7 +1147,7 @@ def dalyreport(request):
          netsale=0
          salesreturn=0
          collection=0
-         expension=0
+         expense=0
          returnprice=0
         
          orderlist=Order.objects.all()
@@ -1167,7 +1167,7 @@ def dalyreport(request):
                 collection += rs.bill.ammount
            else:
                 collection += 0  # Adding 0 when rs.bill.amount is None
-           expension  =  expension +  rs.billexpense
+           expense  =  expense +  rs.billexpense
         
              
 
@@ -1186,7 +1186,7 @@ def dalyreport(request):
                 'netsale':cashsale + duesale ,
                 'returnprice':returnprice,
                 'collection':collection,
-                'expension' :expension,
+                'expense' :expense,
                }
 
 
@@ -1515,16 +1515,24 @@ def salesreport(request):
 
 
 def expensereport(request):
+         credit1 =0
+         debit1= 0
+          
 
          orders=paybill.objects.all().order_by('id')
          myFilter =paybillfilter(request.GET, queryset=orders)
          orders = myFilter.qs 
-       
-
+         
+         
+         for rs in orders :
+             credit1 = credit1 + (rs.reloadpetteycash if rs.reloadpetteycash is not None else 0)
+             debit1 = debit1 + (rs.ammount if rs.ammount is not None else 0)
         
          context = {#'category': category,
                'orders': orders,
-               'myFilter':myFilter
+               'myFilter':myFilter,
+               'credittotal'  :credit1,
+               'debit1total'   :debit1
                }
 
 

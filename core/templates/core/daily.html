@@ -55,76 +55,53 @@
 </form>
 
   
-  <table class="table">
-    <thead class="thead-dark">
-      <tr>
-
-
-        <th scope="col">Date</th>
-        <th scope="col">Doc type</th>
-        <th scope="col">Doc no</th>
-        <th scope="col">Client name</th>
-        <th scope="col">CASH SELL</th>
-        <th scope="col">DUE SELL</th>
-        <th scope="col">NET SELL</th>
-        <th scope="col">Sales return</th>
-        <th scope="col">Collection</th>
-        <th scope="col">Expenses</th>
-        <th scope="col">Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% with total=0 %}
-      {% for rs in orders %}
-      <tr>
-
-
-        <td>{{ rs.added}}</td>
-        <td>{{ INVOICE}}</td>
-        <td>{{rs.added|date:"dmy-gi"}} </td>
-        <td>{% if rs.order.customer.name != None %}
-          
-          {{rs.order.customer.name}} 
-          {% endif%}
-          {% if rs.order.customer.name == None %}
-          Genaral
-          {% endif%}
-        </td>
-        <td>
-          {{rs.order.paid}}
-          {% with total=total+rs.order.paid %}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Doc type</th>
+      <th scope="col">Doc no</th>
+      <th scope="col">Client name</th>
+      <th scope="col">CASH SELL</th>
+      <th scope="col">DUE SELL</th>
+      <th scope="col">NET SELL</th>
+      <th scope="col">Sales return</th>
+      <th scope="col">Collection</th>
+      <th scope="col">Expenses</th>
+      <th scope="col">Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+    {% for rs in orders %}
+    <tr>
+      <td>{{ rs.added }}</td>
+      <td>hhhh</td>
+      <td>{{ rs.added|date:"dmy-gi" }}</td>
+      <td>
+        {% if rs.order.customer.name != None %}
+        {{ rs.order.customer.name }}
+        {% else %}
+        General
+        {% endif %}
       </td>
+      <td>{{ rs.order.paid }}</td>
+      <td>{{ rs.order.due }}</td>
+      <td>{{ rs.order.totalprice }}</td>
+      <td>{{ rs.returnprice }}</td>
+      <td>{{ rs.bill.ammount }}</td>
+      <td>{{ rs.billexpense }}</td>
+      <td>{{ rs.ammount }}</td>
+    </tr>
+    {% endfor %}
 
-      <td>
-        {{rs.order.due}}
-    </td>
-        <td>
-          {{rs.order.totalprice}}
-        </td>
-        
+    <tr>
+      <td colspan="10">Additional Information</td>
+    </tr>
+    
+  </tbody>
+</table>
 
-          <td>{{ rs.returnprice}}</td>
-      
-
-      <td>
-
-        {{ rs.bill.ammount}}
-    </td>
-    <td>{{ rs.billexpense}}</td>
-        <td>{{ rs.ammount}}</td>
-       
-      </tr>
-      {% endfor %}
-
-
-      <tr>
-
-
-       
-      </tr>
-
-    </tbody>
-  </table>
 
 
  

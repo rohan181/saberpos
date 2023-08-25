@@ -181,9 +181,23 @@
                       </tr>
                       {% endfor %}
                     
-                  {{cashsale}}
-                  
-                  </tr>
+                      <tr>
+                        <td align="right" scope="row" colspan="4"><b>Total </b></td>
+                        <td align="right">{{cashsale}}</td>
+                        <td align="right" colspan="1" >{{duesale}}</td>
+                        <td align="right" >{{netsale}}</td>
+                        <td align="right" >{{returnprice}}</td>
+                        <td align="right" >{{collection}}</td>
+                        <td align="right" >{{expense}}</td>
+
+                        <!-- 'cashsale':cashsale,
+                        'duesale':duesale,
+                        'netsale':cashsale + duesale ,
+                        'returnprice':returnprice,
+                        'collection':collection,
+                        'expension' :expension, -->
+                       
+                      </tr>
                
               
               </tbody>
