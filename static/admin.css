@@ -1,0 +1,5 @@
+/* Remove transparency and set a background color for the date widget */
+input[type="date"] {
+    background-color: #fff; /* Change to your desired background color */
+    opacity: 1; /* Set opacity to 1 to remove transparency */
+}

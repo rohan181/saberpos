@@ -2,11 +2,11 @@ from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord,supplier
-from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter
+from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter,mrfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
-from core.form import soldformm, useritem,GeeksForm,mrr,returnnform,billfrom,dailyreportt,tempbilformm
+from core.form import soldformm, useritem,GeeksForm,mrr,returnnform,billfrom,dailyreportt,tempbilformm,mreditformm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -41,7 +41,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import TaskSerializer
 from rest_framework import status
-
+import datetime
+import pytz
 
 @login_required
 def cart(request):
@@ -86,6 +87,20 @@ def cart(request):
     #     product = Product.objects.get(id=rs.product_id)
     #     if product.quantity < rs.quantity and rs.credit =='noncredit':
     #                 outstock=0   
+
+
+    dhaka_timezone = pytz.timezone('Asia/Dhaka')
+
+# Get the current time in the Asia/Dhaka timezone
+    current_time_dhaka = datetime.datetime.now(dhaka_timezone)
+
+# Define the desired format
+    date_time_format = "%d%m%y-%I%M"
+
+# Format and print the current date and time in Asia/Dhaka timezone
+    formatted_date_time = current_time_dhaka.strftime(date_time_format)
+
+
     if request.method=='POST' and 'btnform2' in request.POST: 
      if form.is_valid() and outstock==1:
         fs= form.save(commit=False)
@@ -93,7 +108,8 @@ def cart(request):
         fs.totalprice=total-fs.discount
         fs.totalprice1=total1-fs.discount
         fs.due=total-(fs.paid+fs.discount)
-        fs.invoice_id=fs.added
+     
+        fs.invoicenumber = formatted_date_time 
 
         
         fs.save()
@@ -570,6 +586,12 @@ def cashmemo(request,id):
          return render(request, 'core/cashmemo1.html',context)
 
 
+
+
+
+
+
+
 @login_required
 def cashmemo1(request,id):
       #cursor = connection['db.sqlite3'].cursor()
@@ -643,9 +665,8 @@ def chalan(request,id):
 
          return render(request, 'core/chalan.html',context)    
 
-
 @login_required
-def chalan(request,id):
+def mrcashmemo(request,id):
       #cursor = connection['db.sqlite3'].cursor()
       #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
       #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
@@ -657,12 +678,12 @@ def chalan(request,id):
         
         #row = cursor.fetchone()
 
-         orders=sold.objects.all().filter(order_id=id)
-         ordere_de=Order.objects.all().filter(id=id)
-         date=Order.objects.all().filter(id=id).last()
+         orders=mrentryrecord.objects.all().filter(mrentry_id=id,groupproduct =False)
+         ordere_de=mrentry.objects.all().filter(id=id)
+         date=mrentry.objects.all().filter(id=id).last()
          total=0
          for rs in orders:
-            total+=rs.price2 * rs.quantity
+            total+=rs.price1 * rs.quantity
 
          total1=total-date.discount
          text=num2words(total1)   
@@ -678,11 +699,11 @@ def chalan(request,id):
                }
 
 
-         return render(request, 'core/chalan.html',context)                      
+         return render(request, 'core/mrcashmemo.html',context)
 
 
 @login_required
-def mrmemo(request,id):
+def mreditcashmemo(request,id):
       #cursor = connection['db.sqlite3'].cursor()
       #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
       #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
@@ -694,15 +715,85 @@ def mrmemo(request,id):
         
         #row = cursor.fetchone()
 
+        #  orders=sold.objects.all().filter(order_id=id)
+        #  ordere_de=Order.objects.all().filter(id=id)
+        #  date=sold.objects.all().filter(order_id=id).last()
+
          orders=mrentryrecord.objects.all().filter(mrentry_id=id,groupproduct =False)
-         ordere_de=Order.objects.all().filter(id=id)
+         ordere_de=mrentry.objects.all().filter(id=id)
          date=mrentry.objects.all().filter(id=id).last()
+
          total=0
          for rs in orders:
             total+=rs.price1 * rs.quantity
 
-         total1=total
-         text=num2words(total1)   
+         total1=total-date.discount
+         text=num2words(total1) 
+         products = Product.objects.all()
+   
+    
+         myFilter = OrderFilter(request.GET, queryset=products)
+         products = myFilter.qs 
+         orderr =mrentry.objects.get(id=id)
+
+         form = mrr(request.POST or None, request.FILES or None, instance = orderr)
+         shopcart =UserItem.objects.filter(user=request.user)
+         user_products = UserItem.objects.filter(user=request.user)
+         total=0
+         for gs in user_products:
+           total+=gs.price1 * gs.quantity
+
+
+         total1=0
+         
+         for gs in user_products:
+           total1+=gs.price1 * gs.quantity   
+
+
+         paginator = Paginator(products, 20) # Show 25 contacts per page.
+
+         page_number = request.GET.get('page')
+         pro = paginator.get_page(page_number) 
+
+         if form.is_valid():
+           fs= form.save(commit=False)
+           fs.user= request.user
+           
+           fs.invoice_id=fs.added
+           fs.totalprice=total-fs.discount
+           fs.totalprice1=total1-fs.discount
+           fs.due=total-(fs.paid+fs.discount)
+           fs.invoice_id=fs.added
+        
+           fs.save()  
+           for rs in shopcart:
+                detail = sold()
+                detail.customer    = fs.customer
+                 # Order Id
+                 
+                detail.product_id  = rs.product_id
+                detail.order_id     =id 
+                detail.user  = request.user
+                detail.quantity  = rs.quantity
+                detail.added  = rs.added
+                detail.left = fs.left
+                detail.discount = fs.discount
+                detail.price1 = rs.price1
+                detail.price2 = rs.price2
+                detail.engine_no=rs.engine_no
+                detail.Phone=fs.Phone
+                detail.name=fs.name
+                detail.sparename =rs.sparename 
+                detail.groupproduct = rs.groupproduct
+
+                detail.save()
+                
+                shopcart.delete()    
+                product = Product.objects.get(id=rs.product_id)
+                if rs.credit =='noncredit':    
+                     product.quantity -= rs.quantity
+                     product.save()
+
          #total = sum(product.total_price for product in self.user_products)
          context = {#'category': category,
                'orders': orders,
@@ -712,10 +803,59 @@ def mrmemo(request,id):
                'ordere_de':ordere_de,
                'total':total,
                'total1':total1,
+               'products': products,
+               'myFilter':myFilter,
+               'form':form,
+               'user_products':user_products,
+               'pro':pro
+
                }
 
 
-         return render(request, 'core/mrmemo.html',context)
+         return render(request, 'core/mreditcashmemo.html',context)   
+
+
+
+
+
+
+@login_required
+def mrfianaleditcashmemo(request,id):
+    context ={}
+    shopcart =mrentryrecord.objects.get(id=id)
+    
+
+    # pass the object as instance in form
+    form = mreditformm(request.POST or None, instance = shopcart)
+    productnew = Product.objects.get(id=shopcart.product_id)
+    qua=productnew.quantity - shopcart.quantity
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        fs= form.save(commit=False)
+        form.save()
+        #productnew.quantity  += shopcart.quantity
+        
+        
+        productnew.quantity  = qua + fs.quantity
+        productnew.save()
+       
+   
+
+        
+        
+ 
+    # add form dictionary to context
+    
+    context["form"] = form
+ 
+    return render(request, "core/update_view.html", context)
+
+
+
+
+
+
 
 @login_required
 def returnno(request,id):
@@ -765,15 +905,133 @@ def productlist(request):
         'products': Product.objects.all(),
     })
 
-def mrproductlist(request):
-    return render(request, 'core/mrproductlist.html', {
-        'products': Product.objects.all(),
-    })
+def mrinvoicelist(request):
+         orders=mrentry.objects.all().order_by('-id')
+         myFilter =mrfilter(request.GET, queryset=orders)
+         orders = myFilter.qs 
+        
+         context = {#'category': category,
+               'orders': orders,
+               'myFilter':myFilter
+               }
+
+
+         return render(request, 'core/mrinvoicelist.html',context)
+
+# @login_required
+# def cart(request):
+    
+#     a =UserItem.objects.filter(user=request.user).last()
+#     form = useritem(request.POST or None, request.FILES or None)
+#     form2 = GeeksForm(request.POST or None, request.FILES or None,instance = a)
+#     shopcart =UserItem.objects.filter(user=request.user)
+#     user_products = UserItem.objects.filter(user=request.user,groupproduct =False)
+   
+#     total=0
+#     total1=0
+#     for gs in user_products:
+#         total+=gs.price1 * gs.quantity
+#     for gs in user_products:
+#         total1+=gs.price1 * gs.quantity    
+#     outstock=1    
+    
+#     if request.method=='POST' and 'btnform1' in request.POST: 
+#       if form2.is_valid() :
+#         fs = form2.save(commit=False)
+#         fs.user= request.user 
+    
+#         fs.groupproduct=False
+#         fs.save()
+#         obj = get_object_or_404(Product, id = fs.product_id)
+#         products = Product.objects.all().filter(groupname=obj.groupname).exclude(groupname='')
+       
+#         for rs in products: 
+#           item, created = UserItem.objects.get_or_create(
+#             user_id=request.user.id,
+#             product_id=rs.id,
+#             groupproduct = True,
+#             quantity=rs.subpartquantity * fs.quantity
+
+#           )
+
+#         return HttpResponseRedirect("/")
+     
+
+#     # for rs in shopcart:
+#     #     product = Product.objects.get(id=rs.product_id)
+#     #     if product.quantity < rs.quantity and rs.credit =='noncredit':
+#     #                 outstock=0   
+#     if request.method=='POST' and 'btnform2' in request.POST: 
+#      if form.is_valid() and outstock==1:
+#         fs= form.save(commit=False)
+#         fs.user= request.user
+#         fs.totalprice=total-fs.discount
+#         fs.totalprice1=total1-fs.discount
+#         fs.due=total-(fs.paid+fs.discount)
+#         fs.invoice_id=fs.added
+
+        
+#         fs.save()
+#         if fs.customer !=None:
+#           cus =Customer.objects.filter(id=fs.customer_id).first()
+#           cus.balance +=fs.due
+#           cus.save()
+        
+#         obj = dailyreport.objects.all().last()
+#         item, created =dailyreport.objects.get_or_create(
+#             order_id=fs.id,
+#             ammount=obj.ammount+fs.paid,
+#             petteyCash=obj.petteyCash,
+#             reporttype='INVOICE'
+            
+#         )
+           
+        
+
+#         for rs in shopcart:
+#                 detail = sold()
+#                 detail.customer    = fs.customer
+#                  # Order Id
+                 
+#                 detail.product_id  = rs.product_id
+#                 detail.order_id     = fs.id 
+#                 detail.user  = request.user
+#                 detail.quantity  = rs.quantity
+#                 detail.added  = rs.added
+#                 detail.left = fs.left
+#                 detail.discount = fs.discount
+#                 detail.price1 = rs.price1
+#                 detail.price2 = rs.price2
+#                 detail.engine_no=rs.engine_no
+#                 detail.Phone=fs.Phone
+#                 detail.name=fs.name
+#                 detail.remarks =rs.remarks
+#                 detail.sparename =rs.sparename 
+#                 detail.groupproduct = rs.groupproduct
+                
+                
+#                 shopcart.delete()    
+#                 user_products.delete()
+#                 product = Product.objects.get(id=rs.product_id)
+#                 product.quantity -= rs.quantity
+#                 detail.exchange_ammount=rs.exchange_ammount
+#                 detail.costprice=product.price
+#                 detail.save()
+#                 product.save()
+                
+
+                
+        
+          
+            
+#         return HttpResponseRedirect("/soldlist")
 
 def mr(request):
     form = mrr(request.POST or None, request.FILES or None)
     shopcart =UserItem.objects.filter(user=request.user)
-    user_products = UserItem.objects.filter(user=request.user)
+    user_products = UserItem.objects.filter(user=request.user,groupproduct =False)
+
+
     total=0
     for gs in user_products:
         total+=gs.price1 * gs.quantity
@@ -783,9 +1041,18 @@ def mr(request):
     if form.is_valid():
         fs= form.save(commit=False)
         fs.user= request.user
+        fs.totalprice=total-fs.discount
+        #fs.totalprice1=total1-fs.discount
+        fs.due=total-(fs.paid+fs.discount)
         fs.invoice_id=fs.added
+
         
-        fs.save()   
+        fs.save()
+        if fs.supplier !=None:
+            sup =supplier.objects.filter(id=fs.supplier_id).first()
+            sup.balance +=fs.due
+            sup.save()
+        
         
 
         for rs in shopcart:
@@ -799,8 +1066,9 @@ def mr(request):
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
                 detail.left = fs.left
-                detail.price1=fs.price1
+                detail.price1=rs.price1
                 detail.discount = fs.discount
+                detail.groupproduct = rs.groupproduct
                 detail.save()
                 
                 shopcart.delete()    
@@ -815,11 +1083,60 @@ def mr(request):
 
         
     
-    products = Product.objects.all()
+    category= request.GET.get('category', '')  
+    search = request.GET.get('search', '')
+    if category and search:
+       products = Product.objects.filter(Q(name__icontains=search) & Q(productcatagory__icontains=category))
+    elif search:
+       products = Product.objects.filter(Q(name__icontains=search))
+    elif category:
+       products = Product.objects.filter(Q(productcatagory__icontains=category))
+    else:
+       products = Product.objects.all()
+  
+    #products = Product.objects.filter(Q(productcatagory__icontains=category))
+    totalbalnce=0
+    for p in products:
+        totalbalnce +=p.price * p.quantity
+
+    mo = Product.objects.filter(mother=True)
+
+    bl=0
+    for p in mo:
+        bl +=p.price * p.quantity    
+    totalbalnce=totalbalnce-bl
+    
+    # myFilter = OrderFilter(request.GET, queryset=products)
+    # products = myFilter.qs 
+
+    # p = Paginator(products, 5)  # creating a paginator object
+    # # getting the desired page number from url
+    # page_number = request.GET.get('page')
+    # try:
+    #     page_obj = p.get_page(page_number)  # returns the desired page object
+    # except PageNotAnInteger:
+    #     # if page_number is not an integer then assign the first page
+    #     page_obj = p.page(1)
+    # except EmptyPage:
+    #     # if page is empty then return last page
+    #     page_obj = p.page(p.num_pages)
+
+    
+    
+    # products=page_obj  
+    
+    paginator = Paginator(products, 10) # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    pro = paginator.get_page(page_number)
+
+    category=  Product.objects.values('productcatagory').distinct()
+    
+    context = {'category':category,'products': products,'form':form,'user_products':user_products,'pro':pro,'total':total,'totalbalace':totalbalnce}
+    return render(request, 'core/mr.html', context)
    
     
-    myFilter = OrderFilter(request.GET, queryset=products)
-    products = myFilter.qs 
+   
 
     # p = Paginator(products, 5)  # creating a paginator object
     # # getting the desired page number from url
@@ -838,7 +1155,7 @@ def mr(request):
     # products=page_obj  
     
     
-    context = {'products': products,'myFilter':myFilter,'form':form,'user_products':user_products,'total':total}
+    context = {'products': products,'form':form,'user_products':user_products,'total':total}
     return render(request, 'core/mr.html', context)
 
 

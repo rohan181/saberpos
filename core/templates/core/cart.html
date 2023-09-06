@@ -307,10 +307,7 @@
             </button>
 
 
-            <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40 mr-px"
-            onclick="addItemcart('{{ product.id }}')">
-            jjjj
-        </button>
+           
         
 
          <button class="save btn btn-info mx-2" onclick="openModal('{{ product.id }}', '{{ product.name }}', '{{ product.price }}')">Add</button>
@@ -388,17 +385,17 @@
                                     
                                     <div class="form-group">
                                         <label for="quantity">Quantity:</label>
-                                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                                        <input type="number" class="form-control" id="quantity" name="quantity" value="0" required>
                                     </div>
                                     
                                     <div class="form-group">
                                         <label for="price1">Price1:</label>
-                                        <input type="number" class="form-control" id="price" name="price1" required>
+                                        <input type="number" class="form-control" id="price" name="price1" value="0" required>
                                     </div>
                                     
                                     <div class="form-group">
                                         <label for="price2">Price2:</label>
-                                        <input type="number" class="form-control" id="price2" name="price2" required>
+                                        <input type="number" class="form-control" id="price2" name="price2" value="0" required>
                                     </div>
                                     
                                     <div class="form-group">
@@ -419,10 +416,14 @@
                                         </select>
                                     </div>
                                     
+                                   
+                                   
                                     <div class="form-group">
                                         <label for="exchangeAmount">Exchange Amount:</label>
-                                        <input type="number" class="form-control" id="exchangeAmount" name="exchangeAmount" required>
+                                        <input type="number" class="form-control" id="exchangeAmount" name="exchangeAmount"  placeholder="Enter exchange amount" requ>
                                     </div>
+                                    
+                                    
                                     
                                     <div class="form-group">
                                         <label for="spareName">Spare Name:</label>

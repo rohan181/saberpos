@@ -79,14 +79,14 @@ class OrderFilter(django_filters.FilterSet):
 
 class soldfilter(django_filters.FilterSet):
   
-  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
-  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
-  start_time = DateTimeFilter(field_name="added", lookup_expr='time__gte', widget=AdminTimeWidget())
-  end_time = DateTimeFilter(field_name="added", lookup_expr='time__lte', widget=AdminTimeWidget())
-  
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=forms.DateInput(attrs={'type': 'date'}),)
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=forms.DateInput(attrs={'type': 'date'}))
+  #start_time = DateTimeFilter(field_name="added", lookup_expr='time__gte', widget=AdminTimeWidget())
+  #end_time = DateTimeFilter(field_name="added", lookup_expr='time__lte', widget=AdminTimeWidget())
+  invoicenumber = CharFilter(field_name='invoicenumber', lookup_expr='icontains')
   class Meta:
    model = Order
-   fields = ['customer']
+   fields = ['customer','invoicenumber']
 
 
 class mrfilter(django_filters.FilterSet):
@@ -94,8 +94,8 @@ class mrfilter(django_filters.FilterSet):
   end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
   
   class Meta:
-   model = Order
-   fields = ['customer']
+   model = mrentry
+   fields = ['supplier']
 
 class dailyreportfilter(django_filters.FilterSet):
   start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())

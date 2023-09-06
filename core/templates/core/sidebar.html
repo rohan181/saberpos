@@ -1,0 +1,365 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+
+<!-- Add jQuery UI Autocomplete CSS -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clifford: '#da373d',
+          }
+        }
+      }
+    }
+
+
+    
+(function($) {
+    $('#add-form').click(function() {
+        var index = $('#id_inline_test_models-TOTAL_FORMS').val()
+        var newTable = $('#id_inline_test_models-__prefix__-DELETE').parents('table').clone()
+        newTable.find(':input').each(function() {
+            for (attr of ['name', 'id'])
+                $(this).attr(
+                    attr,
+                    $(this).attr(attr).replace('__prefix__', index)
+                )
+        })
+        newTable.insertBefore($(this))
+        $('#id_inline_test_models-TOTAL_FORMS').val(
+            parseInt($('#id_inline_test_models-TOTAL_FORMS').val()) + 1
+        )
+        newTable.slideDown()
+    })
+})($)
+
+  </script>
+
+ <style>
+
+
+
+body {
+            background-color: #f8f9fa;
+        }
+        
+        .custom-form {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+ </style>
+
+</head>
+<body>
+  {% csrf_token %}
+  
+    <nav class="flex items-center justify-between flex-wrap bg-gray-800 ">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+          <img src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" class="top1 " alt="">
+          <span class="font-semibold text-xl tracking-tight">RANA MOTORS</span>
+        </div>
+        <div class="block lg:hidden">
+          <button class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+            <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+          </button>
+        </div>
+        <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+          <div class="text-sm lg:flex-grow">
+            <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+              Products
+            </a>
+
+          
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                    Logout
+                </a>
+
+                <a href="{% url 'cart' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                  HOME
+              </a>
+             
+               
+            {% else %}
+                <a href="{% url 'login' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                    Login
+                </a>
+            {% endif %}
+          </div>
+        </div>
+      </nav>
+
+    <div >
+
+
+
+
+        <div class="flex ">
+            <div class="h-ful shadow-md bg-black " id="sidenavSecExample">
+                <div class="pt-1 pb-1 px-6">
+                    <a href="#!">
+                        <div class="flex items-center">
+                            
+                            
+                        </div>
+                    </a>
+                </div>
+                <ul class="relative px-1">
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-red-50 text-ellipsis whitespace-nowrap rounded hover:text-blue-60 hover:bg-gray-100 transition duration-300 ease-in-out"
+                            href="admin/core/customer/" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span>admin</span>
+                        </a>
+                    </li>
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            href="/soldlist" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span>invoicelist</span>
+                        </a>
+                    </li>
+                    <hr class="my-2">
+        
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden  text-teal-200 hover:text-white whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            href="admin/core/customer/add" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span>add cutomer</span>
+                        </a>
+        
+                    </li>
+        
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            href="/customerlist" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span>customerlist</span>
+                        </a>
+        
+                    </li>
+                    <hr class="my-2">
+        
+                   
+        
+                    
+        
+                    <li class="relative" id="sidenavSecEx3">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-red-50 text-ellipsis whitespace-nowrap rounded hover:text-blue-60 hover:bg-gray-100 transition duration-300 ease-in-out"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse"
+                            data-bs-target="#collapseSidenavSecEx3" aria-expanded="false" aria-controls="collapseSidenavSecEx3">
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path fill="currentColor"
+                                    d="M192 208c0-17.67-14.33-32-32-32h-16c-35.35 0-64 28.65-64 64v48c0 35.35 28.65 64 64 64h16c17.67 0 32-14.33 32-32V208zm176 144c35.35 0 64-28.65 64-64v-48c0-35.35-28.65-64-64-64h-16c-17.67 0-32 14.33-32 32v112c0 17.67 14.33 32 32 32h16zM256 0C113.18 0 4.58 118.83 0 256v16c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-16c0-114.69 93.31-208 208-208s208 93.31 208 208h-.12c.08 2.43.12 165.72.12 165.72 0 23.35-18.93 42.28-42.28 42.28H320c0-26.51-21.49-48-48-48h-32c-26.51 0-48 21.49-48 48s21.49 48 48 48h181.72c49.86 0 90.28-40.42 90.28-90.28V256C507.42 118.83 398.82 0 256 0z">
+                                </path>
+                            </svg>
+                            <span>Collapsible item 2</span>
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path fill="currentColor"
+                                    d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z">
+                                </path>
+                            </svg>
+                        </a>
+                        <ul class="relative accordion-collapse collapse" id="collapseSidenavSecEx3"
+                            aria-labelledby="sidenavSecEx3" data-bs-parent="#sidenavSecExample">
+                            <li class="relative">
+                                <a href="#!"
+                                    class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                                    data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 3</a>
+                            </li>
+                            <li class="relative">
+                                <a href="#!"
+                                    class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                                    data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 4</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr class="my-2">
+                <ul class="relative px-1">
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-red-50 text-ellipsis whitespace-nowrap rounded hover:text-blue-60 hover:bg-gray-100 transition duration-300 ease-in-out"
+                            href="/mr" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span class="icon">
+                                <ion-icon name="documents-outline"></ion-icon>
+                            </span>
+                            <span>MR ENTRY</span>
+                        </a>
+                    </li>
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            href="/expense" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span class="icon">
+                                <ion-icon name="documents-outline"></ion-icon>
+                            </span>
+                            <span>EXPENSE</span>
+                        </a>
+                    </li>
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            href="/daily" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span class="icon">
+                                <ion-icon name="documents-outline"></ion-icon>
+                            </span>
+                            <span>DAILY REPORT</span>
+                        </a>
+                    </li>
+        
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            href="/salesreport" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span class="icon">
+                                <ion-icon name="documents-outline"></ion-icon>
+                            </span>
+                            <span>SALES REPORT</span>
+                        </a>
+                    </li>
+        
+        
+        
+                    <li class="relative">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-teal-200 hover:text-white text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                            href="/expensereport" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+                            
+                            <span class="icon">
+                                <ion-icon name="documents-outline"></ion-icon>
+                            </span>
+                            <span>Expense report </span>
+                        </a>
+                    </li>
+                    expensereport
+                    
+        
+                    <li class="relative" id="sidenavXxEx2">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse"
+                            data-bs-target="#collapseSidenavXxEx2" aria-expanded="false" aria-controls="collapseSidenavXxEx2">
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="comments"
+                                class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                <path fill="currentColor"
+                                    d="M416 192c0-88.4-93.1-160-208-160S0 103.6 0 192c0 34.3 14.1 65.9 38 92-13.4 30.2-35.5 54.2-35.8 54.5-2.2 2.3-2.8 5.7-1.5 8.7S4.8 352 8 352c36.6 0 66.9-12.3 88.7-25 32.2 15.7 70.3 25 111.3 25 114.9 0 208-71.6 208-160zm122 220c23.9-26 38-57.7 38-92 0-66.9-53.5-124.2-129.3-148.1.9 6.6 1.3 13.3 1.3 20.1 0 105.9-107.7 192-240 192-10.8 0-21.3-.8-31.7-1.9C207.8 439.6 281.8 480 368 480c41 0 79.1-9.2 111.3-25 21.8 12.7 52.1 25 88.7 25 3.2 0 6.1-1.9 7.3-4.8 1.3-2.9.7-6.3-1.5-8.7-.3-.3-22.4-24.2-35.8-54.5z">
+                                </path>
+                            </svg>
+                            <span>Collapsible item 3</span>
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path fill="currentColor"
+                                    d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z">
+                                </path>
+                            </svg>
+                        </a>
+                        <ul class="relative accordion-collapse collapse" id="collapseSidenavXxEx2"
+                            aria-labelledby="sidenavXxEx2" data-bs-parent="#sidenavSecExample">
+                            <li class="relative">
+                                <a href="#!"
+                                    class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                                    data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 5</a>
+                            </li>
+                            <li class="relative">
+                                <a href="#!"
+                                    class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                                    data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 6</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="relative" id="sidenavXxEx3">
+                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer"
+                            data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse"
+                            data-bs-target="#collapseSidenavXxEx3" aria-expanded="false" aria-controls="collapseSidenavXxEx3">
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path fill="currentColor"
+                                    d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z">
+                                </path>
+                            </svg>
+                            <span>Collapsible item 4</span>
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path fill="currentColor"
+                                    d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z">
+                                </path>
+                            </svg>
+                        </a>
+                        <ul class="relative accordion-collapse collapse" id="collapseSidenavXxEx3"
+                            aria-labelledby="sidenavXxEx3" data-bs-parent="#sidenavSecExample">
+                            <li class="relative">
+                                <a href="#!"
+                                    class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                                    data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 7</a>
+                            </li>
+                            <li class="relative">
+                                <a href="#!"
+                                    class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out"
+                                    data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 8</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+        
+            </div>
+
+
+
+
+     
+    
+      
+  
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+ <script src="https://unpkg.com/htmx.org@1.6.1/dist/htmx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
+</body>
+</html>

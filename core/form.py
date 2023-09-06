@@ -1,5 +1,5 @@
 from django import forms  
-from core.models import Order, UserItem,Product,mrentry,returnn,sold,bill,dailyreport,temppaybill
+from core.models import Order, UserItem,Product,mrentry,returnn,sold,bill,dailyreport,temppaybill,mrentryrecord
   
 class useritem(forms.ModelForm):  
     class Meta:  
@@ -59,6 +59,16 @@ class soldformm(forms.ModelForm):
         model = sold
         fields = '__all__'
         exclude = ['product','order','user','Phone','customer','discount']
+
+
+
+
+class mreditformm(forms.ModelForm):
+    class Meta:
+        model = mrentryrecord
+        fields = '__all__'
+        exclude = ['product','order','user','Phone','supplier','discount']
+
          
 
 

@@ -39,19 +39,33 @@
   }
 </script>
 
+<style>
+
+
+input[type="date"] {
+    background-color: #fff; /* Change to your desired background color */
+    opacity: 1; /* Set opacity to 1 to remove transparency */
+}
+
+</style>
+
  
 </head>
+
+
+
 
 <body>
 
   
   {% load crispy_forms_tags %}
 {{ form.media }}
-  <form method="get">
-    
-    {{myFilter.form|crispy }}
+<form method="get" class="flex items-center space-x-4">
 
-    <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
+  <!-- Apply "crispy" filter to your form -->
+  {{ myFilter.form|crispy }}
+  
+  <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded" type="submit">Search</button>
 </form>
 
   

@@ -1,0 +1,357 @@
+{% load mathfilters %}
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rana Motors Limited - Invoice</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+   
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+</head>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CSS -->
+    
+    <style>
+   *{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body{
+    font-family:"Tahoma",sans-serif;
+    font-size: 14px;
+}
+.container{
+    font-family:"Tahoma",sans-serif;
+    font-size: 14px;
+    margin:auto;
+    display: block;
+    
+}
+
+h3{
+    font-size: 20px;
+}
+h5{
+    font-size: 17px;
+}
+h6{
+    font-size: 12px;
+}
+
+.my-0{
+    margin-left: -0.25rem;
+}
+
+
+.mt-n1 {
+    margin-top: -.30rem !important;
+  }
+
+
+  .mt-n3 {
+    margin-top: -1rem !important;
+  }
+
+  .mt-n2 {
+    margin-right: -0.25rem !important;
+  }
+
+
+
+       
+    </style>
+    <title>cashmemeo</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card card-one">
+     
+        <div class="mx-1">
+          <div class="text-center">
+            <img width=78 height=42
+            id="Picture 1" src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" alt="Rana-Motors-Logo"> <b><span
+            style='font-size:16.0pt;line-height:107%;font-family:"Tahoma",sans-serif'>RANA
+            MOTORS LIMITED</span></b> 
+            <p class="card-text">Address: Apollo Hospital Exit Road, Baridhara, Dhaka-1229, Cell: +8801842-111634, +8801842111636, +8801842111612</p>
+            
+
+
+              <div class="text-center mt-n1"><span class=" border border-dark px-4 py-1 fw-bold">INVOICE</span></div> 
+             
+          
+            <div class="d-flex justify-content-end">
+              <span class="float-end fw-bold">Office Copy</span>
+            </div>
+          </div>
+
+      
+          <table class="table table-sm table-bordered border-dark">
+          
+            <tbody>
+              <tr>
+                <th scope="row">Invoice No</th>
+                <td>{{date.added|date:"dmy-gi"}}</td>
+                <th scope="row">Date</th>
+                <td>{{ date.added| date:"F d, Y"}}</td>
+               
+                
+              </tr>
+              {% if date.customer.name != None %}
+              <tr>
+                <th scope="row">Client Name</th>
+                <td>{{date.customer.name|title}}</td>
+                <th scope="row">Mobile No</th>
+                <td>{{date.customer.Phone}}</td>
+                
+              </tr>
+               {% endif%}
+               {% if date.customer.name == None %}
+              <tr>
+                <th scope="row">Client Name</th>
+                <td>{{date.name|title}}</td>
+                <th scope="row">Mobile No</th>
+                <td>{{date.Phone}}</td>
+                
+              </tr>
+               {% endif%}
+
+
+              <tr>
+                <th scope="row">Address</th>
+                <td colspan="3">{{date.customer.address|title}}</td>
+               
+               
+              </tr>
+             
+              <tr>
+                <th scope="row">Delivery Address</th>
+                <td>{{date.address|title}}</td>
+                <th scope="row">Vehecle No</th>
+                <td>{{date.vehicleno}}</td>
+                
+              </tr>
+            </tbody>
+          </table>
+    
+          <table class="table table-sm table-bordered border-dark mt-n1">
+            <thead class="" style="background: rgba(77, 78, 83, 0.425);">
+              <tr>
+                <th class="text-center" scope="col">SL#</th>
+                <th class="text-center" scope="col">Description</th>
+                <th class="text-center" scope="col">Model No</th>
+                <th class="text-center" scope="col">Brand</th>
+                <th class="text-center" scope="col">Quantity</th>
+                <th class="text-center" scope="col">Unit Price</th>
+                <th class="text-center" scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for rs in orders %}
+              <tr>
+
+
+                <th scope="row">{{ forloop.counter }}</th>
+                {% if rs.sparename != None %}
+                
+                <td>{{rs.sparename}} {{rs.engine_no}}</td>
+                {% endif%}
+                {% if rs.sparename == None %}
+                
+                <td>{{rs.product.name}} {{rs.engine_no}}</td>
+                {% endif%}
+                <td>N/A</td>
+                <td>{{rs.product.brand}}</td>
+                <td align="right">{{rs.quantity}}</td>
+                <td>{{rs.price1}}</td>
+                <td align="right">{{rs.total_price1}}</td>
+                
+              </tr> 
+              {% endfor %}
+              
+             
+            
+            </tbody>
+           
+          </table>
+  
+          
+          
+            
+           
+      </div>
+      
+      
+          <div class="mx-1">
+            <table class="d-flex flex-row-reverse mt-n3">
+              <tbody>
+                <tr style='height:10.3pt'>
+                  <td width=400 colspan=5 style='width:285.75px;border:none;padding: 0pt 1.95pt 1.95pt 1.95pt;
+                  height:10.3pt'>
+                  <p class=MsoNormal style='margin-bottom:0in;line-height:normal'>&nbsp;</p>
+                  </td>
+                  <td width=120 colspan=2 style='width:87.9px;border:none;padding:1.95pt 1.95pt 1.95pt 1.95pt;
+                  height:10.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size: 11px;font-family:"Tahoma",sans-serif;
+                  color:black'>Total :</span></b></p>
+                  </td>
+                  <td width=90 style='width:65.65px;border:solid black 1.0pt;border-top:none;
+                  padding:1.95pt 1.95pt 1.95pt 1.95pt;height:10.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size: 11px;font-family:"Tahoma",sans-serif;
+                  color:black'>{{total}}</span></b></p>
+                  </td>
+                 </tr>
+                 {% if date.discount != 0 %}
+                 <tr style='height:10.3pt'>
+                  <td width=400 colspan=5 style='width:285.75px;border:none;padding: 0pt 1.95pt 1.95pt 1.95pt;
+                  height:10.3pt'>
+                  <p class=MsoNormal style='margin-bottom:0in;line-height:normal'>&nbsp;</p>
+                  </td>
+                  <td width=120 colspan=2 style='width:87.9px;border:none;padding:1.95pt 1.95pt 1.95pt 1.95pt;
+                  height:10.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size: 11px;font-family:"Tahoma",sans-serif;
+                  color:black'>Discount :</span></b></p>
+                  </td>
+                  <td width=90 style='width:65.65px;border:solid black 1.0pt;border-top:none;
+                  padding:1.95pt 1.95pt 1.95pt 1.95pt;height:10.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size: 11px;font-family:"Tahoma",sans-serif;
+                  color:black'>{{date.discount}}</span></b></p>
+                  </td>
+                 
+                 </tr>
+                 {% endif %}
+                 <tr style='height:12.3pt'>
+                  <td width=438 colspan=5 style='width:285.75px;border:none;padding:1.95pt 1.95pt 1.95pt 1.95pt;
+                  height:12.3pt'>
+                  <p class=MsoNormal style='margin-bottom:0in;line-height:normal'>&nbsp;</p>
+                  </td>
+                  <td width=120 colspan=2 style='width: 87.9px;border:none;padding:1.95pt 1.95pt 1.95pt 1.95pt;
+                  height:12.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size: 11px;font-family:"Tahoma",sans-serif;
+                  color:black'>Net Amount :</span></b></p>
+                  </td>
+                  
+                  <td width=95 style='width:65.65px;border:solid black 1.0pt;border-top:none;
+                  padding:1.95pt 1.95pt 1.95pt 1.95pt;height:12.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size: 11px;font-family:"Tahoma",sans-serif;
+                  color:black'>{{total|sub:date.discount}}</span></b></p>
+                  </td>
+                 
+                 </tr>
+                 <tr style='height:12.3pt'>
+                  <td width=400 colspan=5 style='width:285.75px;border:none;padding:1.95pt 1.95pt 1.95pt 1.95pt;
+                  height:12.3pt'>
+                  <p class=MsoNormal style='margin-bottom:0in;line-height:normal'>&nbsp;</p>
+                  </td>
+                  <td width=120 colspan=2 style='width:87px;border:none;padding:1.95pt 1.95pt 1.95pt 1.95pt;
+                  height:12.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size: 11px;font-family:"Tahoma",sans-serif;
+                  color:black'>Paid Amount:</span></b></p>
+                  </td>
+                  <td width=95 style='width:65.65px;border:solid black 1.0pt;border-top:none;
+                  padding:1.95pt 1.95pt 1.95pt 1.95pt;height:12.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size:11px;font-family:"Tahoma",sans-serif;
+                  color:black'>{{date.paid}}</span></b></p>
+                  </td>
+                 </tr>
+                 <tr style='height:12.3pt'>
+                  <td width=400 colspan=5 style='width:285.75px;border:none;padding:1.95pt 1.95pt 1.95pt 1.95pt;
+                  height:12.3pt'>
+                  <p class=MsoNormal style='margin-bottom:0in;line-height:normal'>&nbsp;</p>
+                  </td>
+                  <td width=120 colspan=2 style='width:87px;border:none;padding:1.95pt 1.95pt 1.95pt 1.95pt;
+                  height:12.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size:11px;font-family:"Tahoma",sans-serif;
+                  color:black'>Due Amount:</span></b></p>
+                  </td>
+                  <td width=95 style='width:65.65px;border:solid black 1.0pt;border-top:none;
+                  padding:1.95pt 1.95pt 1.95pt 1.95pt;height:12.3pt'>
+                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                  line-height:normal'><b><span style='font-size:11px;font-family:"Tahoma",sans-serif;
+                  color:black'>{{date.totalprice|sub:date.paid}}</span></b></p>
+                  </td>
+                 </tr>
+              </tbody>
+            </table>
+          </div>
+
+        
+      
+    
+      
+      <div class="row">
+          <span class="mx-5 text-decoration-underline fw-bold">In words: BDT {{text|title}}</span>
+      </div>
+      <div class="my-3 mx-4">
+          <div class="float-start">
+              <table>
+                  <tr>
+                      <td width="16%" valign="top"><h6 style="margin-bottom: 0;">
+                          <span style="text-decoration: dashed; padding-left: 100%;color: #000; border-bottom: 1px solid black;"></span>
+                      </h6>
+                          <h6 class="text-center fw-bold"
+                          style="margin-top: 5px;">RECEIVED BY</h6></td>
+                  </tr>
+              </table>
+          </div>
+
+          <div class="float-end">
+              <table>
+                  <tr>
+                      <td width="16%" valign="top"><h6 style="margin-bottom: 0;">
+                          <span style="text-decoration: dashed; padding-left: 100%;color: #000; border-bottom: 1px solid black;"></span>
+                      </h6>
+                          <h6 class="text-center fw-bold"
+                          style="margin-top: 5px;">FOR RANA MOTORS LIMITED</h6></td>
+                  </tr>
+              </table>
+          </div>
+
+      </div>
+    </div>  
+  </div>
+
+
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

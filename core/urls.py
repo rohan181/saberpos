@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path,include
-from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport,api_productlist,delete_user_item,apiaddproduct,userItemstore
+from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport,api_productlist,delete_user_item,apiaddproduct,userItemstore,mreditcashmemo
 
 from django.urls import re_path as url
 from django.urls import reverse
@@ -29,14 +29,20 @@ urlpatterns = [
     path('mrlist', views.mrlist, name='mrlist'),
     path('<id>/cashmemo', views.cashmemo, name='cashmemo'),
     path('<id>/cashmemo1', views.cashmemo1, name='cashmemo1'),
-    path('<id>/mrmemo', views.mrmemo, name='mrmemo'),
+   # path('<id>/mrmemo', views.mrmemo, name='mrmemo'),
     path('<id>/chalan', views.chalan, name='chalan'),
     path('<id>/returnn', views.returnno, name='return'),
     path('<id>/returnitem', views.returnreasonn, name='returnreasonn'),
     path('<id>/editcashmemo', views.editcashmemo, name='editcashmemo'),
     path('<id>/fianaleditcashmemo', views.fianaleditcashmemo, name='fianaleditcashmemo'),
     path('productlist', views.productlist, name='productlist'),
-    path('mrproductlist', views.mrproductlist, name='mrproductlist'),
+
+
+    path('mrinvoicelist', views.mrinvoicelist, name='mrinvoicelist'),
+    path('<id>/mrcashmemo', views.mrcashmemo, name='mrcashmemo'),
+    path('<id>/mreditcashmemo', views.mreditcashmemo, name='mreditcashmemo'),
+    path('<id>/mrfianaleditcashmemo', views.mrfianaleditcashmemo, name='mrfianaleditcashmemo'),
+
     path('<id>/bill', views.billt, name='bill'),
     path('<id>/delete', views.delete_item, name='delete'),
     path('<id>/deletegroup', views.delete_itemgroup, name='delete'),

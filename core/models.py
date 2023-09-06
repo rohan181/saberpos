@@ -86,7 +86,8 @@ class UserItem(models.Model):
         decimal_places=0,
         max_digits=10,
         validators=[MinValueValidator(0)],
-        null=True
+        null=True,
+        blank=True
     )
     added = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
@@ -97,7 +98,7 @@ class UserItem(models.Model):
     productype=models.CharField(max_length=100,choices=PRODUCT1,default='LocalContainer',null=True)
     enginecomplete=models.CharField(max_length=10,choices=engine,default='incomplete',null=True)
     remarks = models.CharField(max_length=500,blank=True,null=True)
-    exchange_ammount = models.PositiveIntegerField(default=0,null=True)
+    exchange_ammount = models.PositiveIntegerField(default=0,null=True,blank=True)
     #exchange_engine = models.CharField(max_length=500,blank=True,default='')
     sparename = models.CharField(max_length=200,null=True,blank=True)
     groupproduct = models.BooleanField(null=True,blank=True)
@@ -129,6 +130,7 @@ class Order(models.Model):
     )
     added = models.DateTimeField(auto_now_add=True,null=True)
     name = models.CharField(max_length=200,null=True,blank=True)
+    invoicenumber = models.CharField(max_length=300,null=True,blank=True)
     address = models.CharField(max_length=800,null=True,blank=True)
     vehicleno  = models.CharField(max_length=800,null=True,blank=True)
     paid = models.PositiveIntegerField(default=0,null=True)
@@ -176,7 +178,8 @@ class sold(models.Model):
         decimal_places=0,
         max_digits=10,
         validators=[MinValueValidator(0)],
-        null=True
+        null=True,
+        blank= True
     )
     name = models.CharField(max_length=200,null=True,blank=True)
     engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
@@ -235,6 +238,8 @@ class supplier(models.Model):
 class mrentry(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     supplier= models.ForeignKey(supplier, on_delete=models.CASCADE,blank=True,null=True)
+  
+    #customer = models.ForeignKey(Customer, on_delete=models.CASCADE,blank=True,null=True)
     UserItem  = models.ManyToManyField(UserItem,blank=True)
     left = models.DecimalField(
         decimal_places=0,
@@ -247,29 +252,41 @@ class mrentry(models.Model):
     added = models.DateTimeField(auto_now_add=True,null=True)
     name = models.CharField(max_length=200,null=True,blank=True)
     address = models.CharField(max_length=800,null=True,blank=True)
+    vehicleno  = models.CharField(max_length=800,null=True,blank=True)
     paid = models.PositiveIntegerField(default=0,null=True)
     Phone = models.CharField(max_length=200,null=True,blank=True)
     discount = models.PositiveIntegerField(default=0,null=True,blank=True)
-    
+    totalprice = models.PositiveIntegerField(default=0,null=True,blank=True)
+    totalprice1 = models.PositiveIntegerField(default=0,null=True,blank=True)
+    due = models.PositiveIntegerField(default=0,null=True,blank=True)
     @property
     def total_price(self):
-        return (self.quantity * self.product.price)            
+        return (self.quantity * self.UserItem.price1)
+           
 
 
 
 
 
 class mrentryrecord(models.Model):
+   
+
+
+    supplier = models.ForeignKey(supplier, on_delete=models.CASCADE,null=True)
+    paid = models.PositiveIntegerField(default=0,null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     mrentry = models.ForeignKey(mrentry, on_delete=models.CASCADE,null=True,blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     added = models.DateTimeField(auto_now_add=True)
-    supplier = models.ForeignKey(supplier, on_delete=models.CASCADE,null=True)
+    #customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True)
     paid = models.PositiveIntegerField(default=0,null=True)
+    exchange_ammount = models.PositiveIntegerField(default=0,null=True)
+    costprice = models.PositiveIntegerField(default=0,null=True)
     left = models.PositiveIntegerField(default=0,null=True)
     discount = models.PositiveIntegerField(default=0,null=True,blank=True)
-    groupproduct = models.BooleanField(null=True,blank=True)
+    remarks = models.CharField(max_length=500,blank=True,null=True)
+    
     price1 = models.DecimalField(
         default=0,
         decimal_places=0,
@@ -277,18 +294,40 @@ class mrentryrecord(models.Model):
         validators=[MinValueValidator(0)],
         null=True
     )
-    
+    price2 = models.DecimalField(
+        default=0,
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+    name = models.CharField(max_length=200,null=True,blank=True)
+    engine_no = models.CharField(max_length=200,null=True,default='',blank=True)
+    Phone = models.CharField(max_length=200,null=True,blank=True)
+    sparename = models.CharField(max_length=200,null=True,blank=True)
+    groupproduct = models.BooleanField(null=True,blank=True)
     @property
     def total_price(self):
-        return self.quantity * self.product.price
+        return self.quantity * self.price1 +self.exchange_ammount
+
+    @property
+    def profit(self):
+        return (self.total_price-self.costprice ) /self.costprice  
+    @property
+    def profit1(self):
+        return self.profit*100   
+    @property  
+    def totalprofit(self):
+        return self.total_price-self.costprice     
+    @property
+    def total_price1(self):
+        return self.quantity * self.price1   
+    @property     
+    def total_costprice(self):
+        return self.quantity * self.costprice     
 
     def __str__(self):
         return self.product.name 
-
-
-    @property
-    def invoice(self):
-        return (self.id+" " +" "+ self.added+"") 
 
 
 

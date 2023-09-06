@@ -5,6 +5,9 @@ from django.contrib import admin
 # from import_export.admin import ImportExportModelAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
+
+from django.forms import Media
+
 from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry,returnn,bill,paybill,paybillcatogory,dailyreport,temppaybill
 class OrderProductline(admin.TabularInline):
     model =sold
@@ -61,3 +64,8 @@ class SwitchModelAdmin(ImportExportModelAdmin):
         search_fields = ['name']
 
 admin.site.register(Product,SwitchModelAdmin)
+
+
+
+
+
