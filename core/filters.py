@@ -90,21 +90,30 @@ class soldfilter(django_filters.FilterSet):
 
 
 class mrfilter(django_filters.FilterSet):
-  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
-  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=forms.DateInput(attrs={'type': 'date'}))
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=forms.DateInput(attrs={'type': 'date'}))
   
   class Meta:
    model = mrentry
    fields = ['supplier']
 
 class dailyreportfilter(django_filters.FilterSet):
-  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
-  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=forms.DateInput(attrs={'type': 'date'}))
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=forms.DateInput(attrs={'type': 'date'}))
   
   class Meta:
    model = dailyreport
    fields = []   
 
+
+
+class returnfilter(django_filters.FilterSet):
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=forms.DateInput(attrs={'type': 'date'}))
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=forms.DateInput(attrs={'type': 'date'}))
+  
+  class Meta:
+   model = returnn
+   fields = []  
 
 
 class expensefilter(django_filters.FilterSet):
@@ -116,8 +125,8 @@ class expensefilter(django_filters.FilterSet):
 
 
 class paybillfilter(django_filters.FilterSet):
-  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=AdminDateWidget())
-  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=AdminDateWidget())
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=forms.DateInput(attrs={'type': 'date'}))
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=forms.DateInput(attrs={'type': 'date'}))
   
   class Meta:
    model = paybill

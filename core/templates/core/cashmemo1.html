@@ -168,11 +168,11 @@ h6{
 
 
                 <th scope="row">{{ forloop.counter }}</th>
-                {% if rs.sparename != None %}
+                {% if rs.sparename == None %}
                 
                 <td>{{rs.sparename}} {{rs.engine_no}}</td>
                 {% endif%}
-                {% if rs.sparename == None %}
+                {% if rs.sparename != None %}
                 
                 <td>{{rs.product.name}} {{rs.engine_no}}</td>
                 {% endif%}

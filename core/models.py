@@ -144,6 +144,12 @@ class Order(models.Model):
         return (self.quantity * self.UserItem.price1)
     
 
+    @property
+    def total_price1(self):
+        return (self.quantity * self.UserItem.price2)
+    
+    
+
     
     
 

@@ -2,7 +2,7 @@ from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord,supplier
-from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter,mrfilter
+from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter,mrfilter,returnfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
@@ -236,6 +236,12 @@ def soldlist(request):
          orders=Order.objects.all().order_by('-id')
          myFilter =soldfilter(request.GET, queryset=orders)
          orders = myFilter.qs 
+
+
+         paginator = Paginator(orders, 15) # Show 25 contacts per page.
+
+         page_number = request.GET.get('page')
+         orders = paginator.get_page(page_number)
         
          context = {#'category': category,
                'orders': orders,
@@ -244,6 +250,39 @@ def soldlist(request):
 
 
          return render(request, 'core/soldlist.html',context)
+
+
+
+@login_required
+def returnlist(request):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         returns=returnn.objects.all().order_by('-id')
+         myFilter =returnfilter(request.GET, queryset=returns)
+         returns = myFilter.qs 
+
+
+         paginator = Paginator(returns, 15) # Show 25 contacts per page.
+
+         page_number = request.GET.get('page')
+         returns= paginator.get_page(page_number)
+        
+         context = {#'category': category,
+               'returns': returns,
+               'myFilter':myFilter
+               }
+
+
+         return render(request, 'core/returnlist.html',context)
 
 
 def mrlist(request):
@@ -613,7 +652,13 @@ def cashmemo1(request,id):
             total+=rs.price2 * rs.quantity
 
          total1=total-date.discount
-         text=num2words(total1)   
+         text=num2words(total1) 
+         deu=date.due
+
+         if date.paid - date.totalprice ==0 :
+             due = 0
+             date.paid= total1
+           
          #total = sum(product.total_price for product in self.user_products)
          context = {#'category': category,
                'orders': orders,
@@ -623,6 +668,7 @@ def cashmemo1(request,id):
                'ordere_de':ordere_de,
                'total':total,
                'total1':total1,
+                'due' :due
                }
 
 

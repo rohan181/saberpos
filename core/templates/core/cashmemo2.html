@@ -169,11 +169,11 @@ h6{
 
 
                 <th scope="row">{{ forloop.counter }}</th>
-                {% if rs.sparename != None %}
+                {% if rs.sparename == None %}
                 
                 <td>{{rs.sparename}} {{rs.engine_no}}</td>
                 {% endif%}
-                {% if rs.sparename == None %}
+                {% if rs.sparename != None %}
                 
                 <td>{{rs.product.name}} {{rs.engine_no}}</td>
                 {% endif%}
@@ -294,7 +294,7 @@ h6{
                   padding:1.95pt 1.95pt 1.95pt 1.95pt;height:12.3pt'>
                   <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
                   line-height:normal'><b><span style='font-size:11px;font-family:"Tahoma",sans-serif;
-                  color:black'>{{total|sub:date.paid}}</span></b></p>
+                  color:black'>{{due}}</span></b></p>
                   </td>
                  </tr>
               </tbody>

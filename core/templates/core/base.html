@@ -73,13 +73,45 @@ body {
             padding: 20px;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+    
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .step-links {
+        display: inline-block;
+        margin: 0 auto;
+    }
+
+    .step-links a {
+        text-decoration: none;
+        padding: 5px 10px;
+        margin: 0 5px;
+        background-color: #c76e47;
+        color: #fff;
+        border-radius: 3px;
+    }
+
+    .step-links a:hover {
+        background-color: #0056b3;
+    }
+
+    .current {
+        font-weight: bold;
+        margin: 0 10px;
+    }
+</style>
+
+
  </style>
 
 </head>
 <body>
   {% csrf_token %}
   
-    <nav class="flex items-center justify-between flex-wrap bg-gray-800 ">
+    <nav class="flex items-center justify-between flex-wrap bg-stone-600  ">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
           <img src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" class="top1 " alt="">
           <span class="font-semibold text-xl tracking-tight">RANA MOTORS</span>
@@ -91,23 +123,21 @@ body {
         </div>
         <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
           <div class="text-sm lg:flex-grow">
-            <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
-              Products
-            </a>
+            
 
           
             {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                <a href="{% url 'logout' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
                     Logout
                 </a>
 
-                <a href="{% url 'cart' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                <a href="{% url 'cart' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
                   HOME
               </a>
              
                
             {% else %}
-                <a href="{% url 'login' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                <a href="{% url 'login' %}" class="block mt-4 lg:inline-block lg:mt-0 text-orange-200 hover:text-white mr-4">
                     Login
                 </a>
             {% endif %}
