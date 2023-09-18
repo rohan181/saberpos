@@ -113,7 +113,7 @@ class returnfilter(django_filters.FilterSet):
   
   class Meta:
    model = returnn
-   fields = []  
+   fields = ['customer']  
 
 
 class expensefilter(django_filters.FilterSet):
@@ -132,6 +132,19 @@ class paybillfilter(django_filters.FilterSet):
    model = paybill
    fields = []   
   
-    
+
+
+
+
+
+
+class billfilter(django_filters.FilterSet):
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=forms.DateInput(attrs={'type': 'date'}))
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=forms.DateInput(attrs={'type': 'date'}))
+  
+  class Meta:
+   model = returnn
+   fields = ['customer']  
+
 		
 

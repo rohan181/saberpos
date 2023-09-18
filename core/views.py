@@ -2,7 +2,7 @@ from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord,supplier
-from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter,mrfilter,returnfilter
+from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter,mrfilter,returnfilter,billfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
@@ -283,6 +283,40 @@ def returnlist(request):
 
 
          return render(request, 'core/returnlist.html',context)
+
+
+
+
+@login_required
+def bill_list(request):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+         returns=bill.objects.all().order_by('-id')
+         myFilter =billfilter(request.GET, queryset=returns)
+         returns = myFilter.qs 
+
+
+         paginator = Paginator(returns, 15) # Show 25 contacts per page.
+
+         page_number = request.GET.get('page')
+         returns= paginator.get_page(page_number)
+        
+         context = {#'category': category,
+               'returns': returns,
+               'myFilter':myFilter
+               }
+
+
+         return render(request, 'core/bill_list.html',context)
 
 
 def mrlist(request):
@@ -1228,16 +1262,24 @@ def returnreasonn(request,id):
     product = Product.objects.get(id=solds.product_id)
     if form.is_valid():
         fs= form.save(commit=False)
+        fs.customer=solds.customer
         
         product.quantity += fs.quantity
         product.save()
         fs.save()
         obj = dailyreport.objects.all().last()
-        item, created =dailyreport.objects.get_or_create(
-            returnn_id=fs.id,
-            ammount=obj.ammount-solds.price1,
-            returnprice=solds.price1*solds.quantity
-        )
+        if fs.status == "CASH RETUEN":
+            item, created =dailyreport.objects.get_or_create(
+                returnn_id=fs.id,
+                ammount=obj.ammount-solds.price1,
+                returnprice=solds.price1*solds.quantity
+            )
+        else :  
+            item, created =dailyreport.objects.get_or_create(
+                returnn_id=fs.id,
+                ammount=obj.ammount,
+                returnprice=solds.price1*solds.quantity
+            )  
 
         
         return HttpResponseRedirect("/")
@@ -1281,15 +1323,14 @@ def editcashmemo(request,id):
          shopcart =UserItem.objects.filter(user=request.user)
          user_products = UserItem.objects.filter(user=request.user)
          total=0
-         for gs in user_products:
+         a=sold.objects.all().filter(order_id=id,groupproduct =False)
+         for gs in  a  :
            total+=gs.price1 * gs.quantity
 
 
          total1=0
          
-         for gs in user_products:
-           total1+=gs.price1 * gs.quantity   
-
+        
 
          paginator = Paginator(products, 20) # Show 25 contacts per page.
 
@@ -1987,11 +2028,12 @@ def delete_user_item(request, item_id):
                 groupname = user_item.product.groupname
                 
                 # Delete related UserItems in the same group
-                products_to_delete = UserItem.objects.filter(
-                    product__groupname=groupname,
-                    product_id__isnull=False  # Ensure valid product_id
-                ).exclude(id=item_id)
-                products_to_delete.delete()
+                if  groupname !="":
+                    products_to_delete = UserItem.objects.filter(
+                        product__groupname=groupname,
+                        product_id__isnull=False  # Ensure valid product_id
+                    ).exclude(id=item_id)
+                    products_to_delete.delete()
                 
                 # Delete the primary UserItem
                 user_item.delete()

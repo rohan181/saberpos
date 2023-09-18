@@ -152,66 +152,36 @@
       <tr>
 
 
-        <th scope="col">ID</th>
+        <th scope="col">INVOICE NO</th>
         <th scope="col">GN</th>
-        <th scope="col">price due</th>
-        <th scope="col">Printcashmemo1</th>
-        <th scope="col">return</th>
-        <th scope="col">editcashmemo</th>
-        <th scope="col">bill</th>
-        <th scope="col">bill</th>
-        <th scope="col">bill</th>
-        <th scope="col">bill</th>
+        <th scope="col">CUSTOMER</th>
+        <th scope="col">return quantity</th>
+        <th scope="col">return reason</th>
+        <th scope="col">status</th>
+        <th scope="col">cashmemo</th>
       </tr>
     </thead>
     <tbody>
-      {% for rs in orders %}
+      {% for rs in returns %}
       <tr>
 
 
-        <td>{{ rs.customer.name}}</td>
-        <td>{{ rs.name}}</td>
-        <td>{{rs.totalprice}} | {{rs.due}} </td>
-        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-            onclick="window.location.href = '{{rs.id}}/cashmemo'">
-            Printcashmemo
-
-          </button>
-        </td>
-        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-          onclick="window.location.href = '{{rs.id}}/cashmemo1'">
-          Printcashmemo2
-
-        </button>
+        <td>{{ rs.sold.order.invoicenumber}}</td>
+        <td>{{ rs.sold.order.name}}</td>
+        <td>{{ rs.sold.order.customer.name}}</td>
+        <td>{{ rs.quantity}}</td>
+        <td>{{ rs.quantity}}</td>
+        <td>{{ rs.status}}</td>
       </td>
 
       <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-        onclick="window.location.href = '{{rs.id}}/chalan'">
-        chalan
+        onclick="window.location.href = '{{rs.sold.order.id}}/cashmemo'">
+        cashmemo
 
       </button>
-    </td>
-        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-            onclick="window.location.href = '{{rs.id}}/returnn'">
-            return
+    
 
-          </button>
-        </td>
-        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-          onclick="window.location.href = '{{rs.id}}/editcashmemo'">
-          editcashmemo
-
-        </button>
-      </td>
-
-      <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-        onclick="window.location.href = '{{rs.id}}/bill'">
-        bill
-
-      </button>
-    </td>
-        <td>{{ rs.added}}</td>
-      </tr>
+    
       {% endfor %}
     </tbody>
   </table>

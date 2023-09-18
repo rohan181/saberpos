@@ -337,13 +337,21 @@ class mrentryrecord(models.Model):
 
 
 
-class returnn(models.Model):        
+class returnn(models.Model):    
+
+
+     category = (
+			('CASH RETUEN', 'CASH RETUEN'),
+			(' WITH OUT CASH RETUEN', 'WITH OUT CASH RETUEN'),
+			)    
      sold = models.ForeignKey(sold, on_delete=models.CASCADE,null=True,blank=True)
      quantity = models.PositiveIntegerField(default=1)
      returnreason = models.CharField(max_length=300,null=True,default='',blank=True)
      
      added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
 
+     status=models.CharField(max_length=50,choices= category ,default='CASH RETUEN',null=True)
+     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
 
 
 class bill(models.Model):  

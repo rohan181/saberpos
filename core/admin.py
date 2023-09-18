@@ -5,7 +5,7 @@ from django.contrib import admin
 # from import_export.admin import ImportExportModelAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-
+from django.utils.translation import gettext_lazy as _
 from django.forms import Media
 
 from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry,returnn,bill,paybill,paybillcatogory,dailyreport,temppaybill
@@ -45,7 +45,7 @@ admin.site.register(supplier)
 admin.site.register(temppaybill)
 admin.site.register(dailyreport)
 admin.site.register(sold,ComputerAdmin)
-admin.site.register(returnn)
+
 admin.site.register(paybill)
 admin.site.register(paybillcatogory)
 admin.site.register(bill)
@@ -66,6 +66,13 @@ class SwitchModelAdmin(ImportExportModelAdmin):
 admin.site.register(Product,SwitchModelAdmin)
 
 
+
+class ReturnnAdmin(admin.ModelAdmin):
+    list_filter = (
+        ('added', admin.DateFieldListFilter),
+    )
+
+admin.site.register(returnn, ReturnnAdmin)
 
 
 

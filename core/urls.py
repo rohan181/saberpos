@@ -33,6 +33,10 @@ urlpatterns = [
     path('<id>/chalan', views.chalan, name='chalan'),
     path('<id>/returnn', views.returnno, name='return'),
     path('<id>/returnitem', views.returnreasonn, name='returnreasonn'),
+    path('returnlist', views.returnlist, name='returnlist'),
+    #bill
+    path('bill_list', views.bill_list, name='bill_list'),
+
     path('<id>/editcashmemo', views.editcashmemo, name='editcashmemo'),
     path('<id>/fianaleditcashmemo', views.fianaleditcashmemo, name='fianaleditcashmemo'),
     path('productlist', views.productlist, name='productlist'),
