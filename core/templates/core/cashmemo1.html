@@ -168,20 +168,20 @@ h6{
               <tr>
 
 
-                <th scope="row">{{ forloop.counter }}</th>
-                {% if rs.sparename != None %}
-                
-                <td>{{rs.sparename}} {{rs.engine_no}}</td>
-                {% endif%}
-                
-                
-                <td>
-                  {% if rs.exchange_ammount != 0 %}
-                  Exchange
-                  {% endif%}
-                  {% if rs.sparename == None %}
-                  {{rs.product.productcatagory}} {{rs.product.name}} {{rs.engine_no}} </td>
-                {% endif%}
+                <th scope="row">{{ forloop.counter }}</th>	
+                {% if  rs.sparename %}	
+                	
+                <td>{{rs.sparename}} {{rs.engine_no}}</td>	
+                {% endif%}	
+                	
+                	
+                <td>	
+                  {% if rs.exchange_ammount != 0 %}	
+                  Exchange	
+                  {% endif%}	
+                  {% if not rs.sparename %}	
+                  {{rs.product.productcatagory}} {{rs.product.name}} {{rs.engine_no}} 
+                 {% endif%}
                 <td>N/A</td>
                 <td>{{rs.product.brand}}</td>
                 <td align="right">{{rs.quantity}}</td>
