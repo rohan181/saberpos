@@ -233,23 +233,27 @@ def soldlist(request):
         
         #row = cursor.fetchone()
 
-         orders=Order.objects.all().order_by('-id')
-         myFilter =soldfilter(request.GET, queryset=orders)
-         orders = myFilter.qs 
+        orders = Order.objects.all().order_by('-id')
 
-
-         paginator = Paginator(orders, 15) # Show 25 contacts per page.
-
-         page_number = request.GET.get('page')
-         orders = paginator.get_page(page_number)
+        # Apply filtering using the custom filter (soldfilter)
+        myFilter = soldfilter(request.GET, queryset=orders)
+        filtered_orders = myFilter.qs
         
-         context = {#'category': category,
-               'orders': orders,
-               'myFilter':myFilter
-               }
+        # Pagination
+        paginator = Paginator(filtered_orders, 30)  # Show 5 orders per page
+        page_number = request.GET.get('page')
+        page_orders = paginator.get_page(page_number)
+
+        context = {
+            'orders': page_orders,
+            'myFilter': myFilter,  # Pass the filter for the template
+        }
+
+        
+       
 
 
-         return render(request, 'core/soldlist.html',context)
+        return render(request, 'core/soldlist.html',context)
 
 
 
@@ -1986,7 +1990,7 @@ class AutocompleteView(View):
     def get(self, request):
         query = request.GET.get('term', '')
         countries = Product.objects.filter(name__icontains=query)[:10]
-        print(countries)
+       
         results = []
         for country in countries:
             country_json = {
@@ -2181,32 +2185,33 @@ def userItemstore(request):
        
         obj = get_object_or_404(Product, id = productId)
         motherproduct = Product.objects.all().filter(groupname=obj.groupname,mother=True).first()
-        products = Product.objects.filter(groupname=obj.groupname).exclude(groupname='').exclude(id=obj.id)
-        print(products)
+        if  obj.mother ==1 :
+            products = Product.objects.filter(groupname=obj.groupname).exclude(groupname='').exclude(id=obj.id)
+            print(products)
         
         
 
-        for product in products:
-            print(product.id)
-            print(product.subpartquantity )
-            totalquan=product.subpartquantity * int(quantity)
-            obj = UserItem.objects.create(
-            product_id=product.id,
-            
-            
-            user_id=request.user.id,
-            quantity =  totalquan ,
-            price1=price1,
-            price2=price2,
-            groupproduct = True,
-            status= status,
-            remarks = remarks ,
-            exchange_ammount =exchangeAmount ,
-            sparename =spareName ,
-            enginecomplete = engine
+            for product in products:
+                print(product.id)
+                print(product.subpartquantity )
+                totalquan=product.subpartquantity * int(quantity)
+                obj = UserItem.objects.create(
+                product_id=product.id,
+                
+                
+                user_id=request.user.id,
+                quantity =  totalquan ,
+                price1=price1,
+                price2=price2,
+                groupproduct = True,
+                status= status,
+                remarks = remarks ,
+                exchange_ammount =exchangeAmount ,
+                sparename =spareName ,
+                enginecomplete = engine
 
-            
-        )
+                
+            )
 
 
 
