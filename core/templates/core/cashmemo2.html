@@ -24,8 +24,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    
     <style>
    *{
     box-sizing: border-box;
@@ -34,11 +34,11 @@
 }
 body{
     font-family:"Tahoma",sans-serif;
-    font-size: 10px;
+    font-size: 14px;
 }
 .container{
     font-family:"Tahoma",sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     margin:auto;
     display: block;
     
@@ -80,7 +80,7 @@ h6{
 </head>
 
 <body>
-  <div class="container">
+  
     <div class="card card-one">
      
         <div class="mx-1">
@@ -168,14 +168,19 @@ h6{
               <tr>
 
 
-                <th scope="row">{{ forloop.counter }}</th>
-                {% if rs.sparename == None %}
-                
-                <td>{{rs.sparename}} {{rs.engine_no}}</td>
-                {% endif%}
-                {% if rs.sparename != None %}
-                
-                <td>{{rs.product.name}} {{rs.engine_no}}</td>
+                <th scope="row">{{ forloop.counter }}</th>	
+                {% if rs.sparename != None %}	
+                	
+                <td>{{rs.sparename}} {{rs.engine_no}}</td>	
+                {% endif%}	
+                	
+                	
+                <td>	
+                  {% if rs.exchange_ammount != 0 %}	
+                  Exchange	
+                  {% endif%}	
+                  {% if rs.sparename == None %}	
+                  {{rs.product.productcatagory}} {{rs.product.name}} {{rs.engine_no}} </td>	
                 {% endif%}
                 <td>N/A</td>
                 <td>{{rs.product.brand}}</td>
@@ -335,7 +340,7 @@ h6{
 
       </div>
     </div>  
-  </div>
+
 
 
 

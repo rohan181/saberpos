@@ -639,7 +639,7 @@ def cashmemo(request,id):
         
         #row = cursor.fetchone()
 
-         orders=sold.objects.all().filter(order_id=id,groupproduct =False)
+         orders=sold.objects.all().filter(order_id=id,groupproduct =False).exclude(quantity=0)
          ordere_de=Order.objects.all().filter(id=id)
          date=Order.objects.all().filter(id=id).last()
          total=0
@@ -691,7 +691,7 @@ def cashmemo1(request,id):
 
          total1=total-date.discount
          text=num2words(total1) 
-         deu=date.due
+         due=date.due
 
          if date.paid - date.totalprice ==0 :
              due = 0
@@ -1331,6 +1331,8 @@ def editcashmemo(request,id):
          for gs in  a  :
            total+=gs.price1 * gs.quantity
 
+         for i in user_products:  
+            total+=i.price1 * i.quantity
 
          total1=0
          
@@ -2032,12 +2034,18 @@ def delete_user_item(request, item_id):
                 groupname = user_item.product.groupname
                 
                 # Delete related UserItems in the same group
-                if  groupname !="":
+                if  user_item.product.mother == 1:
                     products_to_delete = UserItem.objects.filter(
                         product__groupname=groupname,
                         product_id__isnull=False  # Ensure valid product_id
-                    ).exclude(id=item_id)
+                    )
                     products_to_delete.delete()
+
+                    
+
+
+
+
                 
                 # Delete the primary UserItem
                 user_item.delete()

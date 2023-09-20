@@ -79,7 +79,7 @@ h6{
 </head>
 
 <body>
-  <div class="container">
+  
     <div class="card card-one">
      
         <div class="mx-1">
@@ -159,6 +159,7 @@ h6{
                 <th class="text-center" scope="col">Quantity</th>
                 <th class="text-center" scope="col">Unit Price</th>
                 <th class="text-center" scope="col">Total</th>
+                <th class="text-center" scope="col">subremarks</th>
               </tr>
             </thead>
             <tbody>
@@ -168,20 +169,25 @@ h6{
 
 
                 <th scope="row">{{ forloop.counter }}</th>
-                {% if rs.sparename == None %}
+                {% if rs.sparename != None %}
                 
                 <td>{{rs.sparename}} {{rs.engine_no}}</td>
                 {% endif%}
-                {% if rs.sparename != None %}
                 
-                <td>{{rs.product.productcatagory}} {{rs.product.name}} {{rs.engine_no}} </td>
+                
+                <td>
+                  {% if rs.exchange_ammount != 0 %}
+                  Exchange
+                  {% endif%}
+                  {% if rs.sparename == None %}
+                  {{rs.product.productcatagory}} {{rs.product.name}} {{rs.engine_no}} </td>
                 {% endif%}
                 <td>N/A</td>
                 <td>{{rs.product.brand}}</td>
                 <td align="right">{{rs.quantity}}</td>
                 <td>{{rs.price1}}</td>
                 <td align="right">{{rs.total_price1}}</td>
-                
+                <td align="right">{{rs.remarks}}</td>
               </tr> 
               {% endfor %}
               
@@ -334,7 +340,7 @@ h6{
 
       </div>
     </div>  
-  </div>
+  
 
 
 
