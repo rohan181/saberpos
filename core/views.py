@@ -34,6 +34,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import  ListView
 from django.urls import reverse
 from dal import autocomplete
+from django.db.models import F
 
 from django.http import JsonResponse
 
@@ -682,7 +683,7 @@ def cashmemo1(request,id):
         
         #row = cursor.fetchone()
 
-         orders=sold.objects.all().filter(order_id=id,groupproduct =False)
+         orders=sold.objects.all().filter(order_id=id,groupproduct =False).exclude(quantity=0)
          ordere_de=Order.objects.all().filter(id=id)
          date=Order.objects.all().filter(id=id).last()
          total=0
@@ -1755,6 +1756,26 @@ def delete_itemgroup(request,id):
         
         item.delete()      
         return HttpResponseRedirect("group")   
+
+
+def deleteinvoice(request,id):
+        item = sold.objects.filter(order_id=id)
+        #item1 = sold.objects.get(pk=product_pk)
+
+        updates = {}
+
+        for a in item:
+    # Use F() expression to update the quantity directly in the database
+           Product.objects.filter(id=a.product.id).update(quantity=F('quantity') + a.quantity)
+        
+        item.delete()      
+
+        item1 = Order.objects.filter(id=id)
+        #item1 = sold.objects.get(pk=product_pk)
+        
+        
+        item1.delete() 
+        return HttpResponseRedirect("/soldlist")   
          
 
 class CountryAutocomplete(autocomplete.Select2QuerySetView):

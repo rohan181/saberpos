@@ -166,29 +166,55 @@ h6{
 
               {% for rs in orders %}
               <tr>
-
-
                 <th scope="row">{{ forloop.counter }}</th>	
-                {% if  rs.sparename %}	
-                	
-                <td>{{rs.sparename}} {{rs.engine_no}}</td>	
-                {% endif%}	
-                	
-                	
-                <td>	
-                  {% if rs.exchange_ammount != 0 %}	
-                  Exchange	
-                  {% endif%}	
-                  {% if not rs.sparename %}	
-                  {{rs.product.productcatagory}} {{rs.product.name}} {{rs.engine_no}} 
-                 {% endif%}
-                <td>N/A</td>
-                <td>{{rs.product.brand}}</td>
-                <td align="right">{{rs.quantity}}</td>
-                <td>{{rs.price1}}</td>
-                <td align="right">{{rs.total_price1}}</td>
-                <td align="right">{{rs.remarks}}</td>
-              </tr> 
+                {% if rs.sparename %}
+                <td>{{ rs.sparename }}</td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price1 }}</td>
+                <td align="center">{{ rs.total_price1 }}</td>
+                <td align="center">{{ rs.remarks }}</td>
+
+
+                {% elif not rs.sparename and  rs.product.groupname and not rs.exchange_ammount != 0 %}
+                <td> Exchange - {{ rs.product.productcatagory }} <br> {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price1 }}</td>
+                <td align="center">{{ rs.total_price1 }}</td>
+                <td align="center">{{ rs.remarks }}</td>
+
+
+                {% elif not rs.sparename and  not rs.product.groupname and not rs.exchange_ammount != 0 %}
+                <td> Exchange - {{ rs.product.productcatagory }}  {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price1 }}</td>
+                <td align="center">{{ rs.total_price1 }}</td>
+                <td align="center">{{ rs.remarks }}</td>
+               
+                {% elif not rs.sparename and  not rs.product.groupname and  rs.exchange_ammount != 0 %}
+                <td>{{ rs.product.productcatagory }}  {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price1 }}</td>
+                <td align="center">{{ rs.total_price1 }}</td>
+                <td align="center">{{ rs.remarks }}</td>
+                {% else %}
+                <td>{{ rs.product.productcatagory }}  {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price1 }}</td>
+                <td align="center">{{ rs.total_price1 }}</td>
+                <td align="center">{{ rs.remarks }}</td>
+               
+                {% endif %}
+              </tr>
               {% endfor %}
               
              

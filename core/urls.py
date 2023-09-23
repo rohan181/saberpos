@@ -27,8 +27,12 @@ urlpatterns = [
     path('<id>/group',group,name='group'),
     path('soldlist', views.soldlist, name='soldlist'),
     path('mrlist', views.mrlist, name='mrlist'),
+
+
     path('<id>/cashmemo', views.cashmemo, name='cashmemo'),
     path('<id>/cashmemo1', views.cashmemo1, name='cashmemo1'),
+     path('<id>/deleteinvoice', views.deleteinvoice, name='deleteinvoice'),
+
    # path('<id>/mrmemo', views.mrmemo, name='mrmemo'),
     path('<id>/chalan', views.chalan, name='chalan'),
     path('<id>/returnn', views.returnno, name='return'),

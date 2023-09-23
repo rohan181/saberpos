@@ -24,8 +24,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    
     <style>
    *{
     box-sizing: border-box;
@@ -34,11 +34,11 @@
 }
 body{
     font-family:"Tahoma",sans-serif;
-    font-size: 10px;
+    font-size: 14px;
 }
 .container{
     font-family:"Tahoma",sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     margin:auto;
     display: block;
     
@@ -80,7 +80,7 @@ h6{
 </head>
 
 <body>
-  <div class="container">
+  
     <div class="card card-one">
      
         <div class="mx-1">
@@ -97,7 +97,7 @@ h6{
              
           
             <div class="d-flex justify-content-end">
-              <span class="float-end fw-bold">Client Copy</span>
+              <span class="float-end fw-bold">CALAN</span>
             </div>
           </div>
 
@@ -145,12 +145,6 @@ h6{
                 <td>{{date.address|title}}</td>
                 <th scope="row">Vehecle No</th>
                 <td>{{date.vehicleno}}</td>
-                <tr>
-                    <th scope="row">remartks</th>
-                    
-                   
-                   
-                  </tr>
                 
               </tr>
             </tbody>
@@ -171,23 +165,52 @@ h6{
 
               {% for rs in orders %}
               <tr>
+                <th scope="row">{{ forloop.counter }}</th>	
+                {% if rs.sparename %}
+                <td>{{ rs.sparename }}</td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price2 }}</td>
+                <td align="center">{{ rs.total_price2 }}</td>
+                
 
 
-                <th scope="row">{{ forloop.counter }}</th>
-                {% if rs.sparename != None %}
+                {% elif not rs.sparename and  rs.product.groupname and not rs.exchange_ammount != 0 %}
+                <td> Exchange - {{ rs.product.productcatagory }} <br> {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price2 }}</td>
+                <td align="center">{{ rs.total_price2 }}</td>
                 
-                <td>{{rs.sparename}} {{rs.engine_no}}</td>
-                {% endif%}
-                {% if rs.sparename == None %}
-                
-                <td>{{rs.product.name}} {{rs.engine_no}}</td>
-                {% endif%}
-                <td>N/A</td>
-                <td>{{rs.product.brand}}</td>
-                <td align="right">{{rs.quantity}}</td>
-                
-                
-              </tr> 
+
+
+                {% elif not rs.sparename and  not rs.product.groupname and not rs.exchange_ammount != 0 %}
+                <td> Exchange - {{ rs.product.productcatagory }}  {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price2 }}</td>
+                <td align="center">{{ rs.total_price2 }}</td>
+               
+                {% elif not rs.sparename and  not rs.product.groupname and  rs.exchange_ammount != 0 %}
+                <td>{{ rs.product.productcatagory }}  {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price2 }}</td>
+                <td align="center">{{ rs.total_price2 }}</td>
+                {% else %}
+                <td>{{ rs.product.productcatagory }}  {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
+                <td align="center">N/A</td>
+                <td align="center">{{ rs.product.brand }}</td>
+                <td align="center">{{ rs.quantity }}</td>
+                <td align="center">{{ rs.price2 }}</td>
+                <td align="center">{{ rs.total_price2 }}</td>
+               
+                {% endif %}
+              </tr>
               {% endfor %}
               
              
@@ -203,7 +226,42 @@ h6{
       </div>
       
       
-          
+        
+
+        
+      
+    
+      
+     
+      <div class="my-3 mx-4">
+          <div class="float-start">
+              <table>
+                  <tr>
+                      <td width="16%" valign="top"><h6 style="margin-bottom: 0;">
+                          <span style="text-decoration: dashed; padding-left: 100%;color: #000; border-bottom: 1px solid black;"></span>
+                      </h6>
+                          <h6 class="text-center fw-bold"
+                          style="margin-top: 5px;">RECEIVED BY</h6></td>
+                  </tr>
+              </table>
+          </div>
+
+          <div class="float-end">
+              <table>
+                  <tr>
+                      <td width="16%" valign="top"><h6 style="margin-bottom: 0;">
+                          <span style="text-decoration: dashed; padding-left: 100%;color: #000; border-bottom: 1px solid black;"></span>
+                      </h6>
+                          <h6 class="text-center fw-bold"
+                          style="margin-top: 5px;">FOR RANA MOTORS LIMITED</h6></td>
+                  </tr>
+              </table>
+          </div>
+
+      </div>
+    </div>  
+
+
 
 
 
