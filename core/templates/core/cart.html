@@ -22,7 +22,7 @@
 
 
 <div class="flex ">
-    <div class="h-ful shadow-md bg-red-800 " id="sidenavSecExample">
+    <div class="h-ful shadow-md bg-slate-500 " id="sidenavSecExample">
         <div class="pt-1 pb-1 px-6">
             <a href="#!">
                 <div class="flex items-center">
@@ -197,7 +197,7 @@
         
 
      
-        <div class="grid   grid-cols-3 gap-2  ">
+        <div class="grid   grid-cols-3 gap-1  ">
             <div class="col-span-2 m-1">
 
                 TOTAL AMMOUNT  {{totalbalace}} TK
@@ -250,11 +250,11 @@
             <p class="font-normal   text-red mx-1">
                 cat : {{ product.productcatagory }}
             </p>
-            <button
+            <!-- <button
     class="save text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-small rounded-lg text-xs px-3 py-1.5 text-center mr-2 mb-2"
     onclick="window.location.href = '{{product.id}}/addproduct'">
     Add
-</button>
+</button> -->
 
 
            
@@ -293,23 +293,25 @@
 <!-- Modal -->
 
 
-                <div class="pagination">
-                    <span class="step-links">
-                        {% if pro.has_previous %}
-                            <a href="?page=1">&laquo; first</a>
-                            <a href="?page={{ pro.previous_page_number }}">previous</a>
-                        {% endif %}
-                
-                        <span class="current">
-                            Page {{ pro.number }} of {{ pro.paginator.num_pages }}.
-                        </span>
-                
-                        {% if pro.has_next %}
-                            <a href="?page={{ pro.next_page_number }}">next</a>
-                            <a href="?page={{ pro.paginator.num_pages }}">last &raquo;</a>
-                        {% endif %}
-                    </span>
-                </div>
+<div class="pagination">
+    <span class="step-links">
+        {% if pro.has_previous %}
+            <a href="?page=1&category={{ request.GET.category|urlencode }}&search={{ request.GET.search|urlencode }}">&laquo; first</a>
+            <a href="?page={{ pro.previous_page_number }}&category={{ request.GET.category|urlencode }}&search={{ request.GET.search|urlencode }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ pro.number }} of {{ pro.paginator.num_pages }}.
+        </span>
+
+        {% if pro.has_next %}
+            <a href="?page={{ pro.next_page_number }}&category={{ request.GET.category|urlencode }}&search={{ request.GET.search|urlencode }}">next</a>
+            <a href="?page={{ pro.paginator.num_pages }}&category={{ request.GET.category|urlencode }}&search={{ request.GET.search|urlencode }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+
 
 
 
@@ -379,6 +381,15 @@
                                         <label for="spareName">Spare Name:</label>
                                         <input type="text" class="form-control" id="spareName" name="spareName" required>
                                     </div>
+
+
+                                    <div class="form-group">
+                                        <label for="spareName">ENGINE NO:</label>
+                                        <input type="text" class="form-control" id="spareName" name="spareName" required>
+                                    </div>
+
+
+
                                     
                                     <div class="form-group">
                                         <label for="remarks">Remarks:</label>

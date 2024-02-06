@@ -171,8 +171,7 @@ h6{
                 <td align="center">N/A</td>
                 <td align="center">{{ rs.product.brand }}</td>
                 <td align="center">{{ rs.quantity }}</td>
-                <td align="center">{{ rs.price2 }}</td>
-                <td align="center">{{ rs.total_price2 }}</td>
+               
                 
 
 
@@ -181,8 +180,7 @@ h6{
                 <td align="center">N/A</td>
                 <td align="center">{{ rs.product.brand }}</td>
                 <td align="center">{{ rs.quantity }}</td>
-                <td align="center">{{ rs.price2 }}</td>
-                <td align="center">{{ rs.total_price2 }}</td>
+            
                 
 
 
@@ -191,23 +189,20 @@ h6{
                 <td align="center">N/A</td>
                 <td align="center">{{ rs.product.brand }}</td>
                 <td align="center">{{ rs.quantity }}</td>
-                <td align="center">{{ rs.price2 }}</td>
-                <td align="center">{{ rs.total_price2 }}</td>
+               
                
                 {% elif not rs.sparename and  not rs.product.groupname and  rs.exchange_ammount != 0 %}
                 <td>{{ rs.product.productcatagory }}  {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
                 <td align="center">N/A</td>
                 <td align="center">{{ rs.product.brand }}</td>
                 <td align="center">{{ rs.quantity }}</td>
-                <td align="center">{{ rs.price2 }}</td>
-                <td align="center">{{ rs.total_price2 }}</td>
+               
                 {% else %}
                 <td>{{ rs.product.productcatagory }}  {{ rs.product.name }} {{ rs.engine_no|default:"" }} </td>
                 <td align="center">N/A</td>
                 <td align="center">{{ rs.product.brand }}</td>
                 <td align="center">{{ rs.quantity }}</td>
-                <td align="center">{{ rs.price2 }}</td>
-                <td align="center">{{ rs.total_price2 }}</td>
+                
                
                 {% endif %}
               </tr>

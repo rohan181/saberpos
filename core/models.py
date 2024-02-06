@@ -346,13 +346,15 @@ class returnn(models.Model):
      category = (
 			('CASH RETUEN', 'CASH RETUEN'),
 			(' WITH OUT CASH RETUEN', 'WITH OUT CASH RETUEN'),
+            (' BOTH', 'BOTH'),
 			)    
      sold = models.ForeignKey(sold, on_delete=models.CASCADE,null=True,blank=True)
      quantity = models.PositiveIntegerField(default=1)
      returnreason = models.CharField(max_length=300,null=True,default='',blank=True)
-     
+     returnprice = models.PositiveIntegerField(default=0,null=True)
      added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
-
+     cashreturnprice = models.PositiveIntegerField(default=0,null=True)
+     duereturnprice = models.PositiveIntegerField(default=0,null=True)
      status=models.CharField(max_length=50,choices= category ,default='CASH RETUEN',null=True)
      customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
 
@@ -427,6 +429,7 @@ class dailyreport(models.Model):
    returnn = models.ForeignKey(returnn,on_delete=models.CASCADE,null=True,blank=True)
    bill = models.ForeignKey(bill,on_delete=models.CASCADE,null=True,blank=True)
    returnprice = models.PositiveIntegerField(default=0)
+   returncostprice = models.PositiveIntegerField(default=0)
    billexpense = models.PositiveIntegerField(default=0)
    reporttype = models.CharField(max_length=800,null=True,blank=True)
 

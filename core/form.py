@@ -50,7 +50,7 @@ class returnnform(forms.ModelForm):
         # specify fields to be used
         fields = [
            
-          "quantity","returnreason","status",
+          "quantity","returnreason","status","cashreturnprice","duereturnprice" ,
         ]
 
 

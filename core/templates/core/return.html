@@ -172,19 +172,12 @@ ccc
 
 
                             <th scope="row">{{ forloop.counter }}</th>
-                            {% if rs.sparename != None %}
-                            <td><button
-                                    class="bg-blue-500 hover:bg-blue-700 text-blue-600 text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-                                    onclick="window.location.href = '/{{rs.id}}/returnitem'">
-                                    return
+                            
 
-                            </td>
+                           
+                           
 
-                            <td>{{rs.sparename}} {{rs.engine_no}}</td>
-                            {% endif%}
-                            {% if rs.sparename == None %}
-
-                            <td>{{rs.product.name}} {{rs.engine_no}}</td>
+                            <td>{{rs.product.name}} {{rs.sparename|default:""}}{{rs.engine_no}}</td>
 
                             <td><button
                                     class="bg-blue-500 hover:bg-blue-700 text-blue-600 text-xs font-bold py-1 px-1 rounded w-40  mr-px"
@@ -192,12 +185,12 @@ ccc
                                     return
 
                             </td>
-                            {% endif%}
+                           
                             <td>N/A</td>
                             <td>{{rs.product.brand}}</td>
                             <td align="right">{{rs.quantity}}</td>
                             <td>{{rs.price1}}</td>
-                            <td align="right">{{rs.total_price}}</td>
+                            <td align="right">{{rs.total_price1}}</td>
 
                         </tr>
                         {% endfor %}

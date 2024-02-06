@@ -692,7 +692,7 @@ def cashmemo1(request,id):
 
          total1=total-date.discount
          text=num2words(total1) 
-         due=date.due
+         due=total- date.paid
 
          if date.paid - date.totalprice ==0 :
              due = 0
@@ -1158,10 +1158,10 @@ def mr(request):
                 
                 shopcart.delete()    
                 product = Product.objects.get(id=rs.product_id)
-                if rs.credit =='noncredit':    
-                     product.quantity += rs.quantity
-                     product.price = rs.price1
-                     product.save()
+                 
+                product.quantity += rs.quantity
+                product.price = rs.price1
+                product.save()
 
 
 
@@ -1268,6 +1268,7 @@ def returnreasonn(request,id):
     if form.is_valid():
         fs= form.save(commit=False)
         fs.customer=solds.customer
+        fs.returnprice=fs.cashreturnprice + fs.duereturnprice 
         
         product.quantity += fs.quantity
         product.save()
@@ -1276,14 +1277,15 @@ def returnreasonn(request,id):
         if fs.status == "CASH RETUEN":
             item, created =dailyreport.objects.get_or_create(
                 returnn_id=fs.id,
-                ammount=obj.ammount-solds.price1,
-                returnprice=solds.price1*solds.quantity
+                ammount=obj.ammount-fs.returnprice,
+                returnprice=fs.cashreturnprice ,
+                returncostprice = solds.costprice
             )
         else :  
             item, created =dailyreport.objects.get_or_create(
                 returnn_id=fs.id,
                 ammount=obj.ammount,
-                returnprice=solds.price1*solds.quantity
+                returnprice=fs.returnprice*solds.quantity
             )  
 
         
@@ -1845,6 +1847,7 @@ def salesreport(request):
          closeblance=0
          comm=0
          returnprice=0
+         returncostprice=0
          soldlist=sold.objects.all().filter(groupproduct =False)
          orderlist=Order.objects.all()
          officeexpense=0
@@ -1858,6 +1861,7 @@ def salesreport(request):
             if rs.reporttype == 'office expense':
                officeexpense=rs.billexpense+officeexpense
             returnprice=returnprice+rs.returnprice
+            returncostprice=returncostprice+rs.returncostprice
             corporrateex=rs.billexpense+ corporrateex
             if rs.reporttype == "COMMISSION":
                comm=comm+rs.billexpense  
@@ -1899,16 +1903,20 @@ def salesreport(request):
            open2= open +dew+cash
          withoutex=s-e
          aftercommmision=closeblance+corporrateex
-         totalcost=comm+discount+c+returnprice
+         totalcost=comm+discount+c+returnprice - returncostprice
          grossprofit=s-totalcost
          netprofit=grossprofit- officeexpense
-         percentageprofit=(grossprofit/c ) *100
+         if c == 0 :
+             percentageprofit=0
+         if c != 0 :   
+            percentageprofit=(grossprofit/c ) *100
          duesales=withoutex-cash
          pettycashreportbalnce=closeblance+corporrateex
          commisiondisreportbalnce=pettycashreportbalnce+pettycashtransfer
          cashreturnbalance=commisiondisreportbalnce+comm+discount
          collentionbalance= cashreturnbalance+returnprice
          openbalance=collentionbalance-(cash+dew)
+         newreturncost =returnprice - returncostprice
          context = {#'category': category,
                'pettycashreportbalnce':pettycashreportbalnce,
                'commisiondisreportbalnce':commisiondisreportbalnce,
@@ -1939,6 +1947,7 @@ def salesreport(request):
                 'corporrateex':corporrateex,
                 'aftercommmision':aftercommmision,
                 'returnprice':returnprice,
+                 'newreturncost':newreturncost,
                 'officeexpense':officeexpense,
                }  
     
