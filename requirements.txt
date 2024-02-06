@@ -58,3 +58,4 @@ xlrd==2.0.1
 xlwt==1.3.0
 gunicorn
 djangorestframework
+psycopg2-binary
