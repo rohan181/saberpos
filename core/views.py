@@ -1,12 +1,12 @@
 from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord,supplier
+from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord,supplier,Customerbalacesheet
 from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter,mrfilter,returnfilter,billfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
-from core.form import soldformm, useritem,GeeksForm,mrr,returnnform,billfrom,dailyreportt,tempbilformm,mreditformm
+from core.form import soldformm, useritem,GeeksForm,mrr,returnnform,billfrom,dailyreportt,tempbilformm,mreditformm,CorportepayForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -44,7 +44,7 @@ from .serializers import TaskSerializer
 from rest_framework import status
 import datetime
 import pytz
-
+from datetime import datetime as dt_datetime
 @login_required
 def cart(request):
     
@@ -117,7 +117,16 @@ def cart(request):
         if fs.customer !=None:
           cus =Customer.objects.filter(id=fs.customer_id).first()
           cus.balance +=fs.due
-          cus.save()
+        
+          cus.save()        
+          item, created =Customerbalacesheet.objects.get_or_create(
+            order_id=fs.id,
+            customer=cus,
+            balance=cus.balance,
+            dueblaceadd=fs.due
+        )
+          
+
         
         obj = dailyreport.objects.all().last()
         item, created =dailyreport.objects.get_or_create(
@@ -241,7 +250,7 @@ def soldlist(request):
         filtered_orders = myFilter.qs
         
         # Pagination
-        paginator = Paginator(filtered_orders, 30)  # Show 5 orders per page
+        paginator = Paginator(filtered_orders, 10)  # Show 5 orders per page
         page_number = request.GET.get('page')
         page_orders = paginator.get_page(page_number)
 
@@ -1643,18 +1652,37 @@ def expense(request):
              fs.save()
              return HttpResponseRedirect("/expense")
          
-         form2 = dailyreportt(request.POST or None, request.FILES or None)
+         form2 = CorportepayForm(request.POST or None, request.FILES or None)
 
          if request.method=='POST' and 'btnform2' in request.POST:
            if form2.is_valid() :
            
              fs1 = form2.save(commit=False)
-             fs1.billexpense = fs1.petteyCash
-             fs1.ammount =orders.ammount -fs1.petteyCash
-             fs1.petteyCash =orders.petteyCash
-             fs1.reporttype='CORPORATE'
+            #  fs1.billexpense = fs1.petteyCash
+            #  fs1.ammount =orders.ammount -fs1.petteyCash
+            #  fs1.petteyCash =orders.petteyCash
+            #  fs1.reporttype='CORPORATE'
+             item, created = dailyreport.objects.get_or_create(
+            billexpense=fs1.ammount,
+            ammount=orders.ammount - fs1.ammount,
+            petteyCash=orders.petteyCash,
+            reporttype = 'CORPORATE' " " + (str(fs1.suppiler) if fs1.suppiler else '') + (str(fs1.corpocatagory) if fs1.corpocatagory else '')
+             )
+             if fs1.suppiler : 
+                supplier_id = fs1.suppiler
+
+    # Query the supplier from the Supplier model
+                supplier = supplier.objects.get(pk=supplier_id)
+
+    # Assuming there is a balance field in the Supplier model, deduct the balance
+                if supplier.balance:
+                        supplier.balance -= fs1.ammount
+                        supplier.save()
+
+
+
              fs1.save()
-            
+             messages.success(request, 'Form submitted successfully')
              return HttpResponseRedirect("/expense")
 
          form3 = dailyreportt(request.POST or None, request.FILES or None)
@@ -1827,6 +1855,13 @@ def sms(request):
 
 
 def salesreport(request):
+         start_date = request.GET.get('start_date')
+         end_date = request.GET.get('end_date')
+         if not end_date:
+           
+           end_date =dt_datetime.now().strftime('%Y-%m-%d')
+
+         
    
          orders=dailyreport.objects.all().order_by('id')
          myFilter =dailyreportfilter(request.GET, queryset=orders)
@@ -1903,7 +1938,8 @@ def salesreport(request):
            open2= open +dew+cash
          withoutex=s-e
          aftercommmision=closeblance+corporrateex
-         totalcost=comm+discount+c+returnprice - returncostprice
+         totalcost=comm+discount+c+ returnprice
+         netsale =s-returnprice
          grossprofit=s-totalcost
          netprofit=grossprofit- officeexpense
          if c == 0 :
@@ -1916,7 +1952,35 @@ def salesreport(request):
          cashreturnbalance=commisiondisreportbalnce+comm+discount
          collentionbalance= cashreturnbalance+returnprice
          openbalance=collentionbalance-(cash+dew)
-         newreturncost =returnprice - returncostprice
+         #newreturncost =returnprice - returncostprice
+
+
+
+        #for calculating previous time duration  order 
+         
+
+         orders_within_time_range = dailyreport.objects.filter(
+    added__range=(start_date, end_date)
+)
+
+# Retrieve returnn instances within the same time range
+         returnn_within_time_range = returnn.objects.filter(
+    sold__order__added__range=(start_date, end_date)
+)
+
+# Exclude dailyreport instances where associated returnn objects fall within the time range
+         orders_not_in_range = orders_within_time_range.exclude(
+    id__in=returnn_within_time_range.values_list('sold__order__id', flat=True)
+)           
+         oldreturnpricet=0
+         oldreturncostt=0
+         for rs in orders_not_in_range :
+              
+             
+                 oldreturnpricet=rs.returnprice+oldreturnpricet
+                
+                
+
          context = {#'category': category,
                'pettycashreportbalnce':pettycashreportbalnce,
                'commisiondisreportbalnce':commisiondisreportbalnce,
@@ -1947,8 +2011,12 @@ def salesreport(request):
                 'corporrateex':corporrateex,
                 'aftercommmision':aftercommmision,
                 'returnprice':returnprice,
-                 'newreturncost':newreturncost,
+                 'returncostprice': returncostprice,
                 'officeexpense':officeexpense,
+                'start_date': start_date,
+                 'end_date': end_date,
+                 'netsale' :netsale,
+                 'oldreturnpricet':oldreturnpricet,
                }  
     
          return render(request, "core/salesreport.html",context )           

@@ -8,7 +8,7 @@ from import_export import resources
 from django.utils.translation import gettext_lazy as _
 from django.forms import Media
 
-from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry,returnn,bill,paybill,paybillcatogory,dailyreport,temppaybill
+from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry,returnn,bill,paybill,paybillcatogory,dailyreport,temppaybill,corportepay,corpocatagory,Customerbalacesheet
 class OrderProductline(admin.TabularInline):
     model =sold
     
@@ -35,12 +35,12 @@ class ComputerAdmin(admin.ModelAdmin):
   #pass
 
 #admin.site.register(Product,OrderAdmin)
-admin.site.register(Customer,OrderAdmin)
+#admin.site.register(Customer,OrderAdmin)
 admin.site.register(UserItem)
 admin.site.register(mrentryrecord)
 admin.site.register(mrentry)
 admin.site.register(Order)
-admin.site.register(supplier)
+#admin.site.register(supplier)
 
 admin.site.register(temppaybill)
 admin.site.register(dailyreport)
@@ -57,13 +57,46 @@ class SwitchModelResource(resources.ModelResource):
     
 
 class SwitchModelAdmin(ImportExportModelAdmin):
-        list_display = ('added', 'name')
+        list_display = ('added', 'name','price')
         list_filter=('added','productcatagory')
         resource_class = SwitchModelResource
         inlines = [OrderProductline]
         search_fields = ['name']
 
 admin.site.register(Product,SwitchModelAdmin)
+
+
+
+
+
+class SwitchModelResource1(resources.ModelResource):
+        class Meta:
+            model = Customer
+    
+
+class SwitchModelAdmin1(ImportExportModelAdmin):
+        list_display = ('name','balance')
+        search_fields = ['name']
+        resource_class = SwitchModelResource1
+        inlines = [OrderProductline]
+       
+
+admin.site.register(Customer,SwitchModelAdmin1)
+
+
+class SwitchModelResource2(resources.ModelResource):
+        class Meta:
+            model = supplier
+    
+
+class SwitchModelAdmin2(ImportExportModelAdmin):
+        list_display = ('name','balance')
+        search_fields = ['name']
+        resource_class = SwitchModelResource2
+        #inlines = [OrderProductline]
+       
+
+admin.site.register(supplier,SwitchModelAdmin2)
 
 
 
@@ -76,3 +109,11 @@ admin.site.register(returnn, ReturnnAdmin)
 
 
 
+admin.site.register(corportepay)
+
+
+
+admin.site.register(corpocatagory)
+
+
+admin.site.register(Customerbalacesheet)

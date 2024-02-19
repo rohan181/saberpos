@@ -1,13 +1,38 @@
+<script>
+    function closeMessage(button) {
+        var messageContainer = button.parentElement;
+        messageContainer.style.opacity = '0';
+        setTimeout(function () {
+            messageContainer.style.display = 'none';
+            messageContainer.remove();  // Remove the element from the DOM
+        }, 500);  // Adjust the delay as needed
+    }
+</script>
+
 {% extends 'core/base.html' %}
 
 
+
+
 {% block content %}
+
 
 {% load static %}
 {%load crispy_forms_tags %} 
 
 
-
+{% if messages %}
+    <div class="fixed top-4 right-4 w-64 bg-green-500 p-4 rounded-md flex items-center justify-between shadow-md">
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="text-white">
+                    {{ message }}
+                    <button class="ml-2 text-white" onclick="closeMessage(this)">Close</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
 
 
 
@@ -49,48 +74,74 @@
                 
                 
                 {% load crispy_forms_tags %}
-                <form method="POST" class="post-form">
-                    {% csrf_token %}
-                    {{ form|crispy}}
-                    <br>
-                    <button type="submit" class="save btn btn-info" name="btnform1">FUND TRANSER TO PETTYCASH</button>
-                </form>
+
+<style>
+    .form-container {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px;
+    }
+
+    .post-form {
+        width: 300px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .save {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .save:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="form-container">
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <br>
+        <button type="submit" class="save btn btn-info" name="btnform1">FUND TRANSFER TO PETTY CASH</button>
+    </form>
+
+   
+
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {{ form3|crispy }}
+        <br>
+        <button type="submit" class="save btn btn-info" name="btnform3">COMMISSION</button>
+    </form>
 
 
-                <br>
-                {% load crispy_forms_tags %}
-                <form method="POST" class="post-form">
-                    {% csrf_token %}
-                    {{ form2|crispy}}
-                    <br>
-                    <button type="submit" class="save btn btn-info" name="btnform2">corporate payment</button>
-                    <br>
-                </form>
-               
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {{ form3|crispy }}
+        <br>
+        <button type="submit" class="save btn btn-info" name="btnform3">Discount</button>
+    </form>
+
+
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {{ form2|crispy }}
+        <br>
+        <button type="submit" class="save btn btn-info" name="btnform2">CORPORATE PAYMENT</button>
+    </form>
+
 
     
-    
-
-    <br>
-    {% load crispy_forms_tags %}
-                <form method="POST" class="post-form">
-                    {% csrf_token %}
-                    {{ form3|crispy}}
-                    <br>
-                    <button type="submit" class="save btn btn-info" name="btnform3">COMMISSION</button>
-                </form>
-                
-    <br>
-
-    {% load crispy_forms_tags %}
-                <form method="POST" class="post-form">
-                    {% csrf_token %}
-                    {{ form3|crispy}}
-                    <br>
-                    <button type="submit" class="save btn btn-info" name="btnform4">Discount</button>
-                </form>
-                
-    <br>
+</div>
 
     <div class="flex flex-wrap " >
     {% for product in pro %}

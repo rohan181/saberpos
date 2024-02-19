@@ -93,13 +93,13 @@
     {% load crispy_forms_tags %}
     {{ form.media }}
      
-    <div class="container">
-        <form method="get">
-        
-            {{myFilter.form|crispy }}
-        
-            <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded">Search</button>
-        </form>
+    <form method="get" class="flex items-center space-x-5">
+
+      <!-- Apply "crispy" filter to your form -->
+      {{ myFilter.form|crispy }}
+      
+      <button class="bg-transparent hover:bg-gray-800 text-blue-900 font-semibold hover:text-gray-900 py-2 px-4 border border-blue-500 hover:border-transparent rounded" type="submit">Search</button>
+    </form>
       <div class="card card-one">
        
           <div class="mx-1">
@@ -112,11 +112,12 @@
               
   
   
-                <h5> <b>Report Local Container - Profit and Loss [18 Dec 2022 to 19 Jan 2023] </b></h5>
+                <h5> <b>Report Local Container - Profit and Loss [start_date:{{start_date}}: 
+                  end_date:{{end_date}} ] </b></h5>
                
             
               <div class="d-flex justify-content-end">
-                <span class="float-end fw-bold">Print Date: Jan 20, 2023</span>
+                <span class="float-end fw-bold"></span>
               </div>
             </div>
 
@@ -219,9 +220,19 @@
                         <tr>
                           <th scope="row">Total Sales</th>
                           <td>{{ duesales}} due sale </td>
-                          <td>{{withoutex}}</td>
-                          <td>{{e}}</td>
+                          <td>{{withoutex}} out ex</td>
+                          <td>{{e}} exchange</td>
                           <td>{{s}}</td>
+                        
+                          
+                        </tr> 
+
+                        <tr>
+                          <th scope="row">Net  Sales(with out return)</th>
+                          <td colspan="3">{{ returnprice}} return price </td>
+                          <td>{{oldreturnpricet}}</td> oldreturnpricet
+                          
+                          <td>{{ netsale }}</td>
                         
                           
                         </tr> 
@@ -285,7 +296,7 @@
                           <th class="text-center" scope="col">Product Costing</th>
                           <th class="text-center" scope="col">Commission</th>
                           <th class="text-center" scope="col">Discount</th>
-                          <th class="text-center" scope="col">Return</th>
+                          <th class="text-center" scope="col">Return product cost</th>
                           <th class="text-center" scope="col">Total</th>
                           
                         </tr>
@@ -297,7 +308,7 @@
                           <td>{{c}}</td>
                           <td>{{comm}}</td>
                           <td>{{discount}}</td>
-                          <td>{{returnprice}}</td>
+                          <td>{{returncostprice}}</td>
                           <td >{{totalcost}}</td>
                           
                           

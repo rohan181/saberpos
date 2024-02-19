@@ -49,6 +49,9 @@ class Customer(models.Model):
     def __str__(self):
         return self.name +" "+str(self.id)
 
+
+
+
     #class Meta:
       #  ordering = ('name',)           
 
@@ -147,6 +150,20 @@ class Order(models.Model):
     @property
     def total_price1(self):
         return (self.quantity * self.UserItem.price2)
+    
+
+
+
+class Customerbalacesheet(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,related_name='customer')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,related_name='order')
+    dueblaceadd= models.PositiveIntegerField(default=0,null=True)
+    billreceive = models.PositiveIntegerField(default=0,null=True)
+    
+    balance = models.PositiveIntegerField(default=0,null=True)
+    added = models.DateTimeField(auto_now_add=True,null=True)
+       
+    
     
     
 
@@ -415,7 +432,7 @@ class paybill(models.Model):
    typecat=models.CharField(max_length=800,null=True,blank=True)
 
    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)   
-   remarks = models.CharField(max_length=800,null=True,blank=True)
+   remarks = models.CharField(max_length=300,null=True,blank=True)
    added = models.DateTimeField(auto_now_add=True,null=True)
 
 
@@ -427,10 +444,12 @@ class dailyreport(models.Model):
    ammount = models.PositiveIntegerField(default=0,null=True)
    petteyCash = models.PositiveIntegerField(default=0,null=True)
    returnn = models.ForeignKey(returnn,on_delete=models.CASCADE,null=True,blank=True)
+   
    bill = models.ForeignKey(bill,on_delete=models.CASCADE,null=True,blank=True)
    returnprice = models.PositiveIntegerField(default=0)
    returncostprice = models.PositiveIntegerField(default=0)
    billexpense = models.PositiveIntegerField(default=0)
+   remarks = models.TextField(max_length=200,null=True,blank= True)
    reporttype = models.CharField(max_length=800,null=True,blank=True)
 
    @property
@@ -438,12 +457,24 @@ class dailyreport(models.Model):
         return self.order.paid
 
 
-  
-   
+
+
+
+
+class corpocatagory(models.Model):
+             
+    #shopname = models.CharField(max_length=200, null=True, choices=CATEGORY)        
+    name = models.TextField(max_length=200,null=True)
+    def __str__(self):
+        return self.name
 
 
 class corportepay(models.Model):    
     ammount = models.PositiveIntegerField(default=0)
-    Customer = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True,blank=True)
+    suppiler= models.ForeignKey(supplier,on_delete=models.CASCADE,null=True,blank=True)
     added = models.DateTimeField(auto_now_add=True,null=True) 
-    groupproduct = models.BooleanField(null=True,blank=True)  
+    remarks = models.TextField(max_length=100,null=True)
+    corpocatagory= models.ForeignKey(corpocatagory,on_delete=models.CASCADE,null=True,blank=True)
+   
+
+

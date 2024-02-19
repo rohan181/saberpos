@@ -1,5 +1,5 @@
 from django import forms  
-from core.models import Order, UserItem,Product,mrentry,returnn,sold,bill,dailyreport,temppaybill,mrentryrecord
+from core.models import Order, UserItem,Product,mrentry,returnn,sold,bill,dailyreport,temppaybill,mrentryrecord,corportepay
   
 class useritem(forms.ModelForm):  
     class Meta:  
@@ -85,13 +85,29 @@ class billfrom(forms.ModelForm):
 class dailyreportt(forms.ModelForm):  
     class Meta:  
         model =dailyreport
-        fields = ['petteyCash'] 
+        fields = ['petteyCash','remarks'] 
         labels = {
           "petteyCash": ""
     }
+        widgets = {
+            'remarks': forms.Textarea(attrs={'rows': 2, 'cols': 15}),  # Adjust rows and cols as needed
+        }
 
 
 class tempbilformm(forms.ModelForm):  
     class Meta:  
         model =temppaybill
         fields = ['ammount','remarks']                  
+  
+
+
+class CorportepayForm(forms.ModelForm):
+    class Meta:
+        model = corportepay
+        fields = ['ammount', 'suppiler',  'corpocatagory','remarks']
+
+
+        widgets = {
+            'remarks': forms.Textarea(attrs={'rows': 2, 'cols': 15}),  # Adjust rows and cols as needed
+        }
+        # You can customize the widgets or add more options if needed

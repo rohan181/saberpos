@@ -55,16 +55,22 @@ urlpatterns = [
     path('<id>/delete', views.delete_item, name='delete'),
     path('<id>/deletegroup', views.delete_itemgroup, name='delete'),
     path('<id>/billcustomer', views.billcustomer, name='bill'),
+
     path('customerlist', views.customerlist, name='customerlist'),
     path('customerdetail', views.customersolddeatails, name='bill'),
     path("search/", views.search, name="search_results"),
     path("daily", views.dalyreport, name=""),
     path("expensereport", views.expensereport, name=""),
+
+
     path("expense", views.expense, name=""),
+    
+
+    
     path("sms", views.sms, name="sms"),
     path("<id>/expenseform", views.expenseform ,name=""),
     path("expensestore", views.expensestore ,name=""),
-    path("dailysearchresult", views.dalyreportsearch, name="search_results"),
+   # path("dailysearchresult", views.dalyreportsearch, name="search_results"),
     #path("corporatepay", views.corporatepayment ,name=""),
 
 
