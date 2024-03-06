@@ -178,16 +178,35 @@ def cart(request):
         return HttpResponseRedirect("/soldlist")
 
       
-    category= request.GET.get('category', '')  
+    category = request.GET.get('category', '')
     search = request.GET.get('search', '')
-    if category and search:
-       products = Product.objects.filter(Q(name__icontains=search) & Q(productcatagory__icontains=category))
-    elif search:
-       products = Product.objects.filter(Q(name__icontains=search))
+    mother = request.GET.get('mother', '')
+
+    if category and search and mother:
+        products = Product.objects.filter(
+            Q(name__icontains=search) & Q(productcatagory__icontains=category) & Q(mother=mother)
+        )
+    elif category and search:
+        products = Product.objects.filter(
+            Q(name__icontains=search) & Q(productcatagory__icontains=category)
+        )
+    elif category and mother:
+        products = Product.objects.filter(
+            Q(productcatagory__icontains=category) & Q(mother=mother)
+        )
+    elif search and mother:
+        products = Product.objects.filter(
+            Q(name__icontains=search) & Q(mother=mother)
+        )
     elif category:
-       products = Product.objects.filter(Q(productcatagory__icontains=category))
+        products = Product.objects.filter(Q(productcatagory__icontains=category))
+    elif search:
+        products = Product.objects.filter(Q(name__icontains=search))
+    elif mother:
+        products = Product.objects.filter(Q(mother=mother))
     else:
-       products = Product.objects.all()
+        products = Product.objects.all()
+
   
     #products = Product.objects.filter(Q(productcatagory__icontains=category))
     totalbalnce=0
@@ -598,40 +617,41 @@ def ggroup(request, id):
 @login_required
 def group(request,id):
     form = useritem(request.POST or None, request.FILES or None)
-    shopcart =UserItem.objects.filter(user=request.user)
-    user_products = UserItem.objects.filter(user=request.user)
+    #shopcart =UserItem.objects.filter(user=request.user)
+    obj = get_object_or_404(Product, id = id)
+    user_products = UserItem.objects.filter(user=request.user, product__groupname=obj.groupname)
     if form.is_valid():
         fs= form.save(commit=False)
         fs.user= request.user
         fs.save()
         
 
-        for rs in shopcart:
-                detail = sold()
-                detail.customer    = fs.customer # Order Id
-                detail.product_id  = rs.product_id
-                detail.user  = request.user
-                detail.quantity  = rs.quantity
-                detail.added  = rs.added
-                detail.left = fs.left
-                detail.discount = fs.discount
-                detail.save()
-                product = Product.objects.get(id=rs.product_id)
-                if rs.credit =='noncredit':    
-                     product.quantity -= rs.quantity
-                     product.save()
+        # for rs in shopcart:
+        #         detail = sold()
+        #         detail.customer    = fs.customer # Order Id
+        #         detail.product_id  = rs.product_id
+        #         detail.user  = request.user
+        #         detail.quantity  = rs.quantity
+        #         detail.added  = rs.added
+        #         detail.left = fs.left
+        #         detail.discount = fs.discount
+        #         detail.save()
+        #         product = Product.objects.get(id=rs.product_id)
+        #         if rs.credit =='noncredit':    
+        #              product.quantity -= rs.quantity
+        #              product.save()
 
      
 
         
-    obj = get_object_or_404(Product, id = id)
+    
+    #shopcart =UserItem.objects.filter(user=request.user,product=obj.product)
     products = Product.objects.all().filter(groupname=obj.groupname)
     
     
-    myFilter = OrderFilter(request.GET, queryset=products)
-    products = myFilter.qs 
+    
 	  
-    context = {'products': products,'myFilter':myFilter,'user_products':user_products}
+    context = {'products': products,'user_products':user_products}
     return render(request, 'core/group.html', context)
 
 
@@ -1715,6 +1735,13 @@ def expense(request):
 
                
          products =  paybillcatogory.objects.all()
+
+
+
+
+
+
+
    
     
          myFilter = expensefilter(request.GET, queryset=products)
@@ -1723,6 +1750,7 @@ def expense(request):
          context = {#'category': category,
                'orders': orders,
                'form':form,
+               'myFilter':myFilter,
                'pro':products,
                'user_products':user_products,
                'total':total,
@@ -1976,10 +2004,9 @@ def salesreport(request):
          oldreturncostt=0
          for rs in orders_not_in_range :
               
-             
-                 oldreturnpricet=rs.returnprice+oldreturnpricet
+             oldreturnpricet=rs.returnprice+oldreturnpricet
                 
-                
+         netsale2 =s - (returnprice-oldreturnpricet)
 
          context = {#'category': category,
                'pettycashreportbalnce':pettycashreportbalnce,
@@ -2016,6 +2043,7 @@ def salesreport(request):
                 'start_date': start_date,
                  'end_date': end_date,
                  'netsale' :netsale,
+                 'netsale2' :netsale2,
                  'oldreturnpricet':oldreturnpricet,
                }  
     

@@ -187,11 +187,7 @@
         <div class="grid grid-cols-3 gap-2 m-2 ">
             <div class="col-span-2 m-1">
                 <h2 class="font-medium leading-tight text-4xl mt-0 mb-4 text-blue-600">Products</h2>
-                <form method="get">
-                    {{myFilter.form}}
-
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </form>
+               
                 <div class="flex flex-wrap infinite-container" >
                    
                         {% for product in products %}

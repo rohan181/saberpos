@@ -118,7 +118,7 @@ class returnfilter(django_filters.FilterSet):
 
 class expensefilter(django_filters.FilterSet):
   
-  
+  name = CharFilter(field_name='name', lookup_expr='icontains')
   class Meta:
    model =  paybillcatogory
    fields = ['name'] 
@@ -131,6 +131,11 @@ class paybillfilter(django_filters.FilterSet):
   class Meta:
    model = paybill
    fields = []   
+
+
+
+
+
   
 
 
