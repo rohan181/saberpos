@@ -101,7 +101,7 @@
 
 <body>
 
-  <nav class="flex items-center justify-between flex-wrap bg-yellow-500  ">
+  <nav class="flex items-center justify-between flex-wrap bg-stone-600  ">
     <div class="flex items-center flex-shrink-0 text-white mr-6">
       <img src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" class="top1 " alt="">
       <span class="font-semibold text-xl tracking-tight">RANA MOTORS</span>
@@ -124,6 +124,15 @@
             <a href="{% url 'cart' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
               HOME
           </a>
+
+
+          <a href="{% url 'soldlist' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
+            INVICE LIST
+        </a>
+
+        <a href="{% url 'customerlist' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
+          CLIENT LEDGER
+      </a>
          
            
         {% else %}
@@ -232,8 +241,8 @@
    <div class="pagination">
     <span class="step-links">
         {% if orders.has_previous %}
-            <a href="?page=1{% if myFilter.data.status %}&status={{ myFilter.data.status }}{% endif %}{% if myFilter.data.customer_name %}&customer_name={{ myFilter.data.customer_name }}{% endif %}">&laquo; first</a>
-            <a href="?page={{ orders.previous_page_number }}{% if myFilter.data.status %}&status={{ myFilter.data.status }}{% endif %}{% if myFilter.data.customer_name %}&customer_name={{ myFilter.data.customer_name }}{% endif %}">previous</a>
+            <a href="?page=1{% if myFilter.data.customer %}&customer={{ myFilter.data.customer }}{% endif %}{% if myFilter.data.invoicenumber %}&invoicenumber={{ myFilter.data.invoicenumber }}{% endif %}{% if myFilter.data.start_date %}&start_date={{ myFilter.data.start_date }}{% endif %}{% if myFilter.data.end_date %}&end_date={{ myFilter.data.end_date }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ orders.previous_page_number }}{% if myFilter.data.customer %}&customer={{ myFilter.data.customer }}{% endif %}{% if myFilter.data.invoicenumber %}&invoicenumber={{ myFilter.data.invoicenumber }}{% endif %}{% if myFilter.data.start_date %}&start_date={{ myFilter.data.start_date }}{% endif %}{% if myFilter.data.end_date %}&end_date={{ myFilter.data.end_date }}{% endif %}">previous</a>
         {% endif %}
 
         <span class="current-page">
@@ -241,11 +250,12 @@
         </span>
 
         {% if orders.has_next %}
-            <a href="?page={{ orders.next_page_number }}{% if myFilter.data.status %}&status={{ myFilter.data.status }}{% endif %}{% if myFilter.data.customer_name %}&customer_name={{ myFilter.data.customer_name }}{% endif %}">next</a>
-            <a href="?page={{ orders.paginator.num_pages }}{% if myFilter.data.status %}&status={{ myFilter.data.status }}{% endif %}{% if myFilter.data.customer_name %}&customer_name={{ myFilter.data.customer_name }}{% endif %}">last &raquo;</a>
+            <a href="?page={{ orders.next_page_number }}{% if myFilter.data.customer %}&customer={{ myFilter.data.customer }}{% endif %}{% if myFilter.data.invoicenumber %}&invoicenumber={{ myFilter.data.invoicenumber }}{% endif %}{% if myFilter.data.start_date %}&start_date={{ myFilter.data.start_date }}{% endif %}{% if myFilter.data.end_date %}&end_date={{ myFilter.data.end_date }}{% endif %}">next</a>
+            <a href="?page={{ orders.paginator.num_pages }}{% if myFilter.data.customer %}&customer={{ myFilter.data.customer }}{% endif %}{% if myFilter.data.invoicenumber %}&invoicenumber={{ myFilter.data.invoicenumber }}{% endif %}{% if myFilter.data.start_date %}&start_date={{ myFilter.data.start_date }}{% endif %}{% if myFilter.data.end_date %}&end_date={{ myFilter.data.end_date }}{% endif %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
+
 
 
 

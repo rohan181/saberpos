@@ -31,6 +31,51 @@
   </script>
 <body>
 
+
+
+  <nav class="flex items-center justify-between flex-wrap bg-stone-600  ">
+    <div class="flex items-center flex-shrink-0 text-white mr-6">
+      <img src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" class="top1 " alt="">
+      <span class="font-semibold text-xl tracking-tight">RANA MOTORS</span>
+    </div>
+    <div class="block lg:hidden">
+      <button class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+      </button>
+    </div>
+    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+      <div class="text-sm lg:flex-grow">
+        
+
+      
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
+                Logout
+            </a>
+
+            <a href="{% url 'cart' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
+              HOME
+          </a>
+
+
+          <a href="{% url 'soldlist' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
+            INVICE LIST
+        </a>
+
+        <a href="{% url 'customerlist' %}" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
+          CLIENT LEDGER
+      </a>
+         
+           
+        {% else %}
+            <a href="{% url 'login' %}" class="block mt-4 lg:inline-block lg:mt-0 text-orange-200 hover:text-white mr-4">
+                Login
+            </a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
    
 
     
@@ -47,7 +92,7 @@
 
        <label for="" class="sr-only">search</label>
 
-       <input name="search" type="" class="form-control" id="" placeholder="Keyword">
+       <input name="search" type="" class="form-control" id="" placeholder="NAME">
 
        </div>
 
@@ -62,7 +107,12 @@
           <tr>
             <th>Username</th>
             <th>Phone</th>
-            <th>Email</th>
+            <th>DUE BALANCE</th>
+            <th>BILL RECEIVE</th>
+            <th>INVOICE LIST</th>
+            <th>BILL RECEIVE LIST</th>
+            <th>RETUEN LIST</th>
+            <th>BALANCE SHEET</th>
           </tr>
         </thead>
         <tbody>
@@ -73,10 +123,120 @@
               <td>{{ user.balance }}</td>
               <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
           onclick="window.location.href = '{{user.id}}/billcustomer'">
-          Printcashmemo2
+          BILL RECEIVE
 
             </button>
+
+            <td>
+
+              <!-- <a href="{% url 'soldlist' %}?customer= {{user.id}}&invoicenumber=&start_date=&end_date=" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+                INVOICE LIST
+              </a> -->
+
+
+              <form action="{% url 'soldlist' %}" method="get" >
+                <input type="date" name="start_date" class="mr border rounded-md ">
+                <span class="px-1">-</span>
+                <input type="date" name="end_date" class="mr-2 border rounded-md ">
+                <input type="hidden" id="customer_id" name="customer" value="{{user.id}}">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+                    Search
+                </button>
+            </form>
+            
+            <!-- <a href="#" onclick="generateClientLedgerURL()" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+                INVOICE LIST
+            </a> -->
+            
+           
+            </td>
         </td>
+
+         
+
+
+        <td>
+
+          <!-- <a href="{% url 'soldlist' %}?customer= {{user.id}}&invoicenumber=&start_date=&end_date=" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+            INVOICE LIST
+          </a> -->
+
+
+          <form action="{% url 'bill_list' %}" method="get" >
+            <input type="date" name="start_date" class="mr border rounded-md ">
+            <span class="px-1">-</span>
+            <input type="date" name="end_date" class="mr-2 border rounded-md ">
+            <input type="hidden" id="customer_id" name="customer" value="{{user.id}}">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+                Search
+            </button>
+        </form>
+        
+        <!-- <a href="#" onclick="generateClientLedgerURL()" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+            INVOICE LIST
+        </a> -->
+        
+       
+        </td>
+
+
+
+        <td>
+
+          <!-- <a href="{% url 'soldlist' %}?customer= {{user.id}}&invoicenumber=&start_date=&end_date=" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+            INVOICE LIST
+          </a> -->
+
+
+          <form action="{% url 'bill_list' %}" method="get" >
+            <input type="date" name="start_date" class="mr border rounded-md ">
+            <span class="px-1">-</span>
+            <input type="date" name="end_date" class="mr-2 border rounded-md ">
+            <input type="hidden" id="customer_id" name="customer" value="{{user.id}}">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+                Search
+            </button>
+        </form>
+        
+        <!-- <a href="#" onclick="generateClientLedgerURL()" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+            INVOICE LIST
+        </a> -->
+        
+       
+        </td>
+
+
+
+
+        <td>
+
+          <!-- <a href="{% url 'soldlist' %}?customer= {{user.id}}&invoicenumber=&start_date=&end_date=" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+            INVOICE LIST
+          </a> -->
+
+
+          <form action="{% url 'bill_list' %}" method="get" >
+            <input type="date" name="start_date" class="mr border rounded-md ">
+            <span class="px-1">-</span>
+            <input type="date" name="end_date" class="mr-2 border rounded-md ">
+            <input type="hidden" id="customer_id" name="customer" value="{{user.id}}">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+                Search
+            </button>
+        </form>
+        
+        <!-- <a href="#" onclick="generateClientLedgerURL()" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px">
+            INVOICE LIST
+        </a> -->
+        
+       
+        </td>
+    
+
+
+
+
+
             </tr>
           {% endfor %}
         </tbody>
@@ -107,5 +267,16 @@
 
     
 </body>
+<script>
+  function generateClientLedgerURL() {
+      var startDate = document.querySelector('input[name="start_date"]').value;
+      var endDate = document.querySelector('input[name="end_date"]').value;
+      var customerId = document.getElementById('customer_id').value;
+      
+      var clientLedgerURL = `{% url 'soldlist' %}?customer=${customerId}&invoicenumber=&start_date=${startDate}&end_date=${endDate}`;
+      
+      window.location.href = clientLedgerURL;
+  }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </html>

@@ -4,7 +4,7 @@ from core.models import Order, UserItem,Product,mrentry,returnn,sold,bill,dailyr
 class useritem(forms.ModelForm):  
     class Meta:  
         model = Order 
-        fields = ['customer','left','name','address','paid',"discount","Phone",'vehicleno']
+        fields = ['customer','name','address','paid',"discount","Phone",'vehicleno']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name'}),
            
@@ -14,7 +14,7 @@ class useritem(forms.ModelForm):
 class mrr(forms.ModelForm):  
     class Meta:  
         model = mrentry 
-        fields = ['supplier','left','name','address','paid',"discount"]
+        fields = ['supplier','name','address','paid',"discount"]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name'}),
            

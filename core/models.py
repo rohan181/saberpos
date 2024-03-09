@@ -32,7 +32,7 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0,null=True)
     mother = models.BooleanField(null=True,blank=True)
     subpartquantity = models.PositiveIntegerField(default=0,null=True)
-    subpartquantity1 = models.PositiveIntegerField(default=0,null=True)
+    
     def __str__(self):
         return self.name
 
@@ -123,14 +123,6 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,blank=True,null=True)
     UserItem  = models.ManyToManyField(UserItem,blank=True)
-    left = models.DecimalField(
-        decimal_places=0,
-        max_digits=10,
-        validators=[MinValueValidator(0)],
-        default=0,
-        null=True,
-        blank=True
-    )
     added = models.DateTimeField(auto_now_add=True,null=True)
     name = models.CharField(max_length=200,null=True,blank=True)
     invoicenumber = models.CharField(max_length=300,null=True,blank=True)
@@ -406,6 +398,8 @@ class temppaybill(models.Model):
         null=True
     )
    remarks = models.CharField(max_length=800,null=True,blank=True)
+
+
 
 
 

@@ -45,7 +45,8 @@ from rest_framework import status
 import datetime
 import pytz
 from datetime import datetime as dt_datetime
-@login_required
+
+
 def cart(request):
     
     a =UserItem.objects.filter(user=request.user).last()
@@ -60,7 +61,7 @@ def cart(request):
         total+=gs.price1 * gs.quantity
     for gs in user_products:
         total1+=gs.price1 * gs.quantity    
-    outstock=1    
+      
     
     if request.method=='POST' and 'btnform1' in request.POST: 
       if form2.is_valid() :
@@ -102,8 +103,8 @@ def cart(request):
     formatted_date_time = current_time_dhaka.strftime(date_time_format)
 
 
-    if request.method=='POST' and 'btnform2' in request.POST: 
-     if form.is_valid() and outstock==1:
+    if request.method=='POST' and 'btnform2' in request.POST and shopcart.exists(): 
+     if form.is_valid() :
         fs= form.save(commit=False)
         fs.user= request.user
         fs.totalprice=total-fs.discount
@@ -149,7 +150,6 @@ def cart(request):
                 detail.user  = request.user
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
-                detail.left = fs.left
                 detail.discount = fs.discount
                 detail.price1 = rs.price1
                 detail.price2 = rs.price2
@@ -249,6 +249,11 @@ def cart(request):
     context = {'category':category,'products': products,'form':form,'user_products':user_products,'pro':pro,'total':total,'totalbalace':totalbalnce,'form2':form2}
     return render(request, 'core/cart.html', context)
 
+
+
+
+
+
 @login_required
 def soldlist(request):
       #cursor = connection['db.sqlite3'].cursor()
@@ -269,7 +274,7 @@ def soldlist(request):
         filtered_orders = myFilter.qs
         
         # Pagination
-        paginator = Paginator(filtered_orders, 10)  # Show 5 orders per page
+        paginator = Paginator(filtered_orders, 16)  # Show 5 orders per page
         page_number = request.GET.get('page')
         page_orders = paginator.get_page(page_number)
 
@@ -1355,7 +1360,18 @@ def editcashmemo(request,id):
          products = myFilter.qs 
          orderr =Order.objects.get(id=id)
 
+
+
+         daily =dailyreport.objects.get(order_id=id)
+
+
+         
+
+
+         
+
          form = useritem(request.POST or None, request.FILES or None, instance = orderr)
+
          shopcart =UserItem.objects.filter(user=request.user)
          user_products = UserItem.objects.filter(user=request.user)
          total=0
@@ -1367,6 +1383,13 @@ def editcashmemo(request,id):
             total+=i.price1 * i.quantity
 
          total1=0
+
+         for gs in  a  :
+           total1+=gs.price2 * gs.quantity
+
+         for i in user_products:  
+            total1+=i.price2 * i.quantity
+
          
         
 
@@ -1384,19 +1407,44 @@ def editcashmemo(request,id):
            fs.totalprice1=total1-fs.discount
            fs.due=total-(fs.paid+fs.discount)
            fs.invoice_id=fs.added
-        
+           #current daily report paid
+           daily.ammount = (daily.ammount-daily.order.paid) + fs.paid
+           daily.save()
            fs.save()  
+           
+           daily_reports_after_id = dailyreport.objects.filter(order_id__gt=id)
+            # daily report ammount update
+           for i in  daily_reports_after_id:
+             i.ammount = i.ammount - daily.order.paid
+             i.save()
+           for i in  daily_reports_after_id:
+             i.ammount = i.ammount + fs.paid  
+             i.save()
+
+           if fs.customer !=None:
+              cus =Customer.objects.filter(id=daily.order.customer_id).first()
+
+              olddue=total - daily.order.paid
+              newdue=total - fs.paid
+              
+
+# Update the customer's balance
+              cus.balance = (cus.balance - olddue) +newdue
+
+# Save the updated customer object
+              cus.save()
+             
            for rs in shopcart:
                 detail = sold()
                 detail.customer    = fs.customer
                  # Order Id
-                 
-                detail.product_id  = rs.product_id
+                
+                detail.product_id = rs.product_id
                 detail.order_id     =id 
                 detail.user  = request.user
                 detail.quantity  = rs.quantity
                 detail.added  = rs.added
-                detail.left = fs.left
+               
                 detail.discount = fs.discount
                 detail.price1 = rs.price1
                 detail.price2 = rs.price2
@@ -1410,9 +1458,10 @@ def editcashmemo(request,id):
                 
                 shopcart.delete()    
                 product = Product.objects.get(id=rs.product_id)
-                if rs.credit =='noncredit':    
-                     product.quantity -= rs.quantity
-                     product.save()
+                   
+                product.quantity -= rs.quantity
+                product.save()
+           messages.success(request, 'Form submitted successfully') 
 
          #total = sum(product.total_price for product in self.user_products)
          context = {#'category': category,
@@ -1435,38 +1484,49 @@ def editcashmemo(request,id):
          return render(request, 'core/editcashmemo.html',context)    
 
 
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
 @login_required
-def fianaleditcashmemo(request,id):
-    context ={}
-    shopcart =sold.objects.get(id=id)
-    
+def fianaleditcashmemo(request, id):
+    context = {}
+    shopcart = sold.objects.get(id=id)
 
-    # pass the object as instance in form
-    form = soldformm(request.POST or None, instance = shopcart)
+    # pass the object as an instance in form
+    form = soldformm(request.POST or None, instance=shopcart)
     productnew = Product.objects.get(id=shopcart.product_id)
-    qua=productnew.quantity+shopcart.quantity
-    # save the data from the form and
-    # redirect to detail_view
+    qua = productnew.quantity + shopcart.quantity
+    orders = Order.objects.get(id=shopcart.order_id)
+    omitprice1=orders.totalprice - (shopcart.price1 * shopcart.quantity)
+    omitprice2=orders.totalprice1 - (shopcart.price2 *  shopcart.quantity)
     if form.is_valid():
-        fs= form.save(commit=False)
+        fs = form.save(commit=False)
+
+        # Check if the resulting quantity is negative
+        if qua - fs.quantity < 0:
+            messages.error(request, 'Do not have that quantity')
+            return redirect('fianaleditcashmemo', id=id)  # Replace 'update_view' with your actual URL name
+
         form.save()
-        #productnew.quantity  += shopcart.quantity
-        
-        
-        productnew.quantity  = qua-fs.quantity
+
+        # Update product quantity
+        productnew.quantity = qua - fs.quantity
         productnew.save()
-       
-   
 
-        
-        
- 
+        orders.totalprice = omitprice1 +(fs.quantity *fs.price1)
+        orders.totalprice1 = omitprice2 +(fs.quantity *fs.price2)
+        orders.due = orders.totalprice -  orders.paid
+        orders.save()
+
+        messages.success(request, 'Form submitted successfully')
+
+        # Redirect to the updated URL
+        return redirect('editcashmemo', id=shopcart.order.id)
+
     # add form dictionary to context
-    
     context["form"] = form
- 
-    return render(request, "core/update_view.html", context)
 
+    return render(request, "core/update_view.html", context)
 
 
 
@@ -2292,52 +2352,21 @@ def userItemstore(request):
         spareName = json_data.get('spareName')
         remarks = json_data.get('remarks')
         print(productId)
-
-        # Create an object using the form data
-        obj = UserItem.objects.create(
-            product_id=productId,
-            
-            
-            user_id=request.user.id,
-            quantity=quantity,
-            price1=price1,
-            price2=price2,
-            groupproduct = False,
-            status= status,
-            remarks = remarks ,
-            exchange_ammount =exchangeAmount ,
-            sparename =spareName ,
-            enginecomplete = engine
-
-            
-        )
-
-
-
-        
-        
-       
         obj = get_object_or_404(Product, id = productId)
-        motherproduct = Product.objects.all().filter(groupname=obj.groupname,mother=True).first()
-        if  obj.mother ==1 :
-            products = Product.objects.filter(groupname=obj.groupname).exclude(groupname='').exclude(id=obj.id)
-            print(products)
-        
-        
+        # Create an object using the form data
 
-            for product in products:
-                print(product.id)
-                print(product.subpartquantity )
-                totalquan=product.subpartquantity * int(quantity)
-                obj = UserItem.objects.create(
-                product_id=product.id,
-                
-                
+
+        if int(quantity) > int(obj.quantity) :
+            messages.error(request, 'Do not have that quantity')
+            return redirect('cart') 
+        if int(quantity) <= int(obj.quantity) :
+            obj = UserItem.objects.create(
+                product_id=productId,
                 user_id=request.user.id,
-                quantity =  totalquan ,
+                quantity=quantity,
                 price1=price1,
                 price2=price2,
-                groupproduct = True,
+                groupproduct = False,
                 status= status,
                 remarks = remarks ,
                 exchange_ammount =exchangeAmount ,
@@ -2346,6 +2375,59 @@ def userItemstore(request):
 
                 
             )
+
+        # if qua - fs.quantity < 0:
+        #     messages.error(request, 'Do not have that quantity')
+        #     return redirect('fianaleditcashmemo', id=id)  # Replace 'update_view' with your actual URL name
+
+        # form.save()
+
+        # # Update product quantity
+        # productnew.quantity = qua - fs.quantity
+        # productnew.save()
+
+        # messages.success(request, 'Form submitted successfully')
+
+        
+        
+       
+        obj = get_object_or_404(Product, id = productId)
+        motherproduct = Product.objects.all().filter(groupname=obj.groupname,mother=True).first()
+        if  obj.mother ==1 :
+            products = Product.objects.filter(groupname=obj.groupname).exclude(groupname='').exclude(id=obj.id)
+            
+
+            allsubquantity=0
+            for product in products:
+                if int(product.quantity) < int(product.subpartquantity)*int(quantity) :
+                    allsubquantity=1
+
+            print(str(allsubquantity) + "JJJJJ")        
+            if allsubquantity ==0:
+                for product in products:
+                    print(product.id)
+                    
+            # Create an object using the form data
+                    
+                    print(product.subpartquantity )
+                    totalquan=product.subpartquantity * int(quantity)
+                    obj = UserItem.objects.create(
+                    product_id=product.id,
+                
+                
+                    user_id=request.user.id,
+                    quantity =  totalquan ,
+                    price1=0,
+                    price2=0,
+                    groupproduct = True,
+                    status= status,
+                    remarks = remarks ,
+                    exchange_ammount =exchangeAmount ,
+                    sparename =spareName ,
+                    enginecomplete = engine
+
+                    
+                )
 
 
 
