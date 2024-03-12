@@ -143,6 +143,7 @@
       </div>
     </div>
   </nav>
+
   
   {% load crispy_forms_tags %}
 {{ form.media }}
@@ -160,50 +161,68 @@
       <tr>
 
 
+        <th scope="col">ID</th>
         <th scope="col">INVOICE NO</th>
-        <th scope="col">GN</th>
-        <th scope="col">CUSTOMER</th>
-        <th scope="col">return quantity</th>
-        <th scope="col">RUTURN PRODUCT NAME</th>
-        <th scope="col">RETURN TYPE</th>
-        <th scope="col">CASH RETURN</th>
-        <th scope="col">DUE RUTURN</th>
-        <th scope="col">TOTAL RETURN</th>
-        <th scope="col">RETURN REASONS</th>
-        <th scope="col">cashmemo</th>
+        <th scope="col">INVOICE DETAIL</th>
+        <th scope="col">INVOICE DETAIL1</th>
+        <th scope="col">INVOICE DUE</th>
+        <th scope="col">RETURN ITEM</th>
+        <th scope="col">RETURN DUE</th>
+        <th scope="col">BILL RECIVE ammount</th>
+        <th scope="col">BALANCE</th>
+        <th scope="col">TIME</th>
       </tr>
     </thead>
     <tbody>
-      {% for rs in returns %}
+      {% for rs in orders %}
       <tr>
 
 
-        <td>{{ rs.sold.order.invoicenumber}}</td>
-        <td>{{ rs.sold.order.name}}</td>
-        <td>{{ rs.sold.order.customer.name}}</td>
-        <td>{{ rs.quantity}}</td>
-        <td>{{ rs.sold.product.name}}</td>
-        <td>{{ rs.status}}</td>
-        <td>{{ rs.cashreturnprice}}</td>
-        <td>{{ rs.duereturnprice }}</td>
-        <td>{{ rs.returnprice}}</td>
-        <td>{{ rs.returnreason}}</td>
-
-
-
-         
+        <td>{{ rs.customer.name}}</td>
+        <td>{{ rs.order.invoicenumber }}bb</td>
        
-        
-     
+        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+            onclick="window.location.href = '{{rs.order.id}}/cashmemo'">
+            Printcashmemo
 
-      <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-        onclick="window.location.href = '{{rs.sold.order.id}}/cashmemo'">
-        cashmemo
+          </button>
+        </td>
+        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
+          onclick="window.location.href = '{{rs.order.id}}/cashmemo1'">
+          Printcashmemo1
 
-      </button>
+        </button>
+      </td>
+      <td>
+      {{rs.order.due}}
+      
+    </td>
+        <td>
+          {{rs.returnn.sold.product.name}}
+        </td>
+        <td> 
+          {{rs.returnn.duereturnprice}}
+       
       </td>
 
-    
+      <td> 
+        {{rs.bill.ammount}}
+     
+    </td>
+
+   
+  
+
+  <td> 
+    {{rs.balance}}
+ 
+</td>
+
+      
+
+
+        <td>{{ rs.added}}</td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>
@@ -212,23 +231,32 @@
   </table>
 
 
-  <div class="pagination">
+   <!-- Pagination Controls -->
+   <div class="pagination">
     <span class="step-links">
         {% if orders.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ orders.previous_page_number }}">previous</a>
+            <a href="?page=1{% if myFilter.data.customer %}&customer={{ myFilter.data.customer }}{% endif %}{% if myFilter.data.invoicenumber %}&invoicenumber={{ myFilter.data.invoicenumber }}{% endif %}{% if myFilter.data.start_date %}&start_date={{ myFilter.data.start_date }}{% endif %}{% if myFilter.data.end_date %}&end_date={{ myFilter.data.end_date }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ orders.previous_page_number }}{% if myFilter.data.customer %}&customer={{ myFilter.data.customer }}{% endif %}{% if myFilter.data.invoicenumber %}&invoicenumber={{ myFilter.data.invoicenumber }}{% endif %}{% if myFilter.data.start_date %}&start_date={{ myFilter.data.start_date }}{% endif %}{% if myFilter.data.end_date %}&end_date={{ myFilter.data.end_date }}{% endif %}">previous</a>
         {% endif %}
 
-        <span class="current">
+        <span class="current-page">
             Page {{ orders.number }} of {{ orders.paginator.num_pages }}.
         </span>
 
         {% if orders.has_next %}
-            <a href="?page={{ orders.next_page_number }}">next</a>
-            <a href="?page={{ orders.paginator.num_pages }}">last &raquo;</a>
+            <a href="?page={{ orders.next_page_number }}{% if myFilter.data.customer %}&customer={{ myFilter.data.customer }}{% endif %}{% if myFilter.data.invoicenumber %}&invoicenumber={{ myFilter.data.invoicenumber }}{% endif %}{% if myFilter.data.start_date %}&start_date={{ myFilter.data.start_date }}{% endif %}{% if myFilter.data.end_date %}&end_date={{ myFilter.data.end_date }}{% endif %}">next</a>
+            <a href="?page={{ orders.paginator.num_pages }}{% if myFilter.data.customer %}&customer={{ myFilter.data.customer }}{% endif %}{% if myFilter.data.invoicenumber %}&invoicenumber={{ myFilter.data.invoicenumber }}{% endif %}{% if myFilter.data.start_date %}&start_date={{ myFilter.data.start_date }}{% endif %}{% if myFilter.data.end_date %}&end_date={{ myFilter.data.end_date }}{% endif %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
+
+
+
+
+
+
+
+
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
     integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
     crossorigin="anonymous"></script>

@@ -2,7 +2,7 @@ from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Product,UserItem,sold,Order,mrentry,mrentryrecord,returnn,Customer,dailyreport,paybillcatogory,temppaybill,paybill,bill,mrentryrecord,supplier,Customerbalacesheet
-from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter,mrfilter,returnfilter,billfilter
+from .filters import OrderFilter,soldfilter,dailyreportfilter,expensefilter,paybillfilter,mrfilter,returnfilter,billfilter,Customerbalacesheetfilter
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Count, F, Value
 from django.db import connection
@@ -124,7 +124,7 @@ def cart(request):
             order_id=fs.id,
             customer=cus,
             balance=cus.balance,
-            dueblaceadd=fs.due
+            duebalanceadd =fs.due
         )
           
 
@@ -288,6 +288,46 @@ def soldlist(request):
 
 
         return render(request, 'core/soldlist.html',context)
+
+
+
+
+
+@login_required
+def customerbalancesheet(request):
+      #cursor = connection['db.sqlite3'].cursor()
+      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
+     
+      #with connection.cursor() as cursor:
+       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
+        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
+        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
+        
+        #row = cursor.fetchone()
+
+        orders = Customerbalacesheet.objects.all().order_by('-id')
+
+        # Apply filtering using the custom filter (soldfilter)
+        myFilter = Customerbalacesheetfilter(request.GET, queryset=orders)
+        filtered_orders = myFilter.qs
+        
+        # Pagination
+        paginator = Paginator(filtered_orders, 16)  # Show 5 orders per page
+        page_number = request.GET.get('page')
+        page_orders = paginator.get_page(page_number)
+
+        context = {
+            'orders': page_orders,
+            'myFilter': myFilter,  # Pass the filter for the template
+        }
+
+        
+       
+
+
+        return render(request, 'core/cusblsheet.html',context)
+
 
 
 
@@ -1292,7 +1332,7 @@ def returnreasonn(request,id):
     shopcart =returnn.objects.filter(sold_id=id).first()
     
     # pass the object as instance in form
-    form = returnnform(request.POST or None, instance = shopcart)
+    form = returnnform(request.POST or None, instance =None)
  
     # save the data from the form and
     # redirect to detail_view
@@ -1301,34 +1341,82 @@ def returnreasonn(request,id):
     product = Product.objects.get(id=solds.product_id)
     if form.is_valid():
         fs= form.save(commit=False)
-        fs.customer=solds.customer
-        fs.returnprice=fs.cashreturnprice + fs.duereturnprice 
+        if solds.returnquantity >= solds.quantity:
+            # Add an error to the form
+           
+            
+            messages.error(request, 'Do not have that quantity')
+            return redirect('returnreasonn', id=id) 
         
-        product.quantity += fs.quantity
-        product.save()
-        fs.save()
-        obj = dailyreport.objects.all().last()
-        if fs.status == "CASH RETUEN":
-            item, created =dailyreport.objects.get_or_create(
-                returnn_id=fs.id,
-                ammount=obj.ammount-fs.returnprice,
-                returnprice=fs.cashreturnprice ,
-                returncostprice = solds.costprice
-            )
-        else :  
-            item, created =dailyreport.objects.get_or_create(
-                returnn_id=fs.id,
-                ammount=obj.ammount,
-                returnprice=fs.returnprice*solds.quantity
-            )  
+        else:
+            fs.customer=solds.customer
+            fs.returnprice=fs.cashreturnprice + fs.duereturnprice 
+            
+            product.quantity += fs.quantity
+            product.save()
+            
+            fs.save()  
+            solds.returnquantity = solds.returnquantity + fs.quantity
+            solds.save()
+            obj = dailyreport.objects.all().last()
+            if fs.status == "CASH RETURN":
+                item, created =dailyreport.objects.get_or_create(
+                    returnn_id=fs.id,
+                    ammount=obj.ammount-fs.returnprice,
+                    returnprice=fs.cashreturnprice ,
+                    returncostprice = solds.costprice
+                )
+                messages.success(request, 'Return successfully processed!')
+                return redirect('returnreasonn', id=id) 
 
-        
-        return HttpResponseRedirect("/")
-         
+
+            elif fs.status == "DUE RUTURN": 
+                item, created =dailyreport.objects.get_or_create(
+                    returnn_id=fs.id,
+                    ammount=obj.ammount,
+                    returnprice=fs.duereturnprice
+
+
+                ) 
+
+                solds.order.due -= fs.duereturnprice 
+                solds.order.save()
+
+                
+                if solds.order.customer !=None:
+                    solds.customer.balance -= fs.duereturnprice 
+                    solds.customer.save()
+                
+
+
+                    item, created =Customerbalacesheet.objects.get_or_create(
+                    order_id=solds.order.id,
+                    customer=solds.order.customer,
+                    balance=solds.customer.balance,
+                    returnn_id=fs.id
+                
+                )  
+                messages.success(request, 'Return successfully processed!')
+                return redirect('returnreasonn', id=id)      
+
+
+                
+
+            else :  
+                    item, created =dailyreport.objects.get_or_create(
+                        returnn_id=fs.id,
+                        ammount=obj.ammount,
+                        returnprice=fs.returnprice*solds.quantity
+                    )  
+
+            
+                    messages.success(request, 'Return successfully processed!')
+                    return redirect('returnreasonn', id=id) 
+            
     # add form dictionary to context
     context["form"] = form
-    context["form"] = form
-    return render(request, "core/returnreason.html", context)
+    
+    return render(request, "core/update_view.html", context)
 
 
 @login_required
@@ -1879,7 +1967,7 @@ def delete_itemgroup(request,id):
 def deleteinvoice(request,id):
         item = sold.objects.filter(order_id=id)
         #item1 = sold.objects.get(pk=product_pk)
-
+        
         updates = {}
 
         for a in item:
@@ -1891,8 +1979,20 @@ def deleteinvoice(request,id):
         item1 = Order.objects.filter(id=id)
         #item1 = sold.objects.get(pk=product_pk)
         
+
+        daily_reports_after_id = dailyreport.objects.filter(order_id__gt=id)
+            # daily report ammount update
+        for i in  daily_reports_after_id:
+             i.ammount = i.ammount -item.paid
+             i.save()
         
+        
+
+        if item1.customer !=None:
+           item1.customer.balance -=item1.due
+
         item1.delete() 
+
         return HttpResponseRedirect("/soldlist")   
          
 

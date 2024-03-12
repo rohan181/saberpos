@@ -53,12 +53,23 @@ class returnnform(forms.ModelForm):
           "quantity","returnreason","status","cashreturnprice","duereturnprice" ,
         ]
 
+        
 
 class soldformm(forms.ModelForm):
     class Meta:
         model = sold
         fields = '__all__'
         exclude = ['product','order','user','Phone','customer','discount']
+
+
+
+        def clean(self):
+            cleaned_data = super().clean()
+            quantity = cleaned_data.get('quantity')
+            returnquantity = cleaned_data.get('returnquantity')
+
+            if returnquantity and returnquantity > quantity:
+                raise forms.ValidationError("Return quantity cannot be greater than so")
 
 
 

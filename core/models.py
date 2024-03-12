@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 import datetime
 from django.db.models import F, Sum
+from django.core.exceptions import ValidationError
+
 class Product(models.Model):
     CATEGORY = (
 			('uttara', 'uttara'),
@@ -145,33 +147,12 @@ class Order(models.Model):
     
 
 
-
-class Customerbalacesheet(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,related_name='customer')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,related_name='order')
-    dueblaceadd= models.PositiveIntegerField(default=0,null=True)
-    billreceive = models.PositiveIntegerField(default=0,null=True)
-    
-    balance = models.PositiveIntegerField(default=0,null=True)
-    added = models.DateTimeField(auto_now_add=True,null=True)
-       
-    
-    
-    
-
-    
-    
-
-    
-
-    
-
-
 class sold(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    returnquantity = models.PositiveIntegerField(default=0)
     added = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True)
     paid = models.PositiveIntegerField(default=0,null=True)
@@ -230,7 +211,73 @@ class sold(models.Model):
 
     @property
     def invoice(self):
-        return (self.id+" " +" "+ self.added+"")   
+        return (self.id+" " +" "+ self.added+"")       
+    
+    def clean(self):
+        if self.returnquantity > self.quantity:
+            raise ValidationError("Return quantity cannot be greater than sold quantity.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+    
+
+class returnn(models.Model):    
+
+
+     category = (
+			('CASH RETURN', 'CASH RETURN'),
+			('DUE RUTURN', 'DUE RUTURN'),
+            ('BOTH', 'BOTH'),
+			)    
+     sold = models.ForeignKey(sold, on_delete=models.CASCADE,null=True,blank=True)
+     quantity = models.PositiveIntegerField(default=1)
+     returnreason = models.CharField(max_length=300,null=True,default='',blank=True)
+     returnprice = models.PositiveIntegerField(default=0,null=True)
+     added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+     cashreturnprice = models.PositiveIntegerField(default=0,null=True)
+     duereturnprice = models.PositiveIntegerField(default=0,null=True)
+     status=models.CharField(max_length=50,choices= category ,default='CASH RETURN',null=True)
+     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)    
+    
+
+
+
+
+class bill(models.Model):  
+     order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,blank=True)      
+     name = models.TextField(max_length=100,null=True)
+     ammount = models.DecimalField(
+        decimal_places=0,
+        max_digits=10,
+        validators=[MinValueValidator(0)],
+        null=True
+    )
+     added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True) 
+
+
+class Customerbalacesheet(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True,related_name='customer')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,blank=True,related_name='order')
+    returnn = models.ForeignKey(returnn, on_delete=models.CASCADE,null=True,blank=True,related_name='returnn')
+    bill = models.ForeignKey(bill, on_delete=models.CASCADE,null=True,related_name='bill')
+    
+    duebalanceadd = models.PositiveIntegerField(default=0,null=True)
+    balance = models.PositiveIntegerField(default=0,null=True)
+    added = models.DateTimeField(auto_now_add=True,null=True)
+       
+    
+    
+    
+ 
+
+    
+
+    
+
+# MR START
+
 
 
 
@@ -349,36 +396,10 @@ class mrentryrecord(models.Model):
 
 
 
-class returnn(models.Model):    
 
 
-     category = (
-			('CASH RETUEN', 'CASH RETUEN'),
-			(' WITH OUT CASH RETUEN', 'WITH OUT CASH RETUEN'),
-            (' BOTH', 'BOTH'),
-			)    
-     sold = models.ForeignKey(sold, on_delete=models.CASCADE,null=True,blank=True)
-     quantity = models.PositiveIntegerField(default=1)
-     returnreason = models.CharField(max_length=300,null=True,default='',blank=True)
-     returnprice = models.PositiveIntegerField(default=0,null=True)
-     added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
-     cashreturnprice = models.PositiveIntegerField(default=0,null=True)
-     duereturnprice = models.PositiveIntegerField(default=0,null=True)
-     status=models.CharField(max_length=50,choices= category ,default='CASH RETUEN',null=True)
-     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
 
 
-class bill(models.Model):  
-     order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,blank=True)      
-     name = models.TextField(max_length=100,null=True)
-     ammount = models.DecimalField(
-        decimal_places=0,
-        max_digits=10,
-        validators=[MinValueValidator(0)],
-        null=True
-    )
-     added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
-     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True)
 
 
 class paybillcatogory(models.Model):    

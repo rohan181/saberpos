@@ -89,6 +89,19 @@ class soldfilter(django_filters.FilterSet):
    fields = ['customer','invoicenumber']
 
 
+
+class Customerbalacesheetfilter(django_filters.FilterSet):
+  
+  start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=forms.DateInput(attrs={'type': 'date'}),)
+  end_date = DateFilter(field_name="added", lookup_expr='lte',widget=forms.DateInput(attrs={'type': 'date'}))
+  #start_time = DateTimeFilter(field_name="added", lookup_expr='time__gte', widget=AdminTimeWidget())
+  #end_time = DateTimeFilter(field_name="added", lookup_expr='time__lte', widget=AdminTimeWidget())
+  #invoicenumber = CharFilter(field_name='invoicenumber', lookup_expr='icontains')
+  class Meta:
+   model = Customerbalacesheet
+   fields = ['customer']
+
+
 class mrfilter(django_filters.FilterSet):
   start_date = DateFilter(field_name="added", lookup_expr='gte' ,widget=forms.DateInput(attrs={'type': 'date'}))
   end_date = DateFilter(field_name="added", lookup_expr='lte',widget=forms.DateInput(attrs={'type': 'date'}))

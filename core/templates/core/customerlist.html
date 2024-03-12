@@ -77,10 +77,10 @@
   </nav>
 
    
-
+<br>
     
 
-    <form action="{% url 'search_results' %}" class="form-inline" method="get">
+    <form action="{% url 'search_results' %}" class="form-inline px-10" method="get">
 
       <div class="form-group mb-8">
 
@@ -188,7 +188,7 @@
           </a> -->
 
 
-          <form action="{% url 'bill_list' %}" method="get" >
+          <form action="{% url 'returnlist' %}" method="get" >
             <input type="date" name="start_date" class="mr border rounded-md ">
             <span class="px-1">-</span>
             <input type="date" name="end_date" class="mr-2 border rounded-md ">
@@ -215,7 +215,7 @@
           </a> -->
 
 
-          <form action="{% url 'bill_list' %}" method="get" >
+          <form action="{% url 'customerbalancesheet' %}" method="get" >
             <input type="date" name="start_date" class="mr border rounded-md ">
             <span class="px-1">-</span>
             <input type="date" name="end_date" class="mr-2 border rounded-md ">
@@ -274,6 +274,41 @@
       var customerId = document.getElementById('customer_id').value;
       
       var clientLedgerURL = `{% url 'soldlist' %}?customer=${customerId}&invoicenumber=&start_date=${startDate}&end_date=${endDate}`;
+      
+      window.location.href = clientLedgerURL;
+  }
+
+
+
+  function generateClientLedgerURL() {
+      var startDate = document.querySelector('input[name="start_date"]').value;
+      var endDate = document.querySelector('input[name="end_date"]').value;
+      var customerId = document.getElementById('customer_id').value;
+      
+      var clientLedgerURL = `{% url 'bill_list' %}?customer=${customerId}&invoicenumber=&start_date=${startDate}&end_date=${endDate}`;
+      
+      window.location.href = clientLedgerURL;
+  }
+
+
+
+  function generateClientLedgerURL() {
+      var startDate = document.querySelector('input[name="start_date"]').value;
+      var endDate = document.querySelector('input[name="end_date"]').value;
+      var customerId = document.getElementById('customer_id').value;
+      
+      var clientLedgerURL = `{% url 'returnlist' %}?customer=${customerId}&invoicenumber=&start_date=${startDate}&end_date=${endDate}`;
+      
+      window.location.href = clientLedgerURL;
+  }
+
+
+  function generateClientLedgerURL() {
+      var startDate = document.querySelector('input[name="start_date"]').value;
+      var endDate = document.querySelector('input[name="end_date"]').value;
+      var customerId = document.getElementById('customer_id').value;
+      
+      var clientLedgerURL = `{% url 'customerbalancesheet' %}?customer=${customerId}&invoicenumber=&start_date=${startDate}&end_date=${endDate}`;
       
       window.location.href = clientLedgerURL;
   }

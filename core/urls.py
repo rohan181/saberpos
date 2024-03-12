@@ -57,8 +57,12 @@ urlpatterns = [
     path('<id>/billcustomer', views.billcustomer, name='bill'),
 
     path('customerlist', views.customerlist, name='customerlist'),
-    path('customerdetail', views.customersolddeatails, name='bill'),
+   # path('customerdetail', views.customersolddeatails, name='bill'),
     path("search/", views.search, name="search_results"),
+    path('customerbalancesheet', views.customerbalancesheet, name='customerbalancesheet'),
+
+
+
     path("daily", views.dalyreport, name=""),
     path("expensereport", views.expensereport, name=""),
 

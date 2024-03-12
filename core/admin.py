@@ -8,7 +8,7 @@ from import_export import resources
 from django.utils.translation import gettext_lazy as _
 from django.forms import Media
 
-from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry,returnn,bill,paybill,paybillcatogory,dailyreport,temppaybill,corportepay,corpocatagory,Customerbalacesheet
+from .models import Product,UserItem,Customer,Order,sold,mrentryrecord,supplier,mrentry,returnn,bill,paybill,paybillcatogory,dailyreport,temppaybill,corportepay,corpocatagory,Customerbalacesheet,Customerbalacesheet
 class OrderProductline(admin.TabularInline):
     model =sold
     
@@ -42,6 +42,8 @@ admin.site.register(mrentry)
 admin.site.register(Order)
 #admin.site.register(supplier)
 
+
+admin.site.register(Customerbalacesheet)
 admin.site.register(temppaybill)
 admin.site.register(dailyreport)
 admin.site.register(sold,ComputerAdmin)
@@ -116,4 +118,4 @@ admin.site.register(corportepay)
 admin.site.register(corpocatagory)
 
 
-admin.site.register(Customerbalacesheet)
+#admin.site.register(Customerbalacesheet)
