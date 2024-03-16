@@ -729,6 +729,7 @@ def cashmemo(request,id):
 
          total1=total-date.discount
          text=num2words(total1)   
+         text= text.replace(',', '')
          #total = sum(product.total_price for product in self.user_products)
          context = {#'category': category,
                'orders': orders,
@@ -772,6 +773,7 @@ def cashmemo1(request,id):
 
          total1=total-date.discount
          text=num2words(total1) 
+         text= text.replace(',', '')
          due=total- date.paid
 
          if date.paid - date.totalprice ==0 :
