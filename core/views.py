@@ -46,7 +46,7 @@ import datetime
 import pytz
 from datetime import datetime as dt_datetime
 
-
+@login_required
 def cart(request):
     
     a =UserItem.objects.filter(user=request.user).last()
@@ -137,8 +137,11 @@ def cart(request):
             reporttype='INVOICE'
             
         )
-           
-        
+        for rs in shopcart: 
+           product = Product.objects.get(id=rs.product_id)
+           if int(rs.quantity) > int(product.quantity) :
+              messages.error(request, 'Do not have group product quanitity that quantity')
+              return redirect('cart') 
 
         for rs in shopcart:
                 detail = sold()
@@ -665,6 +668,7 @@ def group(request,id):
     #shopcart =UserItem.objects.filter(user=request.user)
     obj = get_object_or_404(Product, id = id)
     user_products = UserItem.objects.filter(user=request.user, product__groupname=obj.groupname)
+    user_products = user_products.exclude(product_id=obj.id)
     if form.is_valid():
         fs= form.save(commit=False)
         fs.user= request.user
@@ -687,7 +691,9 @@ def group(request,id):
         #              product.save()
 
      
-
+    total=0
+    for rs in user_products:
+            total+=rs.product.price * rs.quantity
         
     
     #shopcart =UserItem.objects.filter(user=request.user,product=obj.product)
@@ -696,7 +702,7 @@ def group(request,id):
     
     
 	  
-    context = {'products': products,'user_products':user_products}
+    context = {'products': products, 'user_products': user_products, 'total': total}
     return render(request, 'core/group.html', context)
 
 
@@ -1406,8 +1412,22 @@ def returnreasonn(request,id):
                     item, created =dailyreport.objects.get_or_create(
                         returnn_id=fs.id,
                         ammount=obj.ammount,
-                        returnprice=fs.returnprice*solds.quantity
+                        returnprice=fs.cashreturnprice + fs.duereturnprice
                     )  
+
+                    if solds.order.customer !=None:
+                        solds.customer.balance -= fs.duereturnprice 
+                        solds.customer.save()
+                    
+
+
+                        item, created =Customerbalacesheet.objects.get_or_create(
+                        order_id=solds.order.id,
+                        customer=solds.order.customer,
+                        balance=solds.customer.balance,
+                        returnn_id=fs.id
+                
+                )  
 
             
                     messages.success(request, 'Return successfully processed!')
@@ -1964,37 +1984,41 @@ def delete_itemgroup(request,id):
         return HttpResponseRedirect("group")   
 
 
-def deleteinvoice(request,id):
-        item = sold.objects.filter(order_id=id)
-        #item1 = sold.objects.get(pk=product_pk)
+def deleteinvoice(request, id):
+    item = sold.objects.filter(order_id=id)
+    updates = {}
+
+    for a in item:
+        # Use F() expression to update the quantity directly in the database
+        Product.objects.filter(id=a.product.id).update(quantity=F('quantity') + a.quantity)
+    
+    item.delete()      
+
+    item1 = get_object_or_404(Order, id=id)
+    
+    daily_reports_after_id = dailyreport.objects.filter(order_id__gt=id)
+    
+    # Daily report amount update
+    for i in daily_reports_after_id:
+        i.ammount -= item1.paid
+        i.save()
+
+    if item1.customer != None:
+        item1.customer.balance -= item1.due
+        item1.customer.save()
+        order = Order.objects.get(id=id)
+        order_creation_date = order.added
         
-        updates = {}
+        # Query all balance sheet entries created after the order's creation date
+        balance_sheets = Customerbalacesheet.objects.filter(added__gt=order_creation_date, customer=order.customer) 
+            
+        for i in balance_sheets:
+            i.balance -= order.due
+            i.save()
+    
+    item1.delete() 
+    return HttpResponseRedirect("/soldlist")
 
-        for a in item:
-    # Use F() expression to update the quantity directly in the database
-           Product.objects.filter(id=a.product.id).update(quantity=F('quantity') + a.quantity)
-        
-        item.delete()      
-
-        item1 = Order.objects.filter(id=id)
-        #item1 = sold.objects.get(pk=product_pk)
-        
-
-        daily_reports_after_id = dailyreport.objects.filter(order_id__gt=id)
-            # daily report ammount update
-        for i in  daily_reports_after_id:
-             i.ammount = i.ammount -item.paid
-             i.save()
-        
-        
-
-        if item1.customer !=None:
-           item1.customer.balance -=item1.due
-
-        item1.delete() 
-
-        return HttpResponseRedirect("/soldlist")   
-         
 
 class CountryAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -2497,37 +2521,37 @@ def userItemstore(request):
             products = Product.objects.filter(groupname=obj.groupname).exclude(groupname='').exclude(id=obj.id)
             
 
-            allsubquantity=0
+            # allsubquantity=0
+            # for product in products:
+            #     if int(product.quantity) < int(product.subpartquantity)*int(quantity) :
+            #         allsubquantity=1
+
+            # print(str(allsubquantity) + "JJJJJ")        
+            # if allsubquantity ==0:
             for product in products:
-                if int(product.quantity) < int(product.subpartquantity)*int(quantity) :
-                    allsubquantity=1
-
-            print(str(allsubquantity) + "JJJJJ")        
-            if allsubquantity ==0:
-                for product in products:
-                    print(product.id)
-                    
-            # Create an object using the form data
-                    
-                    print(product.subpartquantity )
-                    totalquan=product.subpartquantity * int(quantity)
-                    obj = UserItem.objects.create(
-                    product_id=product.id,
+                print(product.id)
                 
+        # Create an object using the form data
                 
-                    user_id=request.user.id,
-                    quantity =  totalquan ,
-                    price1=0,
-                    price2=0,
-                    groupproduct = True,
-                    status= status,
-                    remarks = remarks ,
-                    exchange_ammount =exchangeAmount ,
-                    sparename =spareName ,
-                    enginecomplete = engine
+                print(product.subpartquantity )
+                totalquan=product.subpartquantity * int(quantity)
+                obj = UserItem.objects.create(
+                product_id=product.id,
+            
+            
+                user_id=request.user.id,
+                quantity =  totalquan ,
+                price1=0,
+                price2=0,
+                groupproduct = True,
+                status= status,
+                remarks = remarks ,
+                exchange_ammount =exchangeAmount ,
+                sparename =spareName ,
+                enginecomplete = engine
 
-                    
-                )
+                
+            )
 
 
 
