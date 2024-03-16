@@ -329,12 +329,14 @@ h6{
                   line-height:normal'><b><span style='font-size:11px;font-family:"Tahoma",sans-serif;
                   color:black'>Due Amount:</span></b></p>
                   </td>
+                  {% if date.totalprice|sub:date.paid != 0 %}
                   <td width=95 style='width:65.65px;border:solid black 1.0pt;border-top:none;
-                  padding:1.95pt 1.95pt 1.95pt 1.95pt;height:12.3pt'>
-                  <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
-                  line-height:normal'><b><span style='font-size:11px;font-family:"Tahoma",sans-serif;
-                  color:black'>{{date.totalprice|sub:date.paid}}</span></b></p>
+                                    padding:1.95pt 1.95pt 1.95pt 1.95pt;height:12.3pt'>
+                      <p class=MsoNormal align=right style='margin-bottom:0in;text-align:right;
+                      line-height:normal'><b><span style='font-size:11px;font-family:"Tahoma",sans-serif;
+                      color:black'>{{ date.totalprice|sub:date.paid }}</span></b></p>
                   </td>
+                  {% endif %}
                  </tr>
               </tbody>
             </table>
