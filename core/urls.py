@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path,include
-from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport,api_productlist,delete_user_item,apiaddproduct,userItemstore,mreditcashmemo
+from .views import  update_view,ggroup,group,mrupdate_view,customersolddeatails,chalan,billcustomer,groupupdate_view,dalyreport,dalyreportsearch,expenseform,expensestore,addproduct,addproductgroup,CountryAutocomplete,sms,salesreport,expensereport,api_productlist,delete_user_item,apiaddproduct,userItemstore,mreditcashmemo,smssend
 
 from django.urls import re_path as url
 from django.urls import reverse
@@ -21,28 +21,38 @@ urlpatterns = [
     path('autocomplete/', views.AutocompleteView.as_view(), name='autocomplete'),
     path('<id>/update',update_view ,name='update'),
     path('<id>/addproduct',addproduct ,name='update'),
+
+    path('<id>/group',group,name='group'),
     path('<id>/addproductgroup',views.addproductgroup ,name='update'),
     path('<id>/groupupdate',groupupdate_view ,name='update'),
+     path('<id>/deletegroup', views.delete_itemgroup, name='delete'),
     path('<id>/mrupdate',mrupdate_view ,name='mrupdate'),
-    path('<id>/group',group,name='group'),
+
+    
     path('soldlist', views.soldlist, name='soldlist'),
     path('mrlist', views.mrlist, name='mrlist'),
 
 
     path('<id>/cashmemo', views.cashmemo, name='cashmemo'),
     path('<id>/cashmemo1', views.cashmemo1, name='cashmemo1'),
+     path('<id>/chalan', views.chalan, name='chalan'),
      path('<id>/deleteinvoice', views.deleteinvoice, name='deleteinvoice'),
+      path('<id>/editcashmemo', views.editcashmemo, name='editcashmemo'),
+    path('<id>/fianaleditcashmemo', views.fianaleditcashmemo, name='fianaleditcashmemo'),
+
+
+   
+
 
    # path('<id>/mrmemo', views.mrmemo, name='mrmemo'),
-    path('<id>/chalan', views.chalan, name='chalan'),
+   
     path('<id>/returnn', views.returnno, name='return'),
     path('<id>/returnitem', views.returnreasonn, name='returnreasonn'),
     path('returnlist', views.returnlist, name='returnlist'),
     #bill
     path('bill_list', views.bill_list, name='bill_list'),
 
-    path('<id>/editcashmemo', views.editcashmemo, name='editcashmemo'),
-    path('<id>/fianaleditcashmemo', views.fianaleditcashmemo, name='fianaleditcashmemo'),
+   
     path('productlist', views.productlist, name='productlist'),
 
 
@@ -53,7 +63,7 @@ urlpatterns = [
 
     path('<id>/bill', views.billt, name='bill'),
     path('<id>/delete', views.delete_item, name='delete'),
-    path('<id>/deletegroup', views.delete_itemgroup, name='delete'),
+   
     path('<id>/billcustomer', views.billcustomer, name='bill'),
 
     path('customerlist', views.customerlist, name='customerlist'),
@@ -72,6 +82,9 @@ urlpatterns = [
 
     
     path("sms", views.sms, name="sms"),
+    path("smssend", views.smssend, name="smssend"),
+
+
     path("<id>/expenseform", views.expenseform ,name=""),
     path("expensestore", views.expensestore ,name=""),
    # path("dailysearchresult", views.dalyreportsearch, name="search_results"),

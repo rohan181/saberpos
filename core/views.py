@@ -589,17 +589,32 @@ def groupupdate_view(request,id):
     # redirect to detail_view
     if form.is_valid():
         fs= form.save(commit=False)
-        mother.price1 +=fs.price1 * fs.quantity
-        mother.price2 +=fs.price2 * fs.quantity
+       
         
         
         fs.save()
-        mother.save()
+        
         if fs.enginecomplete =="complete":
             products.quantity = products.quantity-1
         products.save()
-        return HttpResponseRedirect("group")
- 
+
+
+        product = Product.objects.get(pk=id)
+    
+    # Get the group name of the selected product
+        group_name = product.groupname
+    
+    # Filter products from the same group where mother is equal to 1
+        mother_products = Product.objects.filter(groupname=group_name, mother=True)
+    
+    # Assuming there's only one mother product, you can get its ID
+        if mother_products.exists():
+            mother_product_id = mother_products.first().id
+            # Redirect to the 'group' URL with mother product ID in the URL
+            return HttpResponseRedirect(f"/{mother_product_id}/group")
+        else:
+        # If there's no mother product, simply redirect to the 'group' URL without including the ID parameter.
+           return HttpResponseRedirect(f"/{id}/group")
     # add form dictionary to context
     context["form"] = form
  
@@ -1443,17 +1458,7 @@ def returnreasonn(request,id):
 
 @login_required
 def editcashmemo(request,id):
-      #cursor = connection['db.sqlite3'].cursor()
-      #user_products = Product.objects.raw("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
-      #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM core_useritem WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_useritem WHERE product_id = core_product.id)")
-     
-      #with connection.cursor() as cursor:
-       # cursor.execute("INSERT INTO core_sold SELECT * FROM core_useritem ")
-        #cursor.execute("UPDATE core_product SET quantity =core_product.quantity-(SELECT quantity FROM  core_sold WHERE product_id = core_product.id) where EXISTS (SELECT quantity FROM core_sold WHERE product_id = core_product.id) ")
-        #cursor.execute("UPDATE  core_sold  SET quantityupdate=1")
-        
-        #row = cursor.fetchone()
-
+    
          orders=sold.objects.all().filter(order_id=id)
          ordere_de=Order.objects.all().filter(id=id)
          date=sold.objects.all().filter(order_id=id).last()
@@ -1474,11 +1479,6 @@ def editcashmemo(request,id):
 
          daily =dailyreport.objects.get(order_id=id)
 
-
-         
-
-
-         
 
          form = useritem(request.POST or None, request.FILES or None, instance = orderr)
 
@@ -1507,44 +1507,33 @@ def editcashmemo(request,id):
 
          page_number = request.GET.get('page')
          pro = paginator.get_page(page_number) 
-
+         oldid= orderr.customer.id
          if form.is_valid():
-           fs= form.save(commit=False)
-           fs.user= request.user
+            fs = form.save(commit=False)
+            
+            fs.user= request.user
            
-           fs.invoice_id=fs.added
-           fs.totalprice=total-fs.discount
-           fs.totalprice1=total1-fs.discount
-           fs.due=total-(fs.paid+fs.discount)
-           fs.invoice_id=fs.added
-           #current daily report paid
-           daily.ammount = (daily.ammount-daily.order.paid) + fs.paid
-           daily.save()
-           fs.save()  
-           
-           daily_reports_after_id = dailyreport.objects.filter(order_id__gt=id)
-            # daily report ammount update
-           for i in  daily_reports_after_id:
-             i.ammount = i.ammount - daily.order.paid
-             i.save()
-           for i in  daily_reports_after_id:
-             i.ammount = i.ammount + fs.paid  
-             i.save()
+            fs.invoice_id=fs.added
+            fs.totalprice=total-fs.discount
+            fs.totalprice1=total1-fs.discount
+            fs.due=total-(fs.paid+fs.discount)
+            fs.invoice_id=fs.added
+            #current daily report paid
+            daily.ammount = (daily.ammount-daily.order.paid) + fs.paid
+            daily.save()
+            fs.save()  
+            
+            daily_reports_after_id = dailyreport.objects.filter(order_id__gt=id)
+                # daily report ammount update
+            for i in  daily_reports_after_id:
+                i.ammount = i.ammount - daily.order.paid
+                i.save()
+            for i in  daily_reports_after_id:
+                i.ammount = i.ammount + fs.paid  
+                i.save()
+            
 
-           if fs.customer !=None:
-              cus =Customer.objects.filter(id=daily.order.customer_id).first()
-
-              olddue=total - daily.order.paid
-              newdue=total - fs.paid
-              
-
-# Update the customer's balance
-              cus.balance = (cus.balance - olddue) +newdue
-
-# Save the updated customer object
-              cus.save()
-             
-           for rs in shopcart:
+            for rs in shopcart:
                 detail = sold()
                 detail.customer    = fs.customer
                  # Order Id
@@ -1571,7 +1560,83 @@ def editcashmemo(request,id):
                    
                 product.quantity -= rs.quantity
                 product.save()
-           messages.success(request, 'Form submitted successfully') 
+
+
+
+            if fs.customer.id != oldid:
+                print("Updating customer balance...")  # Informative print statement
+
+        # Update customer balance if customer changed for the order
+                orderr.customer.balance -= orderr.due
+                orderr.customer.save()
+
+                order_creation_date = orderr.added
+
+        # Efficiently update related CustomerBalanceSheet objects
+                Customerbalacesheet.objects.filter(
+                    added__gt=order_creation_date, customer=orderr.customer
+                ).update(balance=F('balance') - orderr.due)  # F() expression for in-place update
+
+        # Delete existing CustomerBalanceSheet objects associated with the previous order
+                Customerbalacesheet.objects.filter(order=orderr).delete()
+
+
+                cus =Customer.objects.filter(id=fs.customer_id).first()
+                cus.balance +=fs.due
+        
+                cus.save()        
+                item, created =Customerbalacesheet.objects.get_or_create(
+                    order_id=fs.id,
+                    customer=cus,
+                    balance=cus.balance,
+                    duebalanceadd =fs.due
+                )
+
+                
+
+            else:
+        # Handle the case where the customer remains the same (optional logic)
+                print("Customer did not change for the order.")
+
+    # Complete form saving after all checks and updates
+ # Save the form data to create the model instance
+
+                cus =Customer.objects.filter(id=daily.order.customer_id).first()
+
+                olddue=total - daily.order.paid
+                newdue=total - fs.paid
+                
+
+    # Update the customer's balance
+                cus.balance = (cus.balance - olddue) +newdue
+
+    # Save the updated customer object
+                cus.save()
+
+                order_creation_date = orderr.added
+                balance_sheets = Customerbalacesheet.objects.filter(added__gte=order_creation_date, customer=fs.customer) 
+                
+                for i in balance_sheets:
+                    
+                    if(newdue-olddue)>0 :
+                        i.balance = i.balance - (newdue-olddue)
+                        i.save()
+                    else :
+                        
+                        i.balance = i.balance + (newdue-olddue)
+                        i.save()
+
+
+             
+             
+
+
+           
+               
+                
+               
+               
+            messages.success(request, 'Form submitted successfully') 
 
          #total = sum(product.total_price for product in self.user_products)
          context = {#'category': category,
@@ -1652,7 +1717,12 @@ def billt(request,id):
            fs.order_id= id
            fs.save() 
            obj = dailyreport.objects.all().last()
+
            messages.success(request, 'Form submission successful')
+
+           order = Order.objects.get(id=id)
+           order.due=order.due-fs.ammount
+           order.save()
            item, created =dailyreport.objects.get_or_create(
             bill_id=fs.id,
             ammount=obj.ammount+fs.ammount
@@ -1977,14 +2047,29 @@ def delete_item(request,id):
         item.delete()         
         return HttpResponseRedirect(reverse('cart'))
 
-def delete_itemgroup(request,id):
-        item = UserItem.objects.filter(product_id=id)
-        #item1 = sold.objects.get(pk=product_pk)
-        
-        
-        item.delete()      
-        return HttpResponseRedirect("group")   
+def delete_itemgroup(request, id):
+    # Assuming UserItem has a field called 'product_id' which stores the ID of the product
+    items = UserItem.objects.filter(product_id=id)
+    
+    # Delete the items associated with the given product ID
+    items.delete()
 
+    product = Product.objects.get(pk=id)
+    
+    # Get the group name of the selected product
+    group_name = product.groupname
+    
+    # Filter products from the same group where mother is equal to 1
+    mother_products = Product.objects.filter(groupname=group_name, mother=True)
+    
+    # Assuming there's only one mother product, you can get its ID
+    if mother_products.exists():
+        mother_product_id = mother_products.first().id
+        # Redirect to the 'group' URL with mother product ID in the URL
+        return HttpResponseRedirect(f"/{mother_product_id}/group")
+    else:
+        # If there's no mother product, simply redirect to the 'group' URL without including the ID parameter.
+        return HttpResponseRedirect(f"/{id}/group")
 
 def deleteinvoice(request, id):
     item = sold.objects.filter(order_id=id)
@@ -2019,6 +2104,7 @@ def deleteinvoice(request, id):
             i.save()
     
     item1.delete() 
+    messages.success(request, 'invoice deleted  successfully')
     return HttpResponseRedirect("/soldlist")
 
 
@@ -2036,35 +2122,106 @@ class CountryAutocomplete(autocomplete.Select2QuerySetView):
         return qs        
 
 def sms(request):
-       
- 
-   account_sid = 'ACd9cb2c9b4c4aaea3a152dae6c8e5ecf7' 
-   auth_token = '5f2ae880b9f8f7e3e563adf63ecf978e' 
-   client = Client(account_sid, auth_token) 
+    # Data to pass in the context
 
-   products = Product.objects.all()
+    current_date = dt_datetime.now().strftime("%Y-%m-%d")
+    orders=dailyreport.objects.all().last()
+    orders_not_sent = Order.objects.filter(smssend=False)
 
-   totalbalnce=0
-   for p in products:
-        totalbalnce +=p.price * p.quantity
+# Calculate the sum of totalprice, due, and paid
+    total_sale = orders_not_sent.aggregate(total_totalprice=Sum('totalprice'))['total_totalprice'] or 0
+    cash_sale = orders_not_sent.aggregate(total_paid=Sum('paid'))['total_paid'] or 0
+    bill_receive = bill.objects.filter(smssend=False).aggregate(total_amount=Sum('ammount'))['total_amount'] or 0
+    closing_balance = orders.ammount
 
-   mo = Product.objects.filter(mother=True)
+# Construct the message including the current date
+    message = f"On {current_date}, Total sale: {total_sale}, Cash sale: {cash_sale}, Bill received: {bill_receive}, Closing balance: {closing_balance}"
 
-   bl=0
-   for p in mo:
-        bl +=p.price * p.quantity    
-   totalbalnce=totalbalnce-bl
-   a="total cash"+str(totalbalnce)
-   
- 
-   message = client.messages.create(  
-      body=a   , from_='+19386669052',
+     #message = f"On {current_date}, Total sale: {total_sale}, Cash sale: {cash_sale}, Bill received: {bill_receive}, Closing balance: {closing_balance}"
 
-                              to='+8801624462494' 
-                          ) 
- 
-  
-   return HttpResponseRedirect("/")       
+    context = {
+    'message': message,
+    # Include other context variables here if needed
+}
+    # Render the template with context data
+    return render(request, "core/sms_template.html", context)    
+
+
+
+import requests
+def smssend(request):
+    # Data to pass in the context
+
+    current_date = dt_datetime.now().strftime("%Y-%m-%d")
+    orders=dailyreport.objects.all().last()
+    orders_not_sent = Order.objects.filter(smssend=False)
+
+# Calculate the sum of totalprice, due, and paid
+    total_sale = orders_not_sent.aggregate(total_totalprice=Sum('totalprice'))['total_totalprice'] or 0
+    cash_sale = orders_not_sent.aggregate(total_paid=Sum('paid'))['total_paid'] or 0
+    bill_receive = bill.objects.filter(smssend=False).aggregate(total_amount=Sum('ammount'))['total_amount'] or 0
+    closing_balance = orders.ammount
+
+# Construct the message including the current date
+    message = f"On {current_date}, Total sale: {total_sale}, Cash sale: {cash_sale}, Bill received: {bill_receive}, Closing balance: {closing_balance}"
+
+     #message = f"On {current_date}, Total sale: {total_sale}, Cash sale: {cash_sale}, Bill received: {bill_receive}, Closing balance: {closing_balance}"
+    
+
+
+
+
+    
+
+    url = 'https://login.esms.com.bd/api/v3/sms/send'
+    headers = {
+    'Authorization': 'Bearer 297|fOiAZt4BLS5eL1MTjmk4UZvWlHPaOnsIhpW7ivqq',
+    'Content-Type': 'application/json'
+}
+    recipients = ["8801814392710","8801922542456"]
+    sender_id = "8809601001296"
+    #
+
+    for recipient in recipients:
+        data = {
+            "recipient": recipient,
+            "sender_id": sender_id,
+            "type": "plain",
+            "message": message
+        }
+
+        response = requests.post(url, headers=headers, json=data)
+
+        print(f"Recipient: {recipient}")
+        print(f"Status code: {response.status_code}")
+        print(f"Response text: {response.text}")
+        print()
+
+#recipients = ['8801311848771', '8801814392710']
+        data = {
+            "recipient": "8801814392710",
+            "sender_id": "8809601001296",
+            "type": "plain",
+            "message": "Rohan is fucking madarchud!"
+        }
+
+        response = requests.post(url, headers=headers, json=data)
+
+        if response.status_code != 200:
+            # If there's an error, redirect with an error message
+            return HttpResponseRedirect("/sms?error=Error occurred while sending SMS. Please try again later.")
+        
+        orders_not_sent.update(smssend=True)
+        all_bills = bill.objects.all()
+
+# Loop through each bill object and set smssend to True
+        for bill_obj in all_bills:
+            bill_obj.smssend = True
+            bill_obj.save()
+
+    # If all SMS sent successfully, redirect with a success message
+    return HttpResponseRedirect("/sms?success=SMS sent successfully.")  
+
 
 
 

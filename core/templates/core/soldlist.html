@@ -101,6 +101,75 @@
 
 <body>
 
+  {% if messages %}
+  <div class="messages">
+      <ul>
+      {% for message in messages %}
+          <li class="{{ message.tags }}">
+              <span class="message-content">{{ message }}</span>
+              <button type="button" class="close-btn" aria-label="Close message">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </li>
+      {% endfor %}
+      </ul>
+  </div>
+{% endif %}
+
+<script>
+const closeButtons = document.querySelectorAll('.close-btn');
+
+closeButtons.forEach(closeButton => {
+closeButton.addEventListener('click', function() {
+  // Remove the message element associated with the clicked button
+  this.parentElement.remove(); // Simplified using `remove()` for modern browsers
+});
+});
+</script>
+
+<style>
+.messages {
+  /* Adjust styling as needed for spacing, borders, etc. */
+  padding: 1rem;
+  border: 1px solid #ddd;
+  margin: 1rem 0;
+  list-style: none; /* Remove default list styling */
+}
+
+.messages li {
+  /* Adjust styling as needed for individual messages */
+  padding: 0.5rem 1rem;
+  display: flex; /* Allow for inline placement of message and close button */
+  justify-content: space-between; /* Align items horizontally */
+  align-items: center; /* Align items vertically */
+  border-bottom: 1px solid #eee; /* Add subtle separation lines */
+}
+
+.message-content {
+  /* Adjust styling as needed for message content */
+  flex-grow: 1; /* Allow message content to expand to fill remaining space */
+}
+
+.close-btn {
+  /* Adjust styling as needed for close button */
+  background: none; /* Remove default button background */
+  border: none; /* Remove default button border */
+  padding: 0 5px; /* Add some padding for visual separation */
+  cursor: pointer; /* Indicate clickable behavior */
+  color: #888; /* Adjust color as needed */
+  transition: color 0.2s ease-in-out; /* Add smooth color transition on hover */
+}
+
+.close-btn:hover {
+  color: #333; /* Change color on hover */
+}
+</style>
+
+
+
+
+
+
   <nav class="flex items-center justify-between flex-wrap bg-stone-600  ">
     <div class="flex items-center flex-shrink-0 text-white mr-6">
       <img src="http://www.ranamotorsbd.com/images/Rana-Motors-Logo.png" class="top1 " alt="">
@@ -207,25 +276,43 @@
 
           </button>
         </td>
-        <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-          onclick="window.location.href = '{{rs.id}}/editcashmemo'">
-          editcashmemo
-
+        {% if not rs.smssend %}
+    <td>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40 mr-px"
+                onclick="window.location.href = '{{ rs.id }}/editcashmemo'">
+            editcashmemo
         </button>
-      </td>
+    </td>
+{% else %}
+    <td>ALREADY POSTED</td>
+{% endif %}
 
+      {% if  not rs.customer.name %}
       <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
         onclick="window.location.href = '{{rs.id}}/bill'">
         bill
 
       </button>
+      </td>
 
+      {% else %}
+    <td> id customer</td>
 
-      <td><button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40  mr-px"
-        onclick="window.location.href = '{{rs.id}}/deleteinvoice'">
-        delete invoice
+     
+      {% endif %}
 
-      </button>
+     
+
+      {% if not rs.smssend %}
+    <td>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-1 rounded w-40 mr-px"
+                onclick="window.location.href = '{{ rs.id }}/deleteinvoice'">
+            delete invoice
+        </button>
+    </td>
+    {% else %}
+    <td>ALREADY POSTED</td>
+{% endif %}
     </td>
         <td>{{ rs.added}}</td>
       </tr>

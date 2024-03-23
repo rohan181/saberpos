@@ -85,10 +85,15 @@ class mreditformm(forms.ModelForm):
 
 
 
-class billfrom(forms.ModelForm):  
-    class Meta:  
-        model =bill
-        fields = ['name','ammount']     
+class billfrom(forms.ModelForm):
+    class Meta:
+        model = bill
+        fields = ['name', 'ammount', 'billinvoiceid']
+        widgets = {
+            'name': forms.TextInput(attrs={'size': 20}),  # Adjust the size as needed
+            'ammount': forms.NumberInput(attrs={'size': 10}),  # Adjust the size as needed
+            'billinvoiceid': forms.TextInput(attrs={'size': 15}),  # Adjust the size as needed
+        }
 
 
 

@@ -139,6 +139,7 @@ class Order(models.Model):
     totalprice = models.PositiveIntegerField(default=0,null=True,blank=True)
     totalprice1 = models.PositiveIntegerField(default=0,null=True,blank=True)
     due = models.PositiveIntegerField(default=0,null=True,blank=True)
+    smssend= models.BooleanField(null=True,blank=True,default=False)
     @property
     def total_price(self):
         return (self.quantity * self.UserItem.price1)
@@ -249,15 +250,17 @@ class returnn(models.Model):
 
 class bill(models.Model):  
      order = models.ForeignKey(Order, on_delete=models.CASCADE,null=True,blank=True)      
-     name = models.TextField(max_length=100,null=True)
+     name = models.TextField(max_length=20,null=True)
      ammount = models.DecimalField(
         decimal_places=0,
         max_digits=10,
         validators=[MinValueValidator(0)],
         null=True
     )
+     billinvoiceid= models.TextField(max_length=20,null=True)
      added = models.DateTimeField(auto_now_add=True,null=True,blank=True)
      customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True,blank=True) 
+     smssend= models.BooleanField(null=True,blank=True,default=False)
 
 
 class Customerbalacesheet(models.Model):
