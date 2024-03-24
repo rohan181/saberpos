@@ -212,16 +212,16 @@ def cart(request):
 
   
     #products = Product.objects.filter(Q(productcatagory__icontains=category))
-    totalbalnce=0
-    for p in products:
-        totalbalnce +=p.price * p.quantity
+    # totalbalnce=0
+    # for p in products:
+    #     totalbalnce +=p.price * p.quantity
 
-    mo = Product.objects.filter(mother=True)
+    # mo = Product.objects.filter(mother=True)
 
-    bl=0
-    for p in mo:
-        bl +=p.price * p.quantity    
-    totalbalnce=totalbalnce-bl
+    # bl=0
+    # for p in mo:
+    #     bl +=p.price * p.quantity    
+    # totalbalnce=totalbalnce-bl
     
     # myFilter = OrderFilter(request.GET, queryset=products)
     # products = myFilter.qs 
@@ -249,7 +249,7 @@ def cart(request):
 
     category=  Product.objects.values('productcatagory').distinct()
     
-    context = {'category':category,'products': products,'form':form,'user_products':user_products,'pro':pro,'total':total,'totalbalace':totalbalnce,'form2':form2}
+    context = {'category':category,'products': products,'form':form,'user_products':user_products,'pro':pro,'total':total,'form2':form2}
     return render(request, 'core/cart.html', context)
 
 
